@@ -1,8 +1,10 @@
 #!/bin/bash
 
-EUPATH=`pwd`
+runnum=$1
+
+echo "$runnum"
 
 cd bin
-./si_ge_merge 1060
-./beta_beam_merge 1060
-./betadecay 1060
+./si_ge_merge $runnum
+./beta_beam_merge $runnum
+./betadecay $runnum
