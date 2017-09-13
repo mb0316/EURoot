@@ -30,8 +30,8 @@ int main(int argc, char* argv[])
     TTree* tree = new TTree("tree", "tree");
 	EUAnaBeta* beta = new EUAnaBeta(tree);
 
-	TString dssdfile = "../data/WASABI1060.root";
-	TString hpgefile = "../data/go4_1060.root";
+	TString dssdfile = Form("../data/WASABI%04d.root", run_num);
+	TString hpgefile = Form("../data/go4_%04d.root", run_num);
 	dssd = new EUDataSi(dssdfile.Data());
 	hpge = new EUDataGe(hpgefile.Data());
 
