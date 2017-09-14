@@ -93,6 +93,7 @@ int main(int argc, char* argv[])
 			beta->ResetDSSD();
             beta->ResetEURICA();
             beta->CopyEURICA(hpge);
+			beta->AngleEURICA();
             beta->eventid = 0;
             beta->GetIonPos(dssd);
 			tree->Fill();
@@ -110,6 +111,7 @@ int main(int argc, char* argv[])
                 if (beta->fire == 0)
                 {
                     beta->CopyEURICA(hpge);
+					beta->AngleEURICA();
 					tree->Fill();
                 }
             }
