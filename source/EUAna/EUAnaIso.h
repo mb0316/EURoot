@@ -26,6 +26,6 @@ class EUAnaIso : public EUAna, public EUTreeIso
         void    ResetEURICA(); //reset or set 0 for hit information of eurica
         void    ResetPID(); //reset or set 0 for PID
         void    Addback(); //addback algorithm
-
+		void	AngleEURICA();
 };
 #endif

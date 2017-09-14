@@ -54,12 +54,16 @@ class EUTree : public TObject
         //EURICA Info.
         Int_t gchit; //number of hit in EURICA
         Int_t gc_ch[84]; //hit channel
+		Int_t gc_ang[84]; //azimuthal angle
+		Int_t gc_cl[84]; //hit cluster
         Double_t gc_E[84]; //gamma energy for each channel
         Double_t gc_T[84]; //time for each channel, DGFt
         Double_t gc_Ts[84]; //short range TDC for each chnnel
         Double_t gc_Tl[84]; //long range TDC for each channel
         Int_t addhit; //number of hit for addback
         Int_t add_ch[84]; //hit channel for addback
+		Int_t add_ang[84]; //azimuthal angle
+		Int_t add_cl[84]; //hit cluster
         Double_t add_E[84]; //gamma energy after addback
         Double_t add_T[84]; //time after addback
 
@@ -116,12 +120,16 @@ class EUTree : public TObject
         TBranch        *b_beta_T_Y;   //!
         TBranch        *b_gchit;   //!
         TBranch        *b_gc_ch;   //!
+        TBranch        *b_gc_ang;   //!
+        TBranch        *b_gc_cl;   //!
         TBranch        *b_gc_E;   //!
         TBranch        *b_gc_T;   //!
         TBranch        *b_gc_Ts;   //!
         TBranch        *b_gc_Tl;   //!
         TBranch        *b_addhit;   //!
         TBranch        *b_add_ch;   //!
+        TBranch        *b_add_ang;   //!
+        TBranch        *b_add_cl;   //!
         TBranch        *b_add_E;   //!
         TBranch        *b_add_T;   //!
         TBranch        *b_lbhit;   //!

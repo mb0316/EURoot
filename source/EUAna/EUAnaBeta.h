@@ -49,5 +49,6 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
         void	ResetPID(); //reset or set 0 for PID
         void	ResetDSSD(); //reset or set 0 for hit information of wasabi
         void	Addback(); //addback algorithm
+		void	AngleEURICA();
 };
 #endif

@@ -248,3 +248,133 @@ void EUAnaIso::Addback()
 
 }
 
+void EUAnaIso::AngleEURICA()
+{
+    for (Int_t i = 0; i < gchit; i++)
+    {
+        if (gc_ch[i] >= 0 && gc_ch[i] <= 6)
+		{
+			gc_cl[i] = 0;
+			gc_ang[i] = 51;
+		}
+        if (gc_ch[i] >= 7 && gc_ch[i] <= 13)
+		{
+			gc_cl[i] = 1;
+			gc_ang[i] = 51;
+		}
+        if (gc_ch[i] >= 14 && gc_ch[i] <= 20)
+		{
+			gc_cl[i] = 2;
+			gc_ang[i] = 51;
+		}
+        if (gc_ch[i] >= 21 && gc_ch[i] <= 27)
+		{
+			gc_cl[i] = 3;
+			gc_ang[i] = 129;
+		}
+        if (gc_ch[i] >= 28 && gc_ch[i] <= 34)
+		{
+			gc_cl[i] = 4;
+			gc_ang[i] = 129;
+		}
+        if (gc_ch[i] >= 35 && gc_ch[i] <= 41)
+		{
+			gc_cl[i] = 5;
+			gc_ang[i] = 129;
+		}
+        if (gc_ch[i] >= 42 && gc_ch[i] <= 48)
+		{
+			gc_cl[i] = 6;
+			gc_ang[i] = 90;
+		}
+        if (gc_ch[i] >= 49 && gc_ch[i] <= 55)
+		{
+			gc_cl[i] = 7;
+			gc_ang[i] = 90;
+		}
+        if (gc_ch[i] >= 56 && gc_ch[i] <= 62)
+		{
+			gc_cl[i] = 8;
+			gc_ang[i] = 51;
+		}
+        if (gc_ch[i] >= 63 && gc_ch[i] <= 69)
+		{
+			gc_cl[i] = 9;
+			gc_ang[i] = 51;
+		}
+        if (gc_ch[i] >= 70 && gc_ch[i] <= 76)
+		{
+			gc_cl[i] = 10;
+			gc_ang[i] = 129;
+		}
+        if (gc_ch[i] >= 77 && gc_ch[i] <= 83)
+		{
+			gc_cl[i] = 11;
+			gc_ang[i] = 129;
+		}
+    }
+    for (Int_t i = 0; i < addhit; i++)
+    {
+        if (add_ch[i] >= 0 && add_ch[i] <= 6)
+		{
+			add_cl[i] = 0;
+			add_ang[i] = 51;
+		}
+        if (add_ch[i] >= 7 && add_ch[i] <= 13)
+		{
+			add_cl[i] = 1;
+			add_ang[i] = 51;
+		}
+        if (add_ch[i] >= 14 && add_ch[i] <= 20)
+		{
+			add_cl[i] = 2;
+			add_ang[i] = 51;
+		}
+        if (add_ch[i] >= 21 && add_ch[i] <= 27)
+		{
+			add_cl[i] = 3;
+			add_ang[i] = 129;
+		}
+        if (add_ch[i] >= 28 && add_ch[i] <= 34)
+		{
+			add_cl[i] = 4;
+			add_ang[i] = 129;
+		}
+        if (add_ch[i] >= 35 && add_ch[i] <= 41)
+		{
+			add_cl[i] = 5;
+			add_ang[i] = 129;
+		}
+        if (add_ch[i] >= 42 && add_ch[i] <= 48)
+		{
+			add_cl[i] = 6;
+			add_ang[i] = 90;
+		}
+        if (add_ch[i] >= 49 && add_ch[i] <= 55)
+		{
+			add_cl[i] = 7;
+			add_ang[i] = 90;
+		}
+        if (add_ch[i] >= 56 && add_ch[i] <= 62)
+		{
+			add_cl[i] = 8;
+			add_ang[i] = 51;
+		}
+        if (add_ch[i] >= 63 && add_ch[i] <= 69)
+		{
+			add_cl[i] = 9;
+			add_ang[i] = 51;
+		}
+        if (add_ch[i] >= 70 && add_ch[i] <= 76)
+		{
+			add_cl[i] = 10;
+			add_ang[i] = 129;
+		}
+        if (add_ch[i] >= 77 && add_ch[i] <= 83)
+		{
+			add_cl[i] = 11;
+			add_ang[i] = 129;
+		}
+    }
+}
+
