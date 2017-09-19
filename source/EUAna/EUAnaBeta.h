@@ -39,12 +39,19 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
 
 		void	MapCorrel(std::map<Long64_t, Long64_t> &master_mts, std::map<Long64_t, Long64_t>::iterator &imaster_mts, std::map<Long64_t, Long64_t> &slave_mts, std::map<Long64_t, Long64_t>::iterator &islave_mts, std::map<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit);
         void	CopyTS(EUDataSi *dssd); //copy the timestamp from WASABI data
+        void	CopyTS(EUDataGe *hpge); //copy the timestamp from WASABI data
+        void	CopyTS(EUDataBeam *beam); //copy the timestamp from WASABI data
         void	CopyTS(EUTreeBeta *beta); //copy the timestamp from EUTreeBeta data
         void	CopyBigRIPS(EUDataBeam *beam); //copy AoQ and Z data from bigrips data
-        void	CopyPL(EUDataSi *dssd); //copy F11 PL and veto PL data from WASABI data
+        void	CopyBigRIPS(EUTreeBeta *beta); //copy AoQ and Z data from bigrips data
+        void	CopyPL(EUDataSi *dssd); //copy F11 PL and veto PL TDC data from WASABI data
+        void	CopyPL(EUDataGe *hpge); //copy F11 PL ADC data from eurica data
+        void	CopyPL(EUTreeBeta *dssd, EUTreeBeta *hpge); //copy F11 PL ADC data from EUTreeBeta data
+        void	CopyPL(EUTreeBeta *beta); //copy F11 PL ADC data from EUTreeBeta data
         void	CopyEURICA(EUDataGe *hpge); //copy EURICA, LaBr, beta PL data from eurica data
         void	CopyEURICA(EUTreeBeta *beta); //copy EURICA, LaBr, beta PL data from EUTreeBeta data
 		void	CopyDSSD(EUTreeBeta *beta);	//copy DSSD data from EUTreeBeta data
+		void	ResetPL();
         void	ResetEURICA(); //reset or set 0 for hit information of eurica
         void	ResetPID(); //reset or set 0 for PID
         void	ResetDSSD(); //reset or set 0 for hit information of wasabi

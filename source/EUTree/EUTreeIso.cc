@@ -62,6 +62,10 @@ EUTreeIso::EUTreeIso(TTree* tree)
 	tree -> Branch("betaPL2_TRs", &betaPL2_TRs, "betaPL2_TRs/D");
 	tree -> Branch("betaPL2_TLl", &betaPL2_TLl, "betaPL2_TLl/D");
 	tree -> Branch("betaPL2_TRl", &betaPL2_TRl, "betaPL2_TRl/D");
+	tree -> Branch("F11_ADC_L", &F11_ADC_L, "F11_ADC_L/I");
+	tree -> Branch("F11_ADC_R", &F11_ADC_R, "F11_ADC_R/I");
+	tree -> Branch("F11_TDC_L", &F11_TDC_L, "F11_TDC_L/I");
+	tree -> Branch("F11_TDC_R", &F11_TDC_R, "F11_TDC_R/I");
 }
 
 EUTreeIso::~EUTreeIso()	{}
@@ -118,6 +122,10 @@ void EUTreeIso::Init(TTree *tree)
 	fData->SetBranchAddress("betaPL2_TRs", &betaPL2_TRs, &b_betaPL2_TRs);
 	fData->SetBranchAddress("betaPL2_TLl", &betaPL2_TLl, &b_betaPL2_TLl);
 	fData->SetBranchAddress("betaPL2_TRl", &betaPL2_TRl, &b_betaPL2_TRl);
+	fData->SetBranchAddress("F11_ADC_L", &F11_ADC_L, &b_F11_ADC_L);
+	fData->SetBranchAddress("F11_ADC_R", &F11_ADC_R, &b_F11_ADC_R);
+	fData->SetBranchAddress("F11_TDC_L", &F11_TDC_L, &b_F11_TDC_L);
+	fData->SetBranchAddress("F11_TDC_R", &F11_TDC_R, &b_F11_TDC_R);
 }
 
 void EUTreeIso::GetTsEntry(std::map<Long64_t, Long64_t> &mts)

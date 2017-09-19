@@ -92,6 +92,12 @@ class EUTree : public TObject
         Double_t betaPL2_TLl;
         Double_t betaPL2_TRl;
 
+		//F11 PL Info.
+		Int_t F11_ADC_L;
+		Int_t F11_ADC_R;
+		Int_t F11_TDC_L;
+		Int_t F11_TDC_R;
+
         // List of branches
         TBranch        *b_ts;   //!
         TBranch        *b_eventid;   //!
@@ -153,6 +159,10 @@ class EUTree : public TObject
         TBranch        *b_betaPL2_TRs;   //!
         TBranch        *b_betaPL2_TLl;   //!
         TBranch        *b_betaPL2_TRl;   //!
+        TBranch        *b_F11_ADC_L;   //!
+        TBranch        *b_F11_ADC_R;   //!
+        TBranch        *b_F11_TDC_L;   //!
+        TBranch        *b_F11_TDC_R;   //!
 
 		EUTree();
 		~EUTree();

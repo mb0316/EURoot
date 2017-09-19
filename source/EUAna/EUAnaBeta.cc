@@ -137,10 +137,26 @@ void EUAnaBeta::CopyTS(EUDataSi *dssd)
     ts = dssd->EventInfo_timestamp[0];
 }
 
+void EUAnaBeta::CopyTS(EUDataGe *hpge)
+{   
+    ts = hpge->EventInfo_timestamp[0];
+}
+
+void EUAnaBeta::CopyTS(EUDataBeam *beam)
+{   
+    ts = beam->EventInfo_timestamp[0];
+}
+
 void EUAnaBeta::CopyTS(EUTreeBeta *beta)
 {   
     ts = beta->ts;
 	eventid = beta->eventid;
+}
+
+void EUAnaBeta::CopyBigRIPS(EUTreeBeta *beta)
+{   
+    AoQ = beta->AoQ;
+    Zpro = beta->Zpro;
 }
 
 void EUAnaBeta::CopyBigRIPS(EUDataBeam *beam)
@@ -153,10 +169,32 @@ void EUAnaBeta::CopyPL(EUDataSi *dssd)
 {   
     vetoPL1 = dssd->vetoPL_front;
     vetoPL2 = dssd->vetoPL_back;
-    F11_PLl = dssd->bigrips_F11L;
+    F11_TDC_L= dssd->bigrips_F11L;
     F7_PLl = dssd->bigrips_F7L;
-    F11_PLr = dssd->bigrips_F11R;
+    F11_TDC_R = dssd->bigrips_F11R;
     F7_PLr = dssd->bigrips_F7R;
+}
+
+void EUAnaBeta::CopyPL(EUDataGe *hpge)
+{
+	F11_ADC_L = hpge->BigRIPSRaw_F11SCI_L[0];
+	F11_ADC_R = hpge->BigRIPSRaw_F11SCI_R[0];
+}
+
+void EUAnaBeta::CopyPL(EUTreeBeta *beta)
+{
+	F11_ADC_L = beta->F11_ADC_L;
+	F11_ADC_R = beta->F11_ADC_R;
+	F11_TDC_L = beta->F11_TDC_L;
+	F11_TDC_R = beta->F11_TDC_R;
+}
+
+void EUAnaBeta::CopyPL(EUTreeBeta *dssd, EUTreeBeta *hpge)
+{
+	F11_ADC_L = hpge->F11_ADC_L;
+	F11_ADC_R = hpge->F11_ADC_R;
+	F11_TDC_L = dssd->F11_TDC_L;
+	F11_TDC_R = dssd->F11_TDC_R;
 }
 
 void EUAnaBeta::CopyEURICA(EUDataGe *hpge)
@@ -265,6 +303,14 @@ void EUAnaBeta::CopyDSSD(EUTreeBeta *beta)
 		beta_T_X = beta->beta_T_X;
 		beta_T_Y = beta->beta_T_Y;
 	}
+}
+
+void EUAnaBeta::ResetPL()
+{
+	F11_ADC_L = 0;
+	F11_ADC_R = 0;
+	F11_TDC_L = 0;
+	F11_TDC_R = 0;
 }
 
 void EUAnaBeta::ResetEURICA()

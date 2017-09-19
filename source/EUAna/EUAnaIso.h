@@ -21,8 +21,11 @@ class EUAnaIso : public EUAna, public EUTreeIso
 
         void    CopyTS(EUDataSi *dssd); //copy the timestamp from WASABI data
         void    CopyBigRIPS(EUDataBeam *beam); //copy AoQ and Z data from bigrips data
-        void    CopyPL(EUDataSi *dssd); //copy F11 PL and veto PL data from WASABI data
+        void    CopyPL(EUDataSi *dssd); //copy F11 PL and veto PL TDC data from WASABI data
+        void    CopyPL(EUDataGe *hpge); 
+        void    CopyPL(EUTreeIso *iso); 
         void    CopyEURICA(EUDataGe *hpge); //copy EURICA, LaBr, beta PL data from eurica data
+		void	ResetPL();
         void    ResetEURICA(); //reset or set 0 for hit information of eurica
         void    ResetPID(); //reset or set 0 for PID
         void    Addback(); //addback algorithm

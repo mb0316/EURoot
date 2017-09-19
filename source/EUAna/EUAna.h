@@ -52,8 +52,6 @@ class EUAna : public TObject
 		//veto Info.
 		Int_t vetoPL1;
 		Int_t vetoPL2;
-		Int_t F11_PLl;
-		Int_t F11_PLr;
 		Int_t F7_PLl;
 		Int_t F7_PLr;
 

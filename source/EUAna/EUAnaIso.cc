@@ -42,10 +42,24 @@ void EUAnaIso::CopyPL(EUDataSi *dssd)
 {
     vetoPL1 = dssd->vetoPL_front;
     vetoPL2 = dssd->vetoPL_back;
-    F11_PLl = dssd->bigrips_F11L;
+    F11_TDC_L = dssd->bigrips_F11L;
     F7_PLl = dssd->bigrips_F7L;
-    F11_PLr = dssd->bigrips_F11R;
+    F11_TDC_R = dssd->bigrips_F11R;
     F7_PLr = dssd->bigrips_F7R;
+}
+
+void EUAnaIso::CopyPL(EUDataGe *hpge)
+{
+    F11_ADC_L = hpge->BigRIPSRaw_F11SCI_L[0];
+    F11_ADC_R = hpge->BigRIPSRaw_F11SCI_R[0];
+}
+
+void EUAnaIso::CopyPL(EUTreeIso *iso)
+{
+    F11_ADC_L = iso->F11_ADC_L;
+    F11_ADC_R = iso->F11_ADC_R;
+    F11_TDC_L = iso->F11_TDC_L;
+    F11_TDC_R = iso->F11_TDC_R;
 }
 
 void EUAnaIso::CopyEURICA(EUDataGe *hpge)
@@ -91,6 +105,14 @@ void EUAnaIso::CopyEURICA(EUDataGe *hpge)
     betaPL1_TRl = hpge->BetaPlasticUp_TDC_R_lrt[0];
     betaPL2_TLl = hpge->BetaPlasticDown_TDC_L_lrt[0];
     betaPL2_TRl = hpge->BetaPlasticDown_TDC_R_lrt[0];
+}
+
+void EUAnaIso::ResetPL()
+{
+	F11_ADC_L = 0;
+	F11_ADC_R = 0;
+	F11_TDC_L = 0;
+	F11_TDC_R = 0;
 }
 
 void EUAnaIso::ResetEURICA()
