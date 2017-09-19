@@ -28,6 +28,8 @@ int main (int argc, char* argv[])
 		return 0;
 	}
 
+	int run_num = 1060;
+
 	TString datafile = Form("../results/MergeBeam/MergeBeam%04d.root", run_num);
 
 	EUAnaCalibTW* calib = new EUAnaCalibTW(datafile.Data());
