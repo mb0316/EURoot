@@ -16,6 +16,7 @@
 class EUData : public TObject
 {
 	public :
+		TFile	*f;
 		TTree	*fData;
 		Int_t	fCurrent;
 

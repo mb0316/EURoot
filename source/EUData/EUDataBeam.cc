@@ -14,7 +14,7 @@
 EUDataBeam::EUDataBeam(const char* filename, TTree *tree)
 {
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename);
+      f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename);
       if (!f || !f->IsOpen()) {
          f = new TFile(filename);
       }
@@ -25,7 +25,10 @@ EUDataBeam::EUDataBeam(const char* filename, TTree *tree)
 }
 
 EUDataBeam::~EUDataBeam()
-{}
+{
+	fData->Delete();
+	delete f;
+}
 
 Int_t EUDataBeam::GetEntry(Long64_t entry)
 {

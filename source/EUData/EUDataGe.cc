@@ -14,7 +14,7 @@
 EUDataGe::EUDataGe(const char* filename, TTree* tree)
 {
 	if (tree == 0) {
-		TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename);
+		f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename);
 		if (!f || !f->IsOpen()) {
 			f = new TFile(filename);
 		}
@@ -25,7 +25,10 @@ EUDataGe::EUDataGe(const char* filename, TTree* tree)
 }
 
 EUDataGe::~EUDataGe()
-{}
+{
+	fData->Delete();
+	delete f;
+}
 
 Int_t EUDataGe::GetEntry(Long64_t entry)
 {

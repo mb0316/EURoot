@@ -10,7 +10,7 @@ EUTreeDecay::EUTreeDecay(const char* filename, TTree *tree)
 {
     if (tree == 0)
     {
-        TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename);
+        f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename);
         if (!f || !f->IsOpen())
         {
             f = new TFile(filename);
@@ -68,7 +68,11 @@ EUTreeDecay::EUTreeDecay(TTree* tree)
     tree -> Branch("betaPL2_TRl", &betaPL2_TRl, "betaPL2_TRl/D");
 }
 
-EUTreeDecay::~EUTreeDecay()	{}
+EUTreeDecay::~EUTreeDecay()
+{
+	fData->Delete();
+	delete f;
+}
 
 Int_t EUTreeDecay::GetEntry(Long64_t entry)
 {

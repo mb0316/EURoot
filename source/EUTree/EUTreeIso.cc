@@ -11,7 +11,7 @@ EUTreeIso::EUTreeIso(const char* filename, TTree *tree)
 {
 	if (tree == 0)
 	{
-		TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename);
+		f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename);
 		if (!f || !f->IsOpen())
 		{
 			f = new TFile(filename);
@@ -68,7 +68,11 @@ EUTreeIso::EUTreeIso(TTree* tree)
 	tree -> Branch("F11_TDC_R", &F11_TDC_R, "F11_TDC_R/I");
 }
 
-EUTreeIso::~EUTreeIso()	{}
+EUTreeIso::~EUTreeIso()
+{
+	fData->Delete();
+	delete f;
+}
 
 Int_t EUTreeIso::GetEntry(Long64_t entry)
 {
