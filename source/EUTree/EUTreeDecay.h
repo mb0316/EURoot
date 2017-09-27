@@ -12,12 +12,12 @@
 class EUTreeDecay : public EUTree
 {
 	public :
-		
+
 		EUTreeDecay(const char* filename, TTree* tree=0);
 		EUTreeDecay(TTree* tree);
 		~EUTreeDecay();
-        Int_t       GetEntry(Long64_t entry);
-        void        Init(TTree *tree);
-		void		GetTsEntry(std::map<Long64_t, Long64_t> &mts);
+		Int_t	GetEntry(Long64_t entry);
+		void	Init(TTree *tree);
+		void	GetTsEntry(std::map<Long64_t, Long64_t> &mts);
 };
 #endif

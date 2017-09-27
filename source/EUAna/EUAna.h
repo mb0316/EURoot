@@ -59,7 +59,7 @@ class EUAna : public TObject
 		//functions
 		EUAna();
 		~EUAna();
-		void	GetCalib(); //bring all external calibration data
+		virtual void	GetCalib(); //bring all external calibration data
 		int		Addback2hitCheck(int iclust, int icryst1, int icryst2); //check the event whether it is for 2 hit addback or not
 		int		Addback3hitCheck(int iclust, int icryst1, int icryst2, int icryst3); //check the event whether it is for 3 hit addback or not
 //		virtual void    MapCorrel(std::map<Long64_t, Long64_t> &master_mts, std::map<Long64_t, Long64_t>::iterator &imaster_mts, std::map<Long64_t, Long64_t> &slave_mts, std::map<Long64_t, Long64_t>::iterator &islave_mts, std::map<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit) = 0;

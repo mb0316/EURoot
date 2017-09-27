@@ -40,18 +40,15 @@ void EUAna::GetCalib()
 	for (Int_t i = 0; i < 84; i++)
 	{
 		adcfile >> adc_ch[i] >> adc_gain[i] >> adc_offset[i];
-//		cout << "adc :" << " " << adc_ch[i] << " " << adc_gain[i] << " " << adc_offset[i] << endl;
 		tdcsfile >> tdcs_ch[i] >> tdcs_gain[i] >> tdcs_offset[i];
 		gcT_iso_twfile >> gcT_iso_twc[i][0] >> gcT_iso_twc[i][1] >> gcT_iso_twc[i][2] >> gcT_iso_twc[i][3];
 		tdcs_iso_twfile >> tdcs_iso_twc[i][0] >> tdcs_iso_twc[i][1] >> tdcs_iso_twc[i][2] >> tdcs_iso_twc[i][3];
 		tdcl_iso_twfile >> tdcl_iso_twc[i][0] >> tdcl_iso_twc[i][1] >> tdcl_iso_twc[i][2] >> tdcl_iso_twc[i][3];
 		gcT_beta_twfile >> gcT_beta_twc[i][0] >> gcT_beta_twc[i][1] >> gcT_beta_twc[i][2] >> gcT_beta_twc[i][3];
-//		cout << gcT_beta_twc[i][0] << gcT_beta_twc[i][1] << gcT_beta_twc[2] << gcT_beta_twc[3] << endl;
 		art_iso_tdcsfile >> art_iso_tdcs_offset[i];
 		art_iso_tdclfile >> art_iso_tdcl_offset[i];
 		art_beta_tdcsfile >> art_beta_tdcs_offset[i];
 		art_beta_tdclfile >> art_beta_tdcl_offset[i];
-//		cout << "tdcs :" << " " << tdcs_ch[i] << " " << tdcs_gain[i] << " " << tdcs_offset[i] << endl;
 	}
 	tdclfile >> tdcl_gain >> tdcl_offset;
 
@@ -65,7 +62,6 @@ void EUAna::GetCalib()
 	art_beta_tdcsfile.close();
 	art_iso_tdclfile.close();
 	art_beta_tdclfile.close();
-//	cout << "tdcl :"  << " " << tdcl_gain << " " << tdcl_offset << endl;
 }
 
 int EUAna::Addback2hitCheck(Int_t iclust, Int_t icryst1, Int_t icryst2)

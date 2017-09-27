@@ -20,7 +20,7 @@ using namespace std;
 
 int main (int argc, char* argv[])
 {
-	TApplication theApp("test",0,0);
+//	TApplication theApp("test",0,0);
 
 	if (argc < 2 || argc > 2)
 	{
@@ -38,8 +38,8 @@ int main (int argc, char* argv[])
 
 	TH2D* hist_isoT = new TH2D("hist_isoT", "", 2000,0,2000,500,20500,22000);
 	TH2D* hist_betaT = new TH2D("hist_betaT", "", 2000,0,2000,500,20500,22000);
-	TH2D* hist_Ts = new TH2D("hist_Ts", "", 2000,0,2000,100,0,1000);
-	TH2D* hist_Tl = new TH2D("hist_Tl", "", 2000,0,2000,100,4000,5000);
+//	TH2D* hist_Ts = new TH2D("hist_Ts", "", 2000,0,2000,100,0,1000);
+//	TH2D* hist_Tl = new TH2D("hist_Tl", "", 2000,0,2000,100,4000,5000);
 	
 	Long64_t nEnt;
 
@@ -64,8 +64,8 @@ int main (int argc, char* argv[])
 					if (calib->eventid == 0 && calib->gc_ch[ihit] == ch_num)
 					{
 						hist_isoT->Fill(calib->gc_E[ihit], calib->gc_T[ihit]);
-						hist_Ts->Fill(calib->gc_E[ihit], calib->gc_Ts[ihit]);
-						hist_Tl->Fill(calib->gc_E[ihit], calib->gc_Tl[ihit]);
+//						hist_Ts->Fill(calib->gc_E[ihit], calib->gc_Ts[ihit]);
+//						hist_Tl->Fill(calib->gc_E[ihit], calib->gc_Tl[ihit]);
 					}
 					if (calib->eventid == 1)	hist_betaT->Fill(calib->gc_E[ihit], calib->gc_T[ihit]);
 
@@ -77,27 +77,32 @@ int main (int argc, char* argv[])
 	}
 
 	EUAnaCalibTW* calib = new EUAnaCalibTW("../results/MergeBeam/MergeBeam1060.root"); 
-	Double_t con1[4] = {21500, 21600, 400, 4620};
-	Double_t con2[4] = {-2000, -2000, -2000, 2000};
-	Double_t con3[4] = {0.6, 0.6, 0.6, 0.6};
-	TCanvas* cvs1 = new TCanvas("cvs1","",1000,600);
-	cvs1 -> Divide(2,2);
-	TCanvas* cvs2 = new TCanvas("cvs2","",1000,600);
-	cvs2 -> Divide(2,2);
-	TGraphErrors* graph[4];
+//	Double_t con1[4] = {21500, 21600, 400, 4620};
+//	Double_t con2[4] = {-2000, -2000, -2000, 2000};
+//	Double_t con3[4] = {0.6, 0.6, 0.6, 0.6};
+	Double_t con1[2] = {21500, 21600};
+	Double_t con2[2] = {-2000, -2000};
+	Double_t con3[2] = {0.6, 0.6};
+	TCanvas* cvs1 = new TCanvas("cvs1","",500,1000);
+	cvs1 -> Divide(1,2);
+	TCanvas* cvs2 = new TCanvas("cvs2","",500,1000);
+	cvs2 -> Divide(1,2);
+	TGraphErrors* graph[2];
+//	TGraphErrors* graph[4];
 
 	ofstream isoT;
 	ofstream betaT;
-	ofstream gcTs;
-	ofstream gcTl;
+//	ofstream gcTs;
+//	ofstream gcTl;
 
-	for (Int_t i = 0; i < 4; i++)
+//	for (Int_t i = 0; i < 4; i++)
+	for (Int_t i = 0; i < 2; i++)
 	{	
 		graph[i] = new TGraphErrors(Form("graph%d",i));
 
 		if (i == 0)
 		{
-			calib->GetProEnergy(graph[0], hist_isoT, 60);
+			calib->GetProEnergy(graph[0], hist_isoT, 50);
 			gSystem->ProcessEvents();
 			cvs2->cd(i+1);
 			hist_isoT->Draw("colz");
@@ -113,7 +118,7 @@ int main (int argc, char* argv[])
 			gSystem->ProcessEvents();
 //			calib->GetTW(hist_betaT, con1[i], con2[i], con3[i]);
 		}
-
+/*
 		if (i == 2)
 		{
 			calib->GetProEnergy(graph[2], hist_Ts, 60);
@@ -133,7 +138,7 @@ int main (int argc, char* argv[])
 			gSystem->ProcessEvents();
 //			calib->GetTW(hist_Tl, con1[i], con2[i], con3[i]);
 		}
-
+*/
 		calib->GetTW(graph[i], con1[i], con2[i], con3[i]);
 		cout << i << " " << con1[i] << " " << con2[i] << " " << con3[i] << endl;
 		gSystem->ProcessEvents();
@@ -149,7 +154,7 @@ int main (int argc, char* argv[])
 	betaT.open ("../calib/betaT_TW.dat", ofstream::out | ofstream::app);
 	betaT << ch_num << "	" << con1[1] << "	" << con2[1] << "	" << con3[1] << endl;
 	betaT.close();
-
+/*
 	gcTs.open ("../calib/gcTs_TW.dat", ofstream::out | ofstream::app);
 	gcTs << ch_num << "	" << con1[2] << "	" << con2[2] << "	" << con3[2] << endl;
 	gcTs.close();
@@ -157,10 +162,10 @@ int main (int argc, char* argv[])
 	gcTl.open ("../calib/gcTl_TW.dat", ofstream::out | ofstream::app);
 	gcTl << ch_num << "	" << con1[3] << "	" << con2[3] << "	" << con3[3] << endl;
 	gcTl.close();
-
+*/
 	cvs1->SaveAs(Form("../results/CalibTW/CalibTW%02d.pdf",ch_num));
 
-	theApp.Run();
+//	theApp.Run();
 }
 
 

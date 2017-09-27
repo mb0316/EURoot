@@ -16,6 +16,24 @@ EUAnaBeta::EUAnaBeta(TTree* tree):EUTreeBeta(tree)
 EUAnaBeta::~EUAnaBeta()
 {}
 
+void EUAnaBeta::GetCalib()
+{
+        ifstream adcfile("../calib/eurica_adc_calib.dat");
+        ifstream tdcsfile("../calib/eurica_tdcs_calib.dat");
+        ifstream tdclfile("../calib/eurica_tdcl_calib.dat");
+
+        for (Int_t i = 0; i < 84; i++)
+        {
+                adcfile >> adc_ch[i] >> adc_gain[i] >> adc_offset[i];
+                tdcsfile >> tdcs_ch[i] >> tdcs_gain[i] >> tdcs_offset[i];
+        }
+        tdclfile >> tdcl_gain >> tdcl_offset;
+
+        adcfile.close();
+        tdcsfile.close();
+	tdclfile.close();
+}
+
 void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 {
     temp_z = -1;

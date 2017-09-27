@@ -17,11 +17,12 @@ class EUAnaDecay : public EUAna, public EUTreeDecay
 	public :
 		EUAnaDecay(TTree* tree);
 		~EUAnaDecay();
+		void	GetCalib();
 		void	CopyDSSD(EUTreeBeta *beta); //copy all ion(beam) data from BetaMerge to build Decay data
 		void	CopyEURICA(EUTreeBeta *beta); //copy all beta data from BetaMerge to build Decay data
 		void	TWCor(); //Timewalk correction for EURICA
 		void	GetBetaEnergy(EUTreeBeta *beta); //analysis for the beta energy
-        void    GetBetaTDCoffset();
+		void    GetBetaTDCoffset();
 		double	GetXYDistance(int beta_x, int beta_y);
 		void	ResetEURICA();
 };

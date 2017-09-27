@@ -17,6 +17,15 @@ EUAnaDecay::EUAnaDecay(TTree* tree):EUTreeDecay(tree)
 EUAnaDecay::~EUAnaDecay()
 {}
 
+void EUAnaDecay::GetCalib()
+{
+	ifstream gcT_beta_twfile("../calib/betaT_TW.dat");
+
+	for (Int_t i = 0; i < 84; i++)	gcT_beta_twfile >> gcT_beta_twc[i][0] >> gcT_beta_twc[i][1] >> gcT_beta_twc[i][2] >> gcT_beta_twc[i][3];
+
+	gcT_beta_twfile.close();
+}
+
 void EUAnaDecay::CopyDSSD(EUTreeBeta *beta)
 {
     z = beta->ion_z;
@@ -33,6 +42,12 @@ void EUAnaDecay::TWCor()
 		if (gc_T[ihit] > -500E3 && gc_T[ihit] < 500E3)    gc_T[ihit] = -(gc_T[ihit] - gcT_beta_twc[gc_ch[ihit]][1]*(TMath::Power(gc_E[ihit]-gcT_beta_twc[gc_ch[ihit]][2], -gcT_beta_twc[gc_ch[ihit]][3])) - gcT_beta_twc[gc_ch[ihit]][0]);
 		else continue;
 	}
+	for (Int_t ihit = 0; ihit < addhit; ihit++)
+	{
+		if (add_T[ihit] > -500E3 && add_T[ihit] < 500E3)    add_T[ihit] = -(add_T[ihit] - gcT_beta_twc[add_ch[ihit]][1]*(TMath::Power(add_E[ihit]-gcT_beta_twc[add_ch[ihit]][2], -gcT_beta_twc[add_ch[ihit]][3])) - gcT_beta_twc[add_ch[ihit]][0]);
+		else continue;
+	}
+
 }
 
 void EUAnaDecay::CopyEURICA(EUTreeBeta *beta)
@@ -72,54 +87,7 @@ void EUAnaDecay::CopyEURICA(EUTreeBeta *beta)
     betaPL2_TLl = beta->betaPL2_TLl;
     betaPL2_TRl = beta->betaPL2_TRl;
 }
-/*
-void EUAnaDecay::CopyIsoData(EUTreeDecay *decay, EUTreeIso *iso)
-{   
-    decay->AoQ = iso.AoQ;
-    decay->Zpro = iso.Zpro;
-    decay->gchit = iso.gchit;
-    for (Int_t ihit = 0; ihit < decay->gchit; ihit++)
-    {   
-        decay->gc_ch[ihit] = iso.gc_ch[ihit]; 
-        if (iso.gc_T[ihit] > -500E3 && iso.gc_T[ihit] < 500E3)  decay->gc_T[ihit] = -(iso.gc_T[ihit] - gcT_iso_twc[iso.gc_ch[ihit]][1]*(TMath::Power(iso.gc_E[ihit]-gcT_iso_twc[iso.gc_ch[ihit]][2], -gcT_iso_twc[iso.gc_ch[ihit]][3])) - gcT_iso_twc[gc_ch[ihit]][0]);
-        else decay->gc_T[ihit] = iso.gc_T[ihit];
-        decay->gc_E[ihit] = iso.gc_E[ihit];
-        decay->gc_Ts[ihit] = iso.gc_Ts[ihit];
-        decay->gc_Tl[ihit] = iso.gc_Tl[ihit];
-    }
-    decay->addhit = iso.addhit; 
-    for (Int_t ihit = 0; ihit < decay->addhit; ihit++)
-    {   
-        decay->add_ch[ihit] = iso.add_ch[ihit];
-        decay->add_T[ihit] = iso.add_T[ihit];
-        decay->add_E[ihit] = iso.add_E[ihit];
-    }
-    decay->lbhit = iso.lbhit;
-    for (Int_t ihit = 0; ihit < decay->lbhit; ihit++)
-    {   
-        decay->lb_ch[ihit] = iso.lb_ch[ihit];
-        decay->lb_E[ihit] = iso.lb_E[ihit];
-        decay->lb_Ts[ihit] = iso.lb_Ts[ihit];
-        decay->lb_Tl[ihit] = iso.lb_Tl[ihit];
-    }
-    decay->betaPL1_Beam_ADCL = iso.betaPL1_Beam_ADCL;
-    decay->betaPL1_Beam_ADCR = iso.betaPL1_Beam_ADCR;
-    decay->betaPL1_Beta_ADCL = iso.betaPL1_Beta_ADCL;
-    decay->betaPL1_Beta_ADCR = iso.betaPL1_Beta_ADCR;
-    decay->betaPL2_Beam_ADCL = iso.betaPL2_Beam_ADCL;
-    decay->betaPL2_Beam_ADCR = iso.betaPL2_Beam_ADCR;
-    decay->betaPL2_Beta_ADCL = iso.betaPL2_Beta_ADCL;
-    decay->betaPL2_Beta_ADCR = iso.betaPL2_Beta_ADCR;
-    decay->betaPL1_TLs = iso.betaPL1_TLs;
-    decay->betaPL1_TRs = iso.betaPL1_TRs;
-    decay->betaPL2_TLs = iso.betaPL2_TLs;
-    decay->betaPL2_TRs = iso.betaPL2_TRs;
-    decay->betaPL1_TLl = iso.betaPL1_TLl;
-    decay->betaPL1_TRl = iso.betaPL1_TRl;
-    decay->betaPL2_TLl = iso.betaPL2_TLl;
-    decay->betaPL2_TRl = iso.betaPL2_TRl;
-}
-*/
+
 void EUAnaDecay::GetBetaEnergy(EUTreeBeta *beta)
 {
 /*
