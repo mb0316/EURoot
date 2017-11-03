@@ -67,7 +67,7 @@ int main (int argc, char* argv[])
 //						hist_Ts->Fill(calib->gc_E[ihit], calib->gc_Ts[ihit]);
 //						hist_Tl->Fill(calib->gc_E[ihit], calib->gc_Tl[ihit]);
 					}
-					if (calib->eventid == 1)	hist_betaT->Fill(calib->gc_E[ihit], calib->gc_T[ihit]);
+					if (calib->eventid == 1 && calib->gc_ch[ihit] == ch_num)	hist_betaT->Fill(calib->gc_E[ihit], calib->gc_T[ihit]);
 
 					else continue;
 				}

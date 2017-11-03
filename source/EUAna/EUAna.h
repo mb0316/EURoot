@@ -31,14 +31,14 @@ class EUAna : public TObject
 		Double_t tdcs_offset[84];//for short range tdc to time calibration of EURICA for each channel
 		Double_t tdcl_gain; //for long range tdc to time calibration of EURICA for each channel
 		Double_t tdcl_offset; //for long range tdc to time calibration of EURICA for each channel
-		Double_t gcT_iso_twc[84][4]; //for slew correction of gcT of EURICA, for isomeric decay
-		Double_t tdcs_iso_twc[84][4]; //for slew correction of short range TDC of EURICA, for isomeric decay
-		Double_t tdcl_iso_twc[84][4]; //for slew correction of long range TDC of EURICA, for isomeric decay
-		Double_t gcT_beta_twc[84][4]; //for slew correction of gcT of EURICA, for beta decay
-		Double_t art_iso_tdcs_offset[84]; //for artificial TDC offset correction
-		Double_t art_iso_tdcl_offset[84]; //for artificial TDC offset correction
-		Double_t art_beta_tdcs_offset[84]; //for artificial TDC offset correction
-		Double_t art_beta_tdcl_offset[84]; //for artificial TDC offset correction
+		Double_t gcT_iso_twc[84][3]; //for slew correction of gcT of EURICA, for isomeric decay
+		Double_t gcT_beta_twc[84][3]; //for slew correction of gcT of EURICA, for beta decay
+		Double_t art_iso_tdcs_offset[84];
+		Double_t art_iso_tdcl_offset[84];
+		Double_t tdcs_iso_twc[84][4];
+		Double_t tdcl_iso_twc[84][4];
+		Double_t art_beta_tdcs_offset[84];
+		Double_t art_beta_tdcl_offset[84];
 
 		//Addback Algo. Info.
 		static const Int_t Addback_hitpattern[7][7]; //Addback hit pattern for each crystal

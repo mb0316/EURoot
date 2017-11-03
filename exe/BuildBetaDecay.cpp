@@ -63,23 +63,23 @@ int main (int argc, char* argv[])
 			fflush(stdout);
 			printf("\r");
 		}
-		tsIon = imts_master->second;
+		tsIon = imts_master->first;
 		tsL = tsIon + twL;
 		tsH = tsL + twH;
-		beta->GetEntry(imts_master->first);
+		beta->GetEntry(imts_master->second);
 		decay->CopyDSSD(beta);
 		imts_slave = mts_slave.begin();
 
-		while (imts_slave != mts_slave.end() && imts_slave->second < tsH)
+		while (imts_slave != mts_slave.end() && imts_slave->first < tsH)
 		{
-			if (imts_slave->second > tsL)
+			if (imts_slave->first > tsL)
 			{
-				beta->GetEntry(imts_slave->first);
+				beta->GetEntry(imts_slave->second);
 				decay->GetXYDistance(beta->beta_x, beta->beta_y);
 
 				if (beta->beta_z == decay->z && decay->deltaxy < 3)
 				{
-					tsBeta = imts_slave->second;
+					tsBeta = imts_slave->first;
 					decay->t = (tsBeta - tsIon)/(1e5);
 					decay->GetBetaEnergy(beta);
 					decay->ResetEURICA();

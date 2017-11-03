@@ -6,18 +6,25 @@
 #include "EUTreeIso.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "TH2D.h"
 
-
-class EUAnaMat : public EUAna
+class EUAnaMat : public EUAna, public EUTreeDecay
 {
 	public :
-		EUAnaMat(TTree *tree);
+		TH2D* gg_a;
+		TH2D* gg_g;
+		TH2D* tg_a;
+		TH2D* tg_g;
+
+		Double_t beta_time_cut[50] = {0};
+		Double_t iso_time_cut[50] = {0};
+
+		EUAnaMat(const char* filename, TTree *tree=0);
 		~EUAnaMat();
  		//mass : mass number, name : name of nuclide, type : 0 : addback / 1 : Ge, stat : statistics(0 : good, 1 : bad), format : 0 : 32MB, 1 : 64MB
-		void MakeGG(Int_t &mass, char* name, Int_t &type, Int_t &stat, Int_t &format, Int_t &tstart, Int_t &tend);
-		void MakeTG(Int_t &mass, char* name, Int_t &type, Int_t &stat, Int_t &format);
-		void MakeDCO(Int_t &mass, char* name, Int_t &type, Int_t &stat, Int_t &format);
+		void MakeBGG(Int_t &stat, Int_t &tstart, Int_t &tend);
+		void MakeBTG(Int_t &stat);
 
-}
+};
 
 #endif
