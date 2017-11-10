@@ -17,7 +17,7 @@ using namespace std;
 
 int main (int argc, char* argv[])
 {
-	TApplication theApp("test",0,0);
+//	TApplication theApp("test",0,0);
 
 	if (argc < 3 || argc > 4)
 	{
@@ -100,5 +100,5 @@ int main (int argc, char* argv[])
 
 	cvs->SaveAs(Form("../results/PID/Betadecay_%d_%d.pdf", zpro, mass));
 
-	theApp.Run();
+//	theApp.Run();
 }

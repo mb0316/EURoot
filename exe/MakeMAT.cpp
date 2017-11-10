@@ -16,11 +16,11 @@ using namespace std;
 
 int main (int argc, char* argv[])
 {
-	TApplication theApp("test",0,0);
+//	TApplication theApp("test",0,0);
 
 	if (argc < 6 || argc > 7)
 	{
-		cout << "Please type 'MakeSepPID #Z #Mass #statistics #tstart #tend'." << endl;
+		cout << "Please type 'MakeMAT #Z #Mass #statistics #tstart #tend'." << endl;
 		return 0;
 	}
 
@@ -73,5 +73,5 @@ int main (int argc, char* argv[])
 		fwrite(temp3, sizeof(short), 4096, out_tga);
 		fwrite(temp4, sizeof(short), 4096, out_tgg);
 	}
-	theApp.Run();
+//	theApp.Run();
 }

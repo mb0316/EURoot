@@ -5,6 +5,8 @@ runnum=$1
 echo "$runnum"
 
 cd bin
-./si_ge_merge $runnum
-./beta_beam_merge $runnum
-./betadecay $runnum
+./AnaEURICA $runnum
+./AnaWASABI $runnum
+./AnaBeam $runnum
+./MergeDet $runnum
+./MergeBeam $runnum
