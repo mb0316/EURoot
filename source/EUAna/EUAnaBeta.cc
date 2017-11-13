@@ -109,9 +109,10 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 
 }
 
-void EUAnaBeta::GetBetaPos(EUDataSi *dssd, Int_t &ndssd)
+void EUAnaBeta::GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree)
 {   
 	fire = -1;
+	temp_beta_pos.clear();
 	for (ix = 0; ix < 60; ix++)
 	{
 		if (dssd->dssd_E_X[ndssd][ix] > 10 && dssd->dssd_E_X[ndssd][ix] <= 4000 && dssd->dssd_T_X[ndssd][ix][0] > -10000)
@@ -121,9 +122,9 @@ void EUAnaBeta::GetBetaPos(EUDataSi *dssd, Int_t &ndssd)
 				if (dssd->dssd_E_Y[ndssd][iy] > 10 && dssd->dssd_E_Y[ndssd][iy] <= 4000 && dssd->dssd_T_Y[ndssd][iy][0] > -10000)
 				{
 					fire = 1;
-					beta_x = ix;
-					beta_y = iy;
-					break;
+//					beta_x = ix;
+//					beta_y = iy;
+					temp_beta_pos.push_back(pair<int, int> (ix, iy));
 				}
 				else continue;
 			}
@@ -132,13 +133,18 @@ void EUAnaBeta::GetBetaPos(EUDataSi *dssd, Int_t &ndssd)
 	}
 	if (fire == 1)
 	{
-		beta_z = ndssd;
-		beta_E_X = dssd->dssd_E_X[beta_z][beta_x];
-		beta_E_Y = dssd->dssd_E_Y[beta_z][beta_y];
-		beta_T_X = dssd->dssd_T_Y[beta_z][beta_x][0];
-		beta_T_Y = dssd->dssd_T_Y[beta_z][beta_y][0];
-
-		fire = 0;
+		for (Int_t i = 0; i < temp_beta_pos.size(); i++)
+		{
+			beta_z = ndssd;
+			beta_x = temp_beta_pos[i].first;
+			beta_y = temp_beta_pos[i].second;
+			beta_E_X = dssd->dssd_E_X[beta_z][beta_x];
+			beta_E_Y = dssd->dssd_E_Y[beta_z][beta_y];
+			beta_T_X = dssd->dssd_T_Y[beta_z][beta_x][0];
+			beta_T_Y = dssd->dssd_T_Y[beta_z][beta_y][0];
+			tree->Fill();
+		}
+//		fire = 0;
 	}
 }
 

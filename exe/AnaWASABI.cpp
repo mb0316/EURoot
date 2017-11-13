@@ -62,8 +62,8 @@ int main(int argc, char* argv[])
 
 			for (Int_t ihit = 0; ihit < 5; ihit++)
 			{
-				beta->GetBetaPos(dssd, ihit);
-				if (beta->fire == 0)	tree->Fill();
+				beta->GetBetaPos(dssd, ihit, tree);
+//				if (beta->fire == 0)	tree->Fill();
 			}
 
 		}

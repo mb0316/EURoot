@@ -6,6 +6,7 @@
 #include <TFile.h>
 #include "EUAna.h"
 #include <map>
+#include <vector>
 #include <stdio.h>
 #include <stdlib.h>
 #include "EUTree.h"
@@ -28,6 +29,8 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
 		Int_t	iy;
 		Int_t	idssd;
 
+		vector<pair<int, int>>	temp_beta_pos;
+
 	public :
 		Int_t	fire;
 
@@ -36,7 +39,7 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
 		void	GetCalib();
 		void	GetBetaTDCoffset();
 		void	GetIonPos(EUDataSi *dssd);
-		void	GetBetaPos(EUDataSi *dssd, Int_t &ndssd);
+		void	GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree);
 
 		void	MapCorrel(std::map<Long64_t, Long64_t> &master_mts, std::map<Long64_t, Long64_t>::iterator &imaster_mts, std::map<Long64_t, Long64_t> &slave_mts, std::map<Long64_t, Long64_t>::iterator &islave_mts, std::map<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit);
 		void	CopyTS(EUDataSi *dssd); //copy the timestamp from WASABI data
