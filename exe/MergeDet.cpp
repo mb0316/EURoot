@@ -33,8 +33,8 @@ int main(int argc, char* argv[])
 	dssd = new EUTreeBeta(dssdfile.Data());
 	hpge = new EUTreeBeta(hpgefile.Data());
 
-	map<Long64_t, Long64_t> mtsd, mtsg, mvdg;
-	map<Long64_t, Long64_t>::iterator imtsd, imtsg, imvdg;
+	multimap<Long64_t, Long64_t> mtsd, mtsg, mvdg;
+	multimap<Long64_t, Long64_t>::iterator imtsd, imtsg, imvdg;
 
 	cout << "Start checking timestamp correlation between WASABI and EURICA" << endl;
 

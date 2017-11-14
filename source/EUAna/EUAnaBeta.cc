@@ -148,7 +148,7 @@ void EUAnaBeta::GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree)
 	}
 }
 
-void EUAnaBeta::MapCorrel(std::map<Long64_t, Long64_t> &master_mts, std::map<Long64_t, Long64_t>::iterator &imaster_mts, std::map<Long64_t, Long64_t> &slave_mts, std::map<Long64_t, Long64_t>::iterator &islave_mts, std::map<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit)
+void EUAnaBeta::MapCorrel(std::multimap<Long64_t, Long64_t> &master_mts, std::multimap<Long64_t, Long64_t>::iterator &imaster_mts, std::multimap<Long64_t, Long64_t> &slave_mts, std::multimap<Long64_t, Long64_t>::iterator &islave_mts, std::multimap<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit)
 {
 	for (imaster_mts = master_mts.begin(); imaster_mts != master_mts.end(); imaster_mts++)
 	{

@@ -169,7 +169,7 @@ class EUTree : public TObject
 		~EUTree();
 		virtual Int_t	GetEntry(Long64_t entry) = 0;
 		virtual void	Init(TTree *tree) = 0;
-		virtual void	GetTsEntry(std::map<Long64_t, Long64_t> &mts) = 0;
+		virtual void	GetTsEntry(std::multimap<Long64_t, Long64_t> &mts) = 0;
 };
 #endif
 

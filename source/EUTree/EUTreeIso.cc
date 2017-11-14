@@ -132,7 +132,7 @@ void EUTreeIso::Init(TTree *tree)
 	fData->SetBranchAddress("F11_TDC_R", &F11_TDC_R, &b_F11_TDC_R);
 }
 
-void EUTreeIso::GetTsEntry(std::map<Long64_t, Long64_t> &mts)
+void EUTreeIso::GetTsEntry(std::multimap<Long64_t, Long64_t> &mts)
 {
 	Long64_t nentries = fData->GetEntriesFast();
 	for (Long64_t jentry=0; jentry<nentries;jentry++)

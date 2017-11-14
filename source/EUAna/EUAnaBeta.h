@@ -41,7 +41,7 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
 		void	GetIonPos(EUDataSi *dssd);
 		void	GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree);
 
-		void	MapCorrel(std::map<Long64_t, Long64_t> &master_mts, std::map<Long64_t, Long64_t>::iterator &imaster_mts, std::map<Long64_t, Long64_t> &slave_mts, std::map<Long64_t, Long64_t>::iterator &islave_mts, std::map<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit);
+		void	MapCorrel(std::multimap<Long64_t, Long64_t> &master_mts, std::multimap<Long64_t, Long64_t>::iterator &imaster_mts, std::multimap<Long64_t, Long64_t> &slave_mts, std::multimap<Long64_t, Long64_t>::iterator &islave_mts, std::multimap<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit);
 		void	CopyTS(EUDataSi *dssd); //copy the timestamp from WASABI data
 		void	CopyTS(EUDataGe *hpge); //copy the timestamp from WASABI data
 		void	CopyTS(EUDataBeam *beam); //copy the timestamp from WASABI data

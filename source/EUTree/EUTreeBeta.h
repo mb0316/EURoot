@@ -18,7 +18,7 @@ class EUTreeBeta : public EUTree
 		~EUTreeBeta();
 		Int_t		GetEntry(Long64_t entry);
 		void		Init(TTree *tree);
-		void		GetTsEntry(std::map<Long64_t, Long64_t> &mts);
-		void		GetTsEntry(std::map<Long64_t, Long64_t> &mts1, std::map<Long64_t, Long64_t> &mts2);
+		void		GetTsEntry(std::multimap<Long64_t, Long64_t> &mts);
+		void		GetTsEntry(std::multimap<Long64_t, Long64_t> &mts1, std::multimap<Long64_t, Long64_t> &mts2);
 };
 #endif

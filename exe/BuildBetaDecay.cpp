@@ -29,8 +29,8 @@ int main (int argc, char* argv[])
 	EUTreeBeta* beta = new EUTreeBeta(betafile.Data());
 	EUAnaDecay* decay = new EUAnaDecay(tree);
 
-	map<Long64_t, Long64_t> mts_master, mts_slave;
-	map<Long64_t, Long64_t>::iterator imts_master, imts_slave;
+	multimap<Long64_t, Long64_t> mts_master, mts_slave;
+	multimap<Long64_t, Long64_t>::iterator imts_master, imts_slave;
 
 	cout << "Start checking timestamp for ions and betas." << endl;
 	beta->GetTsEntry(mts_master, mts_slave);

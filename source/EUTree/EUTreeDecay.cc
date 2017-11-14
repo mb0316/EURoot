@@ -134,7 +134,7 @@ void EUTreeDecay::Init(TTree *tree)
     fData->SetBranchAddress("betaPL2_TRl", &betaPL2_TRl, &b_betaPL2_TRl);
 }
 
-void EUTreeDecay::GetTsEntry(std::map<Long64_t, Long64_t> &mts)
+void EUTreeDecay::GetTsEntry(std::multimap<Long64_t, Long64_t> &mts)
 {
     Long64_t nentries = fData->GetEntriesFast();
     for (Long64_t jentry = 0; jentry<nentries; jentry++)

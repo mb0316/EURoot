@@ -166,7 +166,7 @@ void EUTreeBeta::Init(TTree *tree)
 	fData->SetBranchAddress("F11_TDC_R", &F11_TDC_R, &b_F11_TDC_R);
 }
 
-void EUTreeBeta::GetTsEntry(std::map<Long64_t, Long64_t> &mts)
+void EUTreeBeta::GetTsEntry(std::multimap<Long64_t, Long64_t> &mts)
 {
 	Long64_t nentries = fData->GetEntriesFast();
 	for (Long64_t jentry = 0; jentry<nentries; jentry++)
@@ -176,7 +176,7 @@ void EUTreeBeta::GetTsEntry(std::map<Long64_t, Long64_t> &mts)
 	}
 }
 
-void EUTreeBeta::GetTsEntry(std::map<Long64_t, Long64_t> &mts1, std::map<Long64_t, Long64_t> &mts2)
+void EUTreeBeta::GetTsEntry(std::multimap<Long64_t, Long64_t> &mts1, std::multimap<Long64_t, Long64_t> &mts2)
 {
 	Long64_t nentries = fData->GetEntriesFast();
 	for (Long64_t jentry = 0; jentry<nentries; jentry++)
@@ -184,6 +184,7 @@ void EUTreeBeta::GetTsEntry(std::map<Long64_t, Long64_t> &mts1, std::map<Long64_
 		fData->GetEntry(jentry);
 		if (eventid == 0)	mts1.insert(std::pair<Long64_t, Long64_t> (ts, jentry));
 		if (eventid == 1)	mts2.insert(std::pair<Long64_t, Long64_t> (ts, jentry));
+
 	}
 }
 
