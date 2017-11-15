@@ -34,7 +34,7 @@ int main (int argc, char* argv[])
 		}
 		else if (mode == 1)
 		{
-			filename = Form("../results/BuildIsomerDecay/BuildIsomerDecay%04d.root", ifile);
+			filename = Form("../results/BuildIsoDecay/BuildIsoDecay%04d.root", ifile);
 			chain -> Add(filename);
 			std::cout << filename << " done." << std::endl;
 		}
@@ -51,7 +51,7 @@ int main (int argc, char* argv[])
 
 	if (mode == 1)
 	{
-		TFile* out = new TFile("../results/BuildIsomerDecay/BuildIsomerDecay.root", "RECREATE");
+		TFile* out = new TFile("../results/BuildIsoDecay/BuildIsoDecay.root", "RECREATE");
 		out -> cd();
 		chain -> CopyTree("") -> Write();
 		out -> Close();

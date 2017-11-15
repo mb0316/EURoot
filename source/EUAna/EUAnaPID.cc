@@ -12,11 +12,43 @@
 #include "TH2D.h"
 #include "TF1.h"
 #include "TTree.h"
+#include "TString.h"
+#include "TObjArray.h"
+#include "TObjString.h"
 
 using namespace std;
-
+/*
 EUAnaPID::EUAnaPID(const char* filename, TTree* tree):EUTreeDecay(filename)
 {}
+*/
+EUAnaPID::EUAnaPID(const char* filename)
+{
+	TString filenameWithPath = filename;
+	TObjArray* decomposite = filenameWithPath.Tokenize("/");
+	TString openFile = ((TObjString *) decomposite ->Last()) -> GetString();
+
+	TFile* file = new TFile(filename, "READ");
+	ftree = (TTree*) file -> Get("tree");
+
+	if (openFile == "BuildBetaDecay.root")
+	{
+		ftree->SetBranchAddress("t", &t);
+		ftree->SetBranchAddress("deltaxy", &deltaxy);
+		ftree->SetBranchAddress("Zpro", &Zpro);
+		ftree->SetBranchAddress("AoQ", &AoQ);
+		ftree->SetBranchAddress("gchit", &gchit);
+		ftree->SetBranchAddress("gc_E", &gc_E);
+		ftree->SetBranchAddress("gc_T", &gc_T);
+	}
+	if (openFile == "BuildIsoDecay.root")
+	{
+		ftree->SetBranchAddress("Zpro", &Zpro);
+		ftree->SetBranchAddress("AoQ", &AoQ);
+		ftree->SetBranchAddress("gchit", &gchit);
+		ftree->SetBranchAddress("gc_E", gc_E);
+		ftree->SetBranchAddress("gc_T", gc_T);
+	}
+}
 
 EUAnaPID::~EUAnaPID()
 {}
@@ -31,12 +63,18 @@ void EUAnaPID::PIDFitting(TH1D* hist, Double_t &mean, Double_t &sig)
 	sig = gaus -> GetParameter(2);
 }
 
-void EUAnaPID::MakeOutFile(Int_t &z, Int_t &mass, Double_t &zpro, Double_t &zpro_cut, Double_t &aoq, Double_t &aoq_cut)
+void EUAnaPID::MakeOutFile(const char* filename, Int_t &z, Int_t &mass, Double_t &zpro, Double_t &zpro_cut, Double_t &aoq, Double_t &aoq_cut)
 {
-	TFile* read = new TFile("../results/BuildBetaDecay/BuildBetaDecay.root", "READ");
+	TString filenameWithPath = filename;
+	TObjArray* decomposite = filenameWithPath.Tokenize("/");
+	TString openFile = ((TObjString *) decomposite ->Last()) -> GetString();
+
+	TFile* read = new TFile(filename, "READ");
+	TFile* out;
+	if (openFile == "BuildBetaDecay.root")	out  = new TFile(Form("../results/PID/Betadecay_%d_%d.root", z, mass), "RECREATE");
+	if (openFile == "BuildIsoDecay.root")	out  = new TFile(Form("../results/PID/Isomerdecay_%d_%d.root", z, mass), "RECREATE");
 	TTree* tree;
 	tree = (TTree*) read -> Get("tree");
-	TFile* out = new TFile(Form("../results/PID/Betadecay_%d_%d.root", z, mass), "RECREATE");
 	tree -> CopyTree(Form("(AoQ <= %f) && (AoQ >= %f) && (Zpro <= %f) && (Zpro >= %f)", aoq + aoq_cut, aoq - aoq_cut, zpro + zpro_cut, zpro - zpro_cut)) -> Write();
 	out -> Close();
 }

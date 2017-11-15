@@ -47,7 +47,8 @@ int main(int argc, char* argv[])
 		beta->CopyTS(dssd);
 		beta->ResetPL();
 		beta->CopyPL(dssd);
-		if ((beta->F11_TDC_L > -2200 && beta->F11_TDC_L < -1800 && beta->F11_TDC_R > -2200 && beta->F11_TDC_R < -1800) && (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3))
+//		if ((beta->F11_TDC_L > -2200 && beta->F11_TDC_L < -1800 && beta->F11_TDC_R > -2200 && beta->F11_TDC_R < -1800) && (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3))
+		if (dssd->IF_ION == 1 && (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3))
 		{
 			beta->ResetDSSD();
 			beta->eventid = 0;
@@ -55,7 +56,8 @@ int main(int argc, char* argv[])
 			tree->Fill();
 		}
 
-		else if (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3)
+//		else if (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3)
+		if (dssd->IF_BETA == 1 && beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3)
 		{
 			beta->eventid = 1;
 			beta->ResetDSSD();
