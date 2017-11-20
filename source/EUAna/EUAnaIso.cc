@@ -33,6 +33,15 @@ void EUAnaIso::GetCalib()
 	}
 
 	gcT_iso_twfile.close();
+
+	ifstream gcT_iso_tcfile("../calib/isoT_TC.dat");
+	for (Int_t i = 0; i < 84; i++)
+	{
+		gcT_iso_tcfile >> temp_ch >> temp_1;
+		gcT_iso_offset[temp_ch] = temp_1;
+		cout << i << " " << temp_ch << " " << gcT_iso_offset[temp_ch] << endl;
+	}
+	gcT_iso_tcfile.close();
 }
 
 void EUAnaIso::CopyDSSD(EUTreeBeta *beta)
@@ -48,12 +57,20 @@ void EUAnaIso::TWCor()
 {
 	for (Int_t ihit = 0; ihit < gchit; ihit++)
 	{
-		if (gc_T[ihit] > -500E3 && gc_T[ihit] < 500E3)    gc_T[ihit] = -(gc_T[ihit] - gcT_iso_twc[gc_ch[ihit]][0] - gcT_iso_twc[gc_ch[ihit]][1]*TMath::Power(gc_E[ihit], -gcT_iso_twc[gc_ch[ihit]][2]));
+		if (gc_T[ihit] > -500E3 && gc_T[ihit] < 500E3)
+		{
+			gc_T[ihit] = -(gc_T[ihit] - gcT_iso_twc[gc_ch[ihit]][0] - gcT_iso_twc[gc_ch[ihit]][1]*TMath::Power(gc_E[ihit], -gcT_iso_twc[gc_ch[ihit]][2]));
+			gc_T[ihit] = gc_T[ihit] - gcT_iso_offset[gc_ch[ihit]];
+		}
 		else continue;
 	}
 	for (Int_t ihit = 0; ihit < addhit; ihit++)
 	{
-		if (add_T[ihit] > -500E3 && add_T[ihit] < 500E3)    add_T[ihit] = -(add_T[ihit] - gcT_iso_twc[add_ch[ihit]][0] - gcT_iso_twc[add_ch[ihit]][1]*TMath::Power(add_E[ihit], -gcT_iso_twc[add_ch[ihit]][2]));
+		if (add_T[ihit] > -500E3 && add_T[ihit] < 500E3)
+		{
+			add_T[ihit] = -(add_T[ihit] - gcT_iso_twc[add_ch[ihit]][0] - gcT_iso_twc[add_ch[ihit]][1]*TMath::Power(add_E[ihit], -gcT_iso_twc[add_ch[ihit]][2]));
+			add_T[ihit] = add_T[ihit] - gcT_iso_offset[gc_ch[ihit]];
+		}
 		else continue;
 	}
 

@@ -49,7 +49,7 @@ int main (int argc, char* argv[])
 		EUAnaCalibTW* calib = new EUAnaCalibTW(Form("../results/MergeBeam/MergeBeam%04d.root", ifile));
 		cout << ifile << endl;
 
-		if (ifile == 1012 || ifile == 1049 || ifile == 1051 || ifile == 1063 || ifile == 1095 || ifile == 1110 || ifile == 1112 || ifile == 1113 && ifile == 1123)	continue;
+		if (ifile == 1012 || ifile == 1049 || ifile == 1051 || ifile == 1063 || ifile == 1095 || ifile == 1110 || ifile == 1112 || ifile == 1113 || ifile == 1123)	continue;
 		else if (ifile > 1023 && ifile < 1028)	continue;
 		else if (ifile > 1040 && ifile < 1045)	continue;
 		else

@@ -84,3 +84,19 @@ void EUAnaCalibTW::GetTW(TH2D* hist, Double_t &con1, Double_t &con2, Double_t &c
 	con2 = ftn->GetParameter(1);
 	con3 = ftn->GetParameter(2);
 }
+
+double EUAnaCalibTW::MatchCenter(TH1D* hist, Double_t &con1)
+{
+	TF1* ftn = new TF1("gaus", "gaus(0)", -100, 100);
+	ftn->SetParameters(hist->GetMaximum(), hist->GetBinCenter(hist->GetMaximumBin()), 5);
+	hist->Fit(ftn, "MQ", "", -50, 50);
+	con1 = ftn->GetParameter(1);
+	return con1;
+}
+
+double EUAnaCalibTW::TWCorrTime(Double_t &gc_E, Double_t &gc_T, Double_t &con1, Double_t &con2, Double_t &con3)
+{
+	if (gc_T > -500E3 && gc_T < 500E3)    gc_T = gc_T - con1 - con2*TMath::Power(gc_E, -con3);
+	return gc_T;
+}
+

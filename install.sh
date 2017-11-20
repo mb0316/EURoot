@@ -17,8 +17,11 @@ cp ${EUPATH}/build/exe/AnaBeam ${EUPATH}/bin/
 cp ${EUPATH}/build/exe/AnaEURICA ${EUPATH}/bin/
 cp ${EUPATH}/build/exe/AnaWASABI ${EUPATH}/bin/
 cp ${EUPATH}/build/exe/BuildBetaDecay ${EUPATH}/bin/
+cp ${EUPATH}/build/exe/BuildIsoDecay ${EUPATH}/bin/
 cp ${EUPATH}/build/exe/CalibTW ${EUPATH}/bin/
-cp ${EUPATH}/build/exe/MakeMAT ${EUPATH}/bin/
+cp ${EUPATH}/build/exe/CalibTC ${EUPATH}/bin/
+cp ${EUPATH}/build/exe/MakeBetaMat ${EUPATH}/bin/
+cp ${EUPATH}/build/exe/MakeIsoMat ${EUPATH}/bin/
 cp ${EUPATH}/build/exe/MakeOneTree ${EUPATH}/bin/
 cp ${EUPATH}/build/exe/MakeSepPID ${EUPATH}/bin/
 cp ${EUPATH}/build/exe/MergeBeam ${EUPATH}/bin/

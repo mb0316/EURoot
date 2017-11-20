@@ -13,33 +13,66 @@
 using namespace std;
 
 //EUAnaMat::EUAnaMat(TTree* tree, Int_t &type) //type 0 : beta decay, 1 : isomer
-EUAnaMat::EUAnaMat(const char* filename, TTree* tree) : EUTreeDecay(filename)
+EUAnaMat::EUAnaMat(const char* filename, int mode)
 {
-	ifstream gtc;
-	gtc.open("../calib/beta_gamma_time_cut.dat");
-	for (Int_t i = 0; i < 50; i++)
+	ifstream data;
+	TFile* file = new TFile(filename, "READ");
+
+	if (mode == 0)
 	{
-		gtc >> beta_time_cut[i];
-		cout << beta_time_cut[i] << endl;
+		data.open("../calib/beta_gamma_time_cut.dat");
+		for (Int_t i = 0; i < 50; i++)
+		{
+			data >> beta_time_cut[i];
+			cout << beta_time_cut[i] << endl;
+		}
+		ftree = (TTree*) file->Get("tree");
+		ftree->SetBranchAddress("gchit", &gchit);
+		ftree->SetBranchAddress("gc_E", gc_E);
+		ftree->SetBranchAddress("gc_T", gc_T);
+		ftree->SetBranchAddress("addhit", &addhit);
+		ftree->SetBranchAddress("add_E", add_E);
+		ftree->SetBranchAddress("add_T", add_T);
+		ftree->SetBranchAddress("deltaxy", &deltaxy);
+		ftree->SetBranchAddress("t", &t);
 	}
+	if (mode == 1)
+	{
+		data.open("../calib/iso_gamma_time_cut.dat");
+		for (Int_t i = 0; i < 50; i++)
+		{
+			data >> iso_time_cut[i];
+			cout << iso_time_cut[i] << endl;
+		}
+		ftree = (TTree*) file->Get("tree");
+		ftree->SetBranchAddress("gchit", &gchit);
+		ftree->SetBranchAddress("gc_E", gc_E);
+		ftree->SetBranchAddress("gc_T", gc_T);
+	}
+	
 }
 
 EUAnaMat::~EUAnaMat()
 {}
 
-void EUAnaMat::MakeBGG(Int_t &stat, Int_t &tstart, Int_t &tend)
+void EUAnaMat::MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend)
 {
 
 	gStyle->SetOptStat(0);
-	gg_a = new TH2D("gg_a", "", 4096, 0, 4096, 4096, 0, 4096);
-	gg_g = new TH2D("gg_g", "", 4096, 0, 4096, 4096, 0, 4096);
-	Long64_t nEnt = fData->GetEntries();
+	Int_t Emax;
+	if (mode == 0)	Emax = 1024;
+	if (mode == 1)	Emax = 2048;
+	if (mode == 2)	Emax = 4096;
+	if (mode == 3)	Emax = 8192;
+	gg_a = new TH2D("gg_a", "", 4096, 0, Emax, 4096, 0, Emax);
+	gg_g = new TH2D("gg_g", "", 4096, 0, Emax, 4096, 0, Emax);
+	Long64_t nEnt = ftree->GetEntries();
 	Int_t Eregion1 = 100;
 	Int_t Eregion2 = 100;
 
 	for (Long64_t iEnt = 0; iEnt < nEnt; iEnt++)
 	{
-		fData->GetEntry(iEnt);
+		ftree->GetEntry(iEnt);
 		if (stat == 0) //good statistics
 		{
 			if (t >= tstart && t <= tend && deltaxy == 0)
@@ -133,16 +166,63 @@ void EUAnaMat::MakeBGG(Int_t &stat, Int_t &tstart, Int_t &tend)
 	}
 }
 
-void EUAnaMat::MakeBTG(Int_t &stat)
+void EUAnaMat::MakeIGG(Int_t &mode, Int_t &tend)
 {
-	tg_a = new TH2D("tg_a", "", 4096, 0, 4096, 4096, 0, 4096);
-	tg_g = new TH2D("tg_g", "", 4096, 0, 4096, 4096, 0, 4096);
-	Long64_t nEnt = fData->GetEntries();
+
+	gStyle->SetOptStat(0);
+	Int_t Emax;
+	if (mode == 0)	Emax = 1024;
+	if (mode == 1)	Emax = 2048;
+	if (mode == 2)	Emax = 4096;
+	if (mode == 3)	Emax = 8192;
+
+	gg_g = new TH2D("gg_g", "", 4096, 0, Emax, 4096, 0, Emax);
+	Long64_t nEnt = ftree->GetEntries();
+	Int_t Eregion1 = 100;
+	Int_t Eregion2 = 100;
+
+	for (Long64_t iEnt = 0; iEnt < nEnt; iEnt++)
+	{
+		ftree->GetEntry(iEnt);
+		for (Int_t ihit = 0; ihit < gchit; ihit++)
+		{
+			if (gc_E[ihit] < 2000)	Eregion1 = int(50 - (2000 - gc_E[ihit])/40);
+			if (gc_E[ihit] >= 2000)	Eregion1 = 49;
+			for (Int_t jhit = 0; jhit < gchit; jhit++)
+			{
+				if (gc_E[gchit-jhit-1] < 2000)	Eregion2 = int(50 - (2000 - gc_E[gchit-jhit-1])/40);
+				if (gc_E[gchit-jhit-1] >= 2000)	Eregion2 = 49;
+
+				if (gc_T[ihit] >= iso_time_cut[Eregion1] && gc_T[ihit] <= tend)
+				{
+					if (abs(gc_T[ihit] - gc_T[gchit-jhit-1]) < 200 && gc_T[gchit-jhit-1] >= iso_time_cut[Eregion2] && gc_T[gchit-jhit-1] <= tend  && !(gc_E[ihit]==gc_E[gchit-jhit-1])) gg_g -> Fill(gc_E[ihit], gc_E[gchit-jhit-1]);
+					else continue;
+				}
+				else continue;
+			}
+
+		}
+
+	}
+}
+
+void EUAnaMat::MakeBTG(Int_t &stat, Int_t &mode)
+{
+	gStyle->SetOptStat(0);
+	Int_t Emax;
+	if (mode == 0)	Emax = 1024;
+	if (mode == 1)	Emax = 2048;
+	if (mode == 2)	Emax = 4096;
+	if (mode == 3)	Emax = 8192;
+
+	tg_a = new TH2D("tg_a", "", 4096, 0, 4096, 4096, 0, Emax);
+	tg_g = new TH2D("tg_g", "", 4096, 0, 4096, 4096, 0, Emax);
+	Long64_t nEnt = ftree->GetEntries();
 	Int_t Eregion = 100;
 
 	for (Long64_t iEnt = 0; iEnt < nEnt; iEnt++)
 	{
-		fData->GetEntry(iEnt);
+		ftree->GetEntry(iEnt);
 		if (stat == 0)
 		{
 			if (t>= 0 && deltaxy == 0)
@@ -185,3 +265,30 @@ void EUAnaMat::MakeBTG(Int_t &stat)
 	}
 }
 
+void EUAnaMat::MakeITG(Int_t &mode1, Int_t &mode2)
+{
+	gStyle->SetOptStat(0);
+	Int_t Emax, Tch;
+	if (mode1 == 0)	Emax = 1024;
+	if (mode1 == 1)	Emax = 2048;
+	if (mode1 == 2)	Emax = 4096;
+	if (mode1 == 3)	Emax = 8192;
+
+	if (mode2 == 0) Tch = 1;	
+	if (mode2 == 1)	Tch = 2;
+	if (mode2 == 2)	Tch = 5;
+	if (mode2 == 3) Tch = 10;
+
+	tg_g = new TH2D("tg_g", "", 4096, -500, 4096*Tch-500, 4096, 0, Emax);
+	Long64_t nEnt = ftree->GetEntries();
+
+	for (Long64_t iEnt = 0; iEnt < nEnt; iEnt++)
+	{
+		ftree->GetEntry(iEnt);
+		for (Int_t ihit = 0; ihit < gchit; ihit++)
+		{
+			if (gc_T[ihit] > -500 && gc_T[ihit] < 4096*Tch-500)	tg_g -> Fill(gc_T[ihit], gc_E[ihit]);
+			else continue;
+		}
+	}
+}

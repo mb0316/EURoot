@@ -22,6 +22,8 @@ class EUAnaCalibTW : public EUAnaCalib, public EUTreeBeta
 		void GetProEnergy(TGraphErrors* graph, TH2D* hist, Int_t bin);
 		void GetTW(TGraphErrors* graph, Double_t &con1, Double_t &con2, Double_t &con3);
 		void GetTW(TH2D* hist, Double_t &con1, Double_t &con2, Double_t &con3);
+		double MatchCenter(TH1D* hist, Double_t &con1);
+		double TWCorrTime(Double_t &gc_E, Double_t &gc_T, Double_t &con1, Double_t &con2, Double_t &con3);
 };
 
 #endif
