@@ -31,16 +31,12 @@ EUTreeIso::EUTreeIso(TTree* tree)
 	tree -> Branch("y", &y, "y/I");
 	tree -> Branch("gchit", &gchit, "gchit/I");
 	tree -> Branch("gc_ch", gc_ch, "gc_ch[gchit]/I");
-	tree -> Branch("gc_ang", gc_ang, "gc_ang[gchit]/I");
-	tree -> Branch("gc_cl", gc_cl, "gc_cl[gchit]/I");
 	tree -> Branch("gc_E", gc_E, "gc_E[gchit]/D");
 	tree -> Branch("gc_T", gc_T, "gc_T[gchit]/D");
 	tree -> Branch("gc_Ts", gc_Ts, "gc_Ts[gchit]/D");
 	tree -> Branch("gc_Tl", gc_Tl, "gc_Tl[gchit]/D");
 	tree -> Branch("addhit", &addhit, "addhit/I");
 	tree -> Branch("add_ch", add_ch, "add_ch[addhit]/I");
-	tree -> Branch("add_ang", add_ang, "add_ang[addhit]/I");
-	tree -> Branch("add_cl", add_cl, "add_cl[addhit]/I");
 	tree -> Branch("add_E", add_E, "add_E[addhit]/D");
 	tree -> Branch("add_T", add_T, "add_T[addhit]/D");
 
@@ -95,16 +91,12 @@ void EUTreeIso::Init(TTree *tree)
 	fData->SetBranchAddress("y", &y, &b_y);
 	fData->SetBranchAddress("gchit", &gchit, &b_gchit);
 	fData->SetBranchAddress("gc_ch", gc_ch, &b_gc_ch);
-	fData->SetBranchAddress("gc_ang", gc_ang, &b_gc_ang);
-	fData->SetBranchAddress("gc_cl", gc_cl, &b_gc_cl);
 	fData->SetBranchAddress("gc_E", gc_E, &b_gc_E);
 	fData->SetBranchAddress("gc_T", gc_T, &b_gc_T);
 	fData->SetBranchAddress("gc_Ts", gc_Ts, &b_gc_Ts);
 	fData->SetBranchAddress("gc_Tl", gc_Tl, &b_gc_Tl);
 	fData->SetBranchAddress("addhit", &addhit, &b_addhit);
 	fData->SetBranchAddress("add_ch", add_ch, &b_add_ch);
-	fData->SetBranchAddress("add_ang", add_ang, &b_add_ang);
-	fData->SetBranchAddress("add_cl", add_cl, &b_add_cl);
 	fData->SetBranchAddress("add_E", add_E, &b_add_E);
 	fData->SetBranchAddress("add_T", add_T, &b_add_T);
 	fData->SetBranchAddress("lbhit", &lbhit, &b_lbhit);
@@ -130,7 +122,7 @@ void EUTreeIso::Init(TTree *tree)
 	fData->SetBranchAddress("betaPL2_TRl", &betaPL2_TRl, &b_betaPL2_TRl);
 }
 
-void EUTreeIso::GetTsEntry(std::multimap<Long64_t, Long64_t> &mts)
+void EUTreeIso::GetTsEntry(std::map<Long64_t, Long64_t> &mts)
 {
 	Long64_t nentries = fData->GetEntriesFast();
 	for (Long64_t jentry=0; jentry<nentries;jentry++)

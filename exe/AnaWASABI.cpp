@@ -3,6 +3,7 @@
 
 #include "TFile.h"
 #include "TTree.h"
+#include "TH1D.h"
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
@@ -25,11 +26,11 @@ int main(int argc, char* argv[])
 	TFile* out = new TFile(Form("../results/AnaWASABI/AnaWASABI%04d.root", run_num), "RECREATE");
 	TTree* tree = new TTree("tree", "tree");
 	EUAnaBeta* beta = new EUAnaBeta(tree);
-
 	TString dssdfile = Form("../data/WASABI%04d.root", run_num);
 	dssd = new EUDataSi(dssdfile.Data());
 	Int_t nBytes;
 	Long64_t nEnt = dssd->fData->GetEntries();
+	beta->GetCalib();
 
 	for (Long64_t ient = 0; ient < nEnt; ient++)
 	{
@@ -48,7 +49,8 @@ int main(int argc, char* argv[])
 		beta->ResetPL();
 		beta->CopyPL(dssd);
 //		if ((beta->F11_TDC_L > -2200 && beta->F11_TDC_L < -1800 && beta->F11_TDC_R > -2200 && beta->F11_TDC_R < -1800) && (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3))
-		if (dssd->IF_ION == 1 && (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3))
+//		if (dssd->IF_ION == 1 && (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3))
+		if (dssd->IF_ION == 1)
 		{
 			beta->ResetDSSD();
 			beta->eventid = 0;
@@ -57,17 +59,15 @@ int main(int argc, char* argv[])
 		}
 
 //		else if (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3)
-		if (dssd->IF_BETA == 1 && beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3)
+//		if (dssd->IF_BETA == 1 && beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3)
+		if (dssd->IF_BETA == 1)
 		{
 			beta->eventid = 1;
 			beta->ResetDSSD();
 
-			for (Int_t ihit = 0; ihit < 5; ihit++)
-			{
-				beta->GetBetaPos(dssd, ihit, tree);
-//				if (beta->fire == 0)	tree->Fill();
-			}
-
+			beta->GetBetaPos(dssd, tree);
+//			for (Int_t ihit = 0; ihit < 5; ihit++) beta->GetBetaPos(dssd, ihit, tree);
+			if (beta->dssdhit<=50) tree->Fill();
 		}
 
 	}

@@ -22,14 +22,18 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
 		Int_t	temp_x;
 		Int_t	temp_y;
 		Int_t	max_tempT;
+		Int_t	fire_z[7];
+//		Int_t	fire_x[6];
 		Int_t	fire_x;
+//		Int_t	fire_y[6];
 		Int_t	fire_y;
 
 		Int_t	ix;
 		Int_t	iy;
 		Int_t	idssd;
 
-		vector<pair<int, int>>	temp_beta_pos;
+		vector<pair<int, int>> temp_beta_pos;
+		vector<int> temp_beta_z;
 
 	public :
 		Int_t	fire;
@@ -39,9 +43,10 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
 		void	GetCalib();
 		void	GetBetaTDCoffset();
 		void	GetIonPos(EUDataSi *dssd);
-		void	GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree);
+		void	GetBetaPos(EUDataSi *dssd, TTree* tree);
+//		void	GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree);
 
-		void	MapCorrel(std::multimap<Long64_t, Long64_t> &master_mts, std::multimap<Long64_t, Long64_t>::iterator &imaster_mts, std::multimap<Long64_t, Long64_t> &slave_mts, std::multimap<Long64_t, Long64_t>::iterator &islave_mts, std::multimap<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit);
+		void	MapCorrel(std::map<Long64_t, Long64_t> &master_mts, std::map<Long64_t, Long64_t>::iterator &imaster_mts, std::map<Long64_t, Long64_t> &slave_mts, std::map<Long64_t, Long64_t>::iterator &islave_mts, std::map<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit);
 		void	CopyTS(EUDataSi *dssd); //copy the timestamp from WASABI data
 		void	CopyTS(EUDataGe *hpge); //copy the timestamp from WASABI data
 		void	CopyTS(EUDataBeam *beam); //copy the timestamp from WASABI data

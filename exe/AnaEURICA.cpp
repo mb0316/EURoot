@@ -51,7 +51,6 @@ int main(int argc, char* argv[])
 		beta->ResetEURICA();
 		beta->CopyPL(hpge);
 		beta->CopyEURICA(hpge);
-		beta->AngleEURICA();
 
 		tree->Fill();
 

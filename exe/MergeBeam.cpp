@@ -33,8 +33,8 @@ int main(int argc, char* argv[])
 	beam = new EUTreeBeta(beamfile.Data());
 	det = new EUTreeBeta(detfile.Data());
 
-	multimap<Long64_t, Long64_t> mts_master, mts_slave, mts_tot;
-	multimap<Long64_t, Long64_t>::iterator imts_master, imts_slave, imts_tot;
+	map<Long64_t, Long64_t> mts_master, mts_slave, mts_tot;
+	map<Long64_t, Long64_t>::iterator imts_master, imts_slave, imts_tot;
 
 	cout << "Start checking timestamp correlation between BigRIPS and Detectors" << endl;
 
@@ -83,7 +83,6 @@ int main(int argc, char* argv[])
 		beta->CopyTS(det);
 		beta->CopyDSSD(det);
 		beta->CopyEURICA(det);
-		beta->AngleEURICA();
 		beta->CopyPL(det);
 
 		imts_tot = mts_tot.find(imts_master->second);

@@ -36,21 +36,22 @@ class EUTree : public TObject
 		Double_t Zpro;
 
 		//WASABI Info.
-		Int_t dssdhit; //number of hit in WASABI
 		Int_t ion_z; //implanted depth for an ion, only for BetaMerge data
 		Int_t ion_x; //implanted pixel for an ion, only for BetaMerge data
 		Int_t ion_y; //implanted pixel for an ion, only for BetaMerge data
-		Int_t beta_z; //hit position for betas, only for BetaMerge data
-		Int_t beta_x; //hit position for betas, only for BetaMerge data
-		Int_t beta_y; //hit position for betas, only for BetaMerge data
-		Int_t ion_E_X; //ion energy in x strip, only for BetaMerge data
-		Int_t ion_E_Y; //ion energy in y strip, only for BetaMerge data
+		Int_t dssdhit;
+		Int_t beta_z[100]; //hit position for betas, only for BetaMerge data
+		Int_t beta_x[100]; //hit position for betas, only for BetaMerge data
+		Int_t beta_y[100]; //hit position for betas, only for BetaMerge data
+		Double_t ion_E_X; //ion energy in x strip, only for BetaMerge data
+		Double_t ion_E_Y; //ion energy in y strip, only for BetaMerge data
 		Int_t ion_T_X; //time for an ion in x strip, only for BetaMerge data
 		Int_t ion_T_Y; //time for an ion in y strip, only for BetaMerge data
-		Int_t beta_E_X; //beta energy in x strip, only for BetaMerge data
-		Int_t beta_E_Y; //beta energy in y strip, only for BetaMerge data
-		Int_t beta_T_X; //time for betas in x strip, only for BetaMerge data
-		Int_t beta_T_Y; //time for betas in y strip, only for BetaMerge data
+		Double_t beta_E_X[100]; //beta energy in x strip, only for BetaMerge data
+		Double_t beta_E_Y[100]; //beta energy in y strip, only for BetaMerge data
+		Double_t beta_E_delta[100]; //difference between Ex and Ey
+		Int_t beta_T_X[100]; //time for betas in x strip, only for BetaMerge data
+		Int_t beta_T_Y[100]; //time for betas in y strip, only for BetaMerge data
 
 		//EURICA Info.
 		Int_t gchit; //number of hit in EURICA
@@ -100,14 +101,14 @@ class EUTree : public TObject
 		Int_t F11_TDC_R;
 
 		// List of branches
-		TBranch        *b_ts;   //!
-		TBranch        *b_eventid;   //!
-		TBranch			*b_t;
-		TBranch 		*b_z;
-		TBranch 		*b_x;
-		TBranch			*b_y;
-		TBranch			*b_beta_E;
-		TBranch			*b_deltaxy;
+		TBranch       	*b_ts;   //!
+		TBranch        	*b_eventid;   //!
+		TBranch		*b_t;
+		TBranch 	*b_z;
+		TBranch 	*b_x;
+		TBranch		*b_y;
+		TBranch		*b_beta_E;
+		TBranch		*b_deltaxy;
 		TBranch        *b_AoQ;   //!
 		TBranch        *b_Zpro;   //!
 		TBranch        *b_ion_z;   //!
@@ -117,12 +118,13 @@ class EUTree : public TObject
 		TBranch        *b_ion_E_Y;   //!
 		TBranch        *b_ion_T_X;   //!
 		TBranch        *b_ion_T_Y;   //!
-		TBranch        *b_dssdhit;   //!
+		TBranch		*b_dssdhit;
 		TBranch        *b_beta_z;   //!
 		TBranch        *b_beta_x;   //!
 		TBranch        *b_beta_y;   //!
 		TBranch        *b_beta_E_X;   //!
 		TBranch        *b_beta_E_Y;   //!
+		TBranch		*b_beta_E_delta;
 		TBranch        *b_beta_T_X;   //!
 		TBranch        *b_beta_T_Y;   //!
 		TBranch        *b_gchit;   //!
@@ -169,7 +171,7 @@ class EUTree : public TObject
 		~EUTree();
 		virtual Int_t	GetEntry(Long64_t entry) = 0;
 		virtual void	Init(TTree *tree) = 0;
-		virtual void	GetTsEntry(std::multimap<Long64_t, Long64_t> &mts) = 0;
+		virtual void	GetTsEntry(std::map<Long64_t, Long64_t> &mts) = 0;
 };
 #endif
 

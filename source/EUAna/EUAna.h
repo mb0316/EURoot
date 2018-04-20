@@ -41,6 +41,26 @@ class EUAna : public TObject
 		Double_t art_beta_tdcs_offset[84];
 		Double_t art_beta_tdcl_offset[84];
 
+		Double_t wasabi_gain_x[5][60];
+		Double_t wasabi_gain_y[5][40];
+		Double_t wasabi_offset_x[5][60];
+		Double_t wasabi_offset_y[5][40];
+
+		Int_t overflow[84];
+		Int_t temp_gchit;
+		Int_t temp_addhit;
+		Int_t temp_gc_ch[84];
+		Double_t temp_gc_E[84];
+		Double_t temp_gc_T[84];
+		Double_t temp_gc_Ts[84];
+		Double_t temp_gc_Tl[84];
+		Int_t temp_add_ch[84];
+		Double_t temp_add_E[84];
+		Double_t temp_add_T[84];
+		Double_t temp_add_Ts[84];
+		Double_t temp_add_Tl[84];
+		
+
 		//Addback Algo. Info.
 		static const Int_t Addback_hitpattern[7][7]; //Addback hit pattern for each crystal
 		Int_t tempgchit[12]; //temporary gchit data for the analysis

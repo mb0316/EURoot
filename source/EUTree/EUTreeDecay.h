@@ -18,6 +18,6 @@ class EUTreeDecay : public EUTree
 		~EUTreeDecay();
 		Int_t	GetEntry(Long64_t entry);
 		void	Init(TTree *tree);
-		void	GetTsEntry(std::multimap<Long64_t, Long64_t> &mts);
+		void	GetTsEntry(std::map<Long64_t, Long64_t> &mts);
 };
 #endif

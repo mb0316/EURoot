@@ -29,8 +29,8 @@ int main (int argc, char* argv[])
 	EUTreeBeta* beta = new EUTreeBeta(betafile.Data());
 	EUAnaDecay* decay = new EUAnaDecay(tree);
 
-	multimap<Long64_t, Long64_t> mts_master, mts_slave;
-	multimap<Long64_t, Long64_t>::iterator imts_master, imts_slave;
+	map<Long64_t, Long64_t> mts_master, mts_slave;
+	map<Long64_t, Long64_t>::iterator imts_master, imts_slave;
 
 	cout << "Start checking timestamp for ions and betas." << endl;
 	beta->GetTsEntry(mts_master, mts_slave);
@@ -75,18 +75,18 @@ int main (int argc, char* argv[])
 			if (imts_slave->first > tsL)
 			{
 				beta->GetEntry(imts_slave->second);
-				decay->GetXYDistance(beta->beta_x, beta->beta_y);
 
-				if (beta->beta_z == decay->z && decay->deltaxy < 3)
+				decay->BetaTrack(beta);
+				if (decay->good_beta == 1)
 				{
 					tsBeta = imts_slave->first;
 					decay->t = (tsBeta - tsIon)/(1e5);
-					decay->GetBetaEnergy(beta);
 					decay->ResetEURICA();
 					decay->CopyEURICA(beta);
 					decay->TWCor();
 					tree->Fill();
 				}
+
 			}
 			imts_slave++;
 		}

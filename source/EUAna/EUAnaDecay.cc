@@ -28,7 +28,7 @@ void EUAnaDecay::GetCalib()
 		gcT_beta_twc[temp_ch][0] = temp_1;
 		gcT_beta_twc[temp_ch][1] = temp_2;
 		gcT_beta_twc[temp_ch][2] = temp_3;
-		cout << i << " " << temp_ch << " " << gcT_beta_twc[temp_ch][0] << " " << gcT_beta_twc[temp_ch][1] << " " <<  gcT_beta_twc[temp_ch][2] << endl;
+//		cout << i << " " << temp_ch << " " << gcT_beta_twc[temp_ch][0] << " " << gcT_beta_twc[temp_ch][1] << " " <<  gcT_beta_twc[temp_ch][2] << endl;
 	}
 
 	gcT_beta_twfile.close();
@@ -47,12 +47,12 @@ void EUAnaDecay::TWCor()
 {
 	for (Int_t ihit = 0; ihit < gchit; ihit++)
 	{
-		if (gc_T[ihit] > -500E3 && gc_T[ihit] < 500E3)    gc_T[ihit] = gc_T[ihit] - gcT_beta_twc[gc_ch[ihit]][0] - gcT_beta_twc[gc_ch[ihit]][1]*TMath::Power(gc_E[ihit], -gcT_beta_twc[gc_ch[ihit]][2]);
+		if (gc_T[ihit] > -500E3 && gc_T[ihit] < 500E3)    gc_T[ihit] = -(gc_T[ihit] - gcT_beta_twc[gc_ch[ihit]][0] - gcT_beta_twc[gc_ch[ihit]][1]*TMath::Power(gc_E[ihit], -gcT_beta_twc[gc_ch[ihit]][2]));
 		else continue;
 	}
 	for (Int_t ihit = 0; ihit < addhit; ihit++)
 	{
-		if (add_T[ihit] > -500E3 && add_T[ihit] < 500E3)    add_T[ihit] = add_T[ihit] - gcT_beta_twc[add_ch[ihit]][0] - gcT_beta_twc[add_ch[ihit]][1]*TMath::Power(add_E[ihit], -gcT_beta_twc[add_ch[ihit]][2]);
+		if (add_T[ihit] > -500E3 && add_T[ihit] < 500E3)    add_T[ihit] = -(add_T[ihit] - gcT_beta_twc[add_ch[ihit]][0] - gcT_beta_twc[add_ch[ihit]][1]*TMath::Power(add_E[ihit], -gcT_beta_twc[add_ch[ihit]][2]));
 		else continue;
 	}
 
@@ -96,18 +96,49 @@ void EUAnaDecay::CopyEURICA(EUTreeBeta *beta)
     betaPL2_TRl = beta->betaPL2_TRl;
 }
 
-void EUAnaDecay::GetBetaEnergy(EUTreeBeta *beta)
+int EUAnaDecay::BetaTrack(EUTreeBeta *beta)
 {
-/*
-    Int_t tempE  = 0;
-    Int_t beta_E = 0;
-    for (Int_t i = 0; i < beta.dssdhit; i++)
-    {
-        tempE = beta.beta_E_X[i] + beta.beta_E_Y[i];
-        beta_E = beta_E + tempE;
-    }
-*/
-    beta_E = beta->beta_E_X + beta->beta_E_Y;
+	Int_t flag_z = 0;
+	Int_t flag_front = -1;
+	Int_t flag_back = -1;
+	deltaxy = 10;
+	good_beta = 0;
+	for (Int_t ihit = 0; ihit < beta->dssdhit; ihit++)
+	{
+		if (beta->beta_z[ihit] == z && (z > -1 && z < 5)) flag_z = 1;
+		else continue;
+	}
+
+	if (flag_z == 1)
+	{
+		for (Int_t ihit = 0; ihit < beta->dssdhit; ihit++)
+		{
+			if (beta->beta_z[ihit] == z)
+			{
+				GetXYDistance(beta->beta_x[ihit], beta->beta_y[ihit]);
+				if (temp_deltaxy < deltaxy) deltaxy = temp_deltaxy;
+				else continue;
+			}
+			else continue;
+		}
+//		if (deltaxy > -1 && deltaxy <= 2 && beta->dssdhit > 1)
+		if (deltaxy > -1 && deltaxy <= 2)
+		{
+			flag_front = 0;
+			flag_back = 0;
+			for (Int_t ihit = 0; ihit < beta->dssdhit; ihit++)
+			{
+				if (beta->beta_z[ihit]+1 == z && z > 0) flag_front = 1;
+				else if (beta->beta_z[ihit]-1 == z && z < 4) flag_back = 1;
+				else continue;
+			}
+		}
+	}
+
+	if (flag_z == 1 && (deltaxy > -1 && deltaxy <= 2) && ((flag_front == 1 && flag_back == 0) || (flag_front == 0 && flag_back == 1) || (flag_front == 0 && flag_back == 0))) good_beta = 1;
+	
+//	cout << flag_z << " " << flag_front << " " << flag_back << " " << good_beta << endl;
+	return good_beta;
 }
 
 void EUAnaDecay::GetBetaTDCoffset()
@@ -121,8 +152,8 @@ void EUAnaDecay::GetBetaTDCoffset()
 
 double EUAnaDecay::GetXYDistance(int beta_x, int beta_y)
 {
-	deltaxy = sqrt((x - beta_x)*(x - beta_x) + (y - beta_y)*(y - beta_y));
-	return deltaxy;
+	temp_deltaxy = sqrt((x - beta_x)*(x - beta_x) + (y - beta_y)*(y - beta_y));
+	return temp_deltaxy;
 }
 
 void EUAnaDecay::ResetEURICA()

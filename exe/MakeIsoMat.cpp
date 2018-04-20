@@ -25,7 +25,6 @@ int main (int argc, char* argv[])
 		cout << "Mass : Mass number" << endl;
 		cout << "mode1 : 0 for 1 MeV, 1 for 2 MeV, 2 for 4 MeV, 3 for 8 MeV" << endl;
 		cout << "mode2 : 0 for 1ns/ch, 1 for 2ns/ch, 2 for 5ns/ch, 3 for 10ns/ch" << endl;
-		cout << "tstart : set first time cut for g-g matrix" << endl;
 		cout << "tend : set end time cut for g-g matrix" << endl;
 		return 0;
 	}
@@ -76,5 +75,27 @@ int main (int argc, char* argv[])
 		fwrite(temp1, sizeof(short), 4096, out_ggg);
 		fwrite(temp2, sizeof(short), 4096, out_tgg);
 	}
+
+        TFile* out1 = new TFile(Form("../results/MAT/%d_%d_add_gg.root", zpro, mass), "RECREATE");
+        TFile* out2 = new TFile(Form("../results/MAT/%d_%d_gc_gg.root", zpro, mass), "RECREATE");
+        TFile* out3 = new TFile(Form("../results/MAT/%d_%d_add_tg.root", zpro, mass), "RECREATE");
+        TFile* out4 = new TFile(Form("../results/MAT/%d_%d_gc_tg.root", zpro, mass), "RECREATE");
+
+        out1->cd();
+        mat->gg_a -> Write();
+        out1->Close();
+
+        out2->cd();
+        mat->gg_g -> Write();
+        out2->Close();
+
+        out3->cd();
+        mat->tg_a -> Write();
+        out3->Close();
+
+        out4->cd();
+        mat->tg_g -> Write();
+        out4->Close();
+
 //	theApp.Run();
 }

@@ -21,58 +21,103 @@ void EUAnaBeta::GetCalib()
 	ifstream adcfile("../calib/eurica_adc_calib.dat");
 	ifstream tdcsfile("../calib/eurica_tdcs_calib.dat");
 	ifstream tdclfile("../calib/eurica_tdcl_calib.dat");
+	ifstream wasabifile("../calib/WASABI_gain.dat");
+	ifstream overflowfile("../calib/eurica_overflow.dat");
 
 	for (Int_t i = 0; i < 84; i++)
 	{
 		adcfile >> adc_ch[i] >> adc_gain[i] >> adc_offset[i];
 		tdcsfile >> tdcs_ch[i] >> tdcs_gain[i] >> tdcs_offset[i];
+		overflowfile >> adc_ch[i] >> overflow[i];
 	}
 	tdclfile >> tdcl_gain >> tdcl_offset;
+
+	Int_t iden, numdssd, ich;
+	Double_t temp_gain, temp_offset;
+
+	for (Int_t i = 0; i < 500; i++)
+	{
+		wasabifile >> iden >> numdssd >> ich >> temp_gain >> temp_offset;
+		if (iden == 0)
+		{
+			wasabi_gain_x[numdssd][ich] = abs(temp_gain);
+			wasabi_offset_x[numdssd][ich] = temp_offset;
+		}
+		if (iden == 1)
+		{
+			wasabi_gain_y[numdssd][ich] = abs(temp_gain);
+			wasabi_offset_y[numdssd][ich] = temp_offset;
+		}
+	}
 
 	adcfile.close();
 	tdcsfile.close();
 	tdclfile.close();
+	wasabifile.close();
+	overflowfile.close();
 }
-
+/*
 void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 {
+	for (Int_t i = 0; i < 5; i++)
+	{
+		fire_z[i] = 0;
+		fire_x[i] = 0;
+		fire_y[i] = 0;
+	}
 	temp_z = -1;
 	temp_x = -1;
 	temp_y = -1;
 	max_tempT = 0;
-	fire_x = -1;
-	fire_y = -1;
 
 	for (idssd = 0; idssd < 5; idssd++)
 	{
 		for (ix = 0; ix < 60; ix++)
 		{
-//			if (dssd->dssd_E_X[idssd][ix] > 4000 && dssd->dssd_T_X[idssd][ix][0] > -50000)
-			if (dssd->dssd_E_X[idssd][ix] > 4000 && dssd->dssd_T_X[idssd][ix][0] > -2000)
+			if (dssd->dssd_E_X[idssd][ix] > 4000 && dssd->dssd_T_X[idssd][ix][0] > -50000)
 			{
-				fire_x = 1;
+				fire_x[idssd] = 1;
 				break;
 			}
 			else    continue;
 		}
+	}
+	for (idssd = 0; idssd < 5; idssd++)
+	{
 		for (iy = 0; iy < 40; iy++)
 		{
-//			if (dssd->dssd_E_Y[idssd][iy] > 4000 && dssd->dssd_T_Y[idssd][iy][0] > -50000)
-			if (dssd->dssd_E_Y[idssd][iy] > 4000 && dssd->dssd_T_Y[idssd][iy][0] > -2000)
+			if (dssd->dssd_E_Y[idssd][iy] > 4000 && dssd->dssd_T_Y[idssd][iy][0] > -50000)
 			{
-				fire_y = 1;
+				fire_y[idssd] = 1;
 				break;
 			}
 			else    continue;
 		}
-		if (fire_x == 1 && fire_y == 1)	temp_z = idssd;
-
-//		if (temp_z == 4 && betaPL2_Beam_ADCR > 175) temp_z = -1;
-		if (temp_z == 4 && dssd->betaPL2L > -50000 && dssd->betaPL2R > -50000) temp_z = 5;
-		fire_x = 0;
-		fire_y = 0;
 	}
 
+	for (Int_t i = 0; i < 5; i++)
+	{
+		if (fire_x[i] == 1 && fire_y[i] == 1)
+		{
+			fire_z[i] = 1;
+		}
+	}
+	if (dssd->betaPL2L > -50000 && dssd->betaPL2R > -50000) fire_z[5] = 1;
+	else fire_z[5] = 0;
+
+	fire_z[6] = 0;
+
+	if (fire_z[0] == 1)
+	{
+		for (Int_t i = 0; i < 6; i++)
+		{
+			if (fire_z[i] == 1 && fire_z[i+1] == 0)
+			{
+				temp_z = i;
+				break;
+			}
+		}
+	}
 
 	if (temp_z > -1 && temp_z < 5)
 	{
@@ -99,6 +144,115 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 		}
 	}
 
+
+	ion_z = temp_z;
+	ion_x = temp_x;
+	ion_y = temp_y;
+	ion_E_X = dssd->dssd_E_X[temp_z][temp_x];
+	ion_T_X = dssd->dssd_T_X[temp_z][temp_x][0];
+	ion_E_Y = dssd->dssd_E_Y[temp_z][temp_y];
+	ion_T_Y = dssd->dssd_T_Y[temp_z][temp_y][0];
+
+}
+*/
+
+void EUAnaBeta::GetIonPos(EUDataSi *dssd)
+{
+	temp_z = -1;
+	temp_x = -1;
+	temp_y = -1;
+	max_tempT = 0;
+	fire_x = -1;
+	fire_y = -1;
+
+	for (idssd = 0; idssd < 5; idssd++)
+	{
+		for (ix = 0; ix < 60; ix++)
+		{
+			if (dssd->dssd_E_X[idssd][ix] > 5000 && dssd->dssd_T_X[idssd][ix][0] > -2000)
+			{
+				fire_x = 1;
+				break;
+			}
+			else    continue;
+		}
+
+		for (iy = 0; iy < 40; iy++)
+		{
+			if (dssd->dssd_E_Y[idssd][iy] > 5000 && dssd->dssd_T_Y[idssd][iy][0] > -2000)
+			{
+				fire_y = 1;
+				break;
+			}
+			else    continue;
+		}
+
+		if (fire_x == 1 && fire_y == 1)	temp_z = idssd;
+
+		if (temp_z == 4 && dssd->betaPL2L > -50000 && dssd->betaPL2R > -50000) temp_z = 5; 
+		fire_x = 0;
+		fire_y = 0;
+
+	}
+
+	if (temp_z > -1 && temp_z < 5)
+	{
+
+		if (temp_z == 0 || temp_z == 1)
+		{
+			max_tempT = 50000;
+			for (ix = 0; ix < 60; ix++)
+			{
+//				if (dssd->dssd_T_X[temp_z][ix][0] > -2000 && dssd->dssd_T_X[temp_z][ix][0] < max_tempT && dssd->dssd_E_X[temp_z][ix] > 4000)
+				if (dssd->dssd_T_X[temp_z][ix][0] > -10000 && dssd->dssd_T_X[temp_z][ix][0] < max_tempT && dssd->dssd_T_X[temp_z][ix][0] < 750 && dssd->dssd_E_X[temp_z][ix] > 5000)
+				{
+					temp_x = ix;
+					max_tempT = dssd->dssd_T_X[temp_z][ix][0];
+				}
+				else continue;
+			}
+			max_tempT = 50000;
+
+			for (iy = 0; iy < 40; iy++)
+			{
+//				if (dssd->dssd_T_Y[temp_z][iy][0] > -2000 && dssd->dssd_T_Y[temp_z][iy][0] < max_tempT && dssd->dssd_E_Y[temp_z][iy] > 4000)
+				if (dssd->dssd_T_Y[temp_z][iy][0] > -10000 && dssd->dssd_T_Y[temp_z][iy][0] < max_tempT && dssd->dssd_T_Y[temp_z][iy][0] < 500 && dssd->dssd_E_Y[temp_z][iy] > 5000)
+				{
+					temp_y = iy;
+					max_tempT = dssd->dssd_T_Y[temp_z][iy][0];
+				}
+				else continue;
+			}
+		}
+
+		else
+		{
+			max_tempT = 50000;
+			for (ix = 0; ix < 60; ix++)
+			{
+				if (dssd->dssd_T_X[temp_z][ix][0] > -2000 && dssd->dssd_T_X[temp_z][ix][0] < max_tempT && dssd->dssd_E_X[temp_z][ix] > 5000)
+				{
+					temp_x = ix;
+					max_tempT = dssd->dssd_T_X[temp_z][ix][0];
+				}
+				else continue;
+			}
+			max_tempT = 50000;
+
+			for (iy = 0; iy < 40; iy++)
+			{
+				if (dssd->dssd_T_Y[temp_z][iy][0] > -2000 && dssd->dssd_T_Y[temp_z][iy][0] < max_tempT && dssd->dssd_E_Y[temp_z][iy] > 5000)
+				{
+					temp_y = iy;
+					max_tempT = dssd->dssd_T_Y[temp_z][iy][0];
+				}
+				else continue;
+			}
+		}
+
+	}
+
+
 	ion_z = temp_z;
 	ion_x = temp_x;
 	ion_y = temp_y;
@@ -109,21 +263,69 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 
 }
 
+
+//void EUAnaBeta::GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree)
+void EUAnaBeta::GetBetaPos(EUDataSi *dssd, TTree* tree)
+{   
+	fire = -1;
+	temp_beta_pos.clear();
+	temp_beta_z.clear();
+	dssdhit = 0;
+	for (Int_t idssd = 0; idssd < 5; idssd++)
+	{
+		for (ix = 0; ix < 60; ix++)
+		{
+			if (dssd->dssd_E_X[idssd][ix] > 10 && dssd->dssd_T_X[idssd][ix][0] > -50000)
+			{
+				for (iy = 0; iy < 40; iy++)
+				{
+					if (dssd->dssd_E_Y[idssd][iy] > 10 && dssd->dssd_T_Y[idssd][iy][0] > -50000)
+					{
+						fire = 1;
+						dssdhit++;
+						temp_beta_pos.push_back(pair<int, int> (ix, iy));
+						temp_beta_z.push_back(idssd);
+					}
+					else continue;
+				}
+			}
+			else continue;
+		}
+	}
+
+	if (fire == 1 && dssdhit <= 50)
+	{
+//		for (Int_t i = 0; i < temp_beta_pos.size(); i++)
+		for (Int_t i = 0; i < dssdhit; i++)
+		{
+			beta_z[i]  = temp_beta_z[i];
+			beta_x[i] = temp_beta_pos[i].first;
+			beta_y[i] = temp_beta_pos[i].second;
+			beta_E_X[i] = dssd->dssd_E_X[beta_z[i]][beta_x[i]]*abs(wasabi_gain_x[beta_z[i]][beta_x[i]]) + wasabi_offset_x[beta_z[i]][beta_x[i]];
+			beta_E_Y[i] = dssd->dssd_E_Y[beta_z[i]][beta_y[i]]*abs(wasabi_gain_y[beta_z[i]][beta_y[i]]) + wasabi_offset_y[beta_z[i]][beta_y[i]];
+			beta_T_X[i] = dssd->dssd_T_Y[beta_z[i]][beta_x[i]][0];
+			beta_T_Y[i] = dssd->dssd_T_Y[beta_z[i]][beta_y[i]][0];
+			beta_E_delta[i] = beta_E_X[i] - beta_E_Y[i];
+		}
+	}
+}
+/*
+
 void EUAnaBeta::GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree)
 {   
 	fire = -1;
 	temp_beta_pos.clear();
+	dssdhit = 0;
 	for (ix = 0; ix < 60; ix++)
 	{
-		if (dssd->dssd_E_X[ndssd][ix] > 10 && dssd->dssd_E_X[ndssd][ix] <= 4000 && dssd->dssd_T_X[ndssd][ix][0] > -10000)
+		if (dssd->dssd_E_X[ndssd][ix] > 10 && dssd->dssd_T_X[ndssd][ix][0] > -50000)
 		{
 			for (iy = 0; iy < 40; iy++)
 			{
-				if (dssd->dssd_E_Y[ndssd][iy] > 10 && dssd->dssd_E_Y[ndssd][iy] <= 4000 && dssd->dssd_T_Y[ndssd][iy][0] > -10000)
+				if (dssd->dssd_E_Y[ndssd][iy] > 10 && dssd->dssd_T_Y[ndssd][iy][0] > -50000)
 				{
 					fire = 1;
-//					beta_x = ix;
-//					beta_y = iy;
+					dssdhit++;
 					temp_beta_pos.push_back(pair<int, int> (ix, iy));
 				}
 				else continue;
@@ -131,24 +333,26 @@ void EUAnaBeta::GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree)
 		}
 		else continue;
 	}
+
 	if (fire == 1)
 	{
 		for (Int_t i = 0; i < temp_beta_pos.size(); i++)
 		{
-			beta_z = ndssd;
+			beta_z  = ndssd;
 			beta_x = temp_beta_pos[i].first;
 			beta_y = temp_beta_pos[i].second;
-			beta_E_X = dssd->dssd_E_X[beta_z][beta_x];
-			beta_E_Y = dssd->dssd_E_Y[beta_z][beta_y];
+			beta_E_X = dssd->dssd_E_X[beta_z][beta_x]*abs(wasabi_gain_x[beta_z][beta_x]) + wasabi_offset_x[beta_z][beta_x];
+			beta_E_Y = dssd->dssd_E_Y[beta_z][beta_y]*abs(wasabi_gain_y[beta_z][beta_y]) + wasabi_offset_y[beta_z][beta_y];
 			beta_T_X = dssd->dssd_T_Y[beta_z][beta_x][0];
 			beta_T_Y = dssd->dssd_T_Y[beta_z][beta_y][0];
+			beta_E_delta = beta_E_X - beta_E_Y;
 			tree->Fill();
 		}
-//		fire = 0;
 	}
 }
+*/
 
-void EUAnaBeta::MapCorrel(std::multimap<Long64_t, Long64_t> &master_mts, std::multimap<Long64_t, Long64_t>::iterator &imaster_mts, std::multimap<Long64_t, Long64_t> &slave_mts, std::multimap<Long64_t, Long64_t>::iterator &islave_mts, std::multimap<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit)
+void EUAnaBeta::MapCorrel(std::map<Long64_t, Long64_t> &master_mts, std::map<Long64_t, Long64_t>::iterator &imaster_mts, std::map<Long64_t, Long64_t> &slave_mts, std::map<Long64_t, Long64_t>::iterator &islave_mts, std::map<Long64_t, Long64_t> &target_mts, Int_t lower_limit, Int_t upper_limit)
 {
 	for (imaster_mts = master_mts.begin(); imaster_mts != master_mts.end(); imaster_mts++)
 	{
@@ -224,22 +428,55 @@ void EUAnaBeta::CopyPL(EUTreeBeta *dssd, EUTreeBeta *hpge)
 
 void EUAnaBeta::CopyEURICA(EUDataGe *hpge)
 {
-	gchit = hpge->GeCluster_;
-	for (Int_t ihit = 0; ihit < gchit; ihit++)
+	temp_gchit = hpge->GeCluster_;
+	for (Int_t ihit = 0; ihit < temp_gchit; ihit++)
 	{
-		gc_ch[ihit] = hpge->GeCluster_channel[ihit];
-		gc_T[ihit] = hpge->GeCluster_fTime[ihit];
+		temp_gc_ch[ihit] = hpge->GeCluster_channel[ihit];
+		temp_gc_T[ihit] = hpge->GeCluster_fTime[ihit];
 
-		gc_E[ihit] = adc_gain[gc_ch[ihit]]*(hpge->GeCluster_fADCe[ihit]) + adc_offset[gc_ch[ihit]];
-		gc_Ts[ihit] = tdcs_gain[gc_ch[ihit]]*(hpge->GeCluster_fTDCs[ihit]);
+		temp_gc_E[ihit] = adc_gain[temp_gc_ch[ihit]]*(hpge->GeCluster_fADCe[ihit]) + adc_offset[temp_gc_ch[ihit]];
+		temp_gc_Ts[ihit] = tdcs_gain[temp_gc_ch[ihit]]*(hpge->GeCluster_fTDCs[ihit]);
 		//      gc_Ts[ihit] = tdcs_gain[gc_ch[ihit]]*(hpge.GeCluster_fTDCs[ihit]) + tdcs_offset[gc_ch[ihit]];
-		gc_Tl[ihit] = tdcl_gain*hpge->GeCluster_fTDCl[ihit];
+		temp_gc_Tl[ihit] = tdcl_gain*hpge->GeCluster_fTDCl[ihit];
 		//      gc_Tl[ihit] = tdcl_gain*hpge.GeCluster_fTDCl[ihit] + tdcl_offset;
 
 	}
 
-	Addback();
 
+	gchit = 0;
+
+	for (Int_t ihit = 0; ihit < temp_gchit; ihit++)
+	{
+		if (temp_gc_E[ihit] < overflow[temp_gc_ch[ihit]])
+		{
+			gc_ch[gchit] = temp_gc_ch[ihit];
+			gc_E[gchit] = temp_gc_E[ihit];
+			gc_T[gchit] = temp_gc_T[ihit];
+			gc_Ts[gchit] = temp_gc_Ts[ihit];
+			gc_Tl[gchit] = temp_gc_Tl[ihit];
+			
+			gchit++;
+		}
+		else continue;
+	}
+
+	Addback();
+/*
+	for (Int_t ihit = 0; ihit < temp_addhit; ihit++)
+	{
+		if (temp_add_E[ihit] < overflow[temp_add_ch[ihit]])
+		{
+			add_ch[addhit] = temp_add_ch[ihit];
+			add_E[addhit] = temp_add_E[ihit];
+			add_T[addhit] = temp_add_T[ihit];
+			add_Ts[addhit] = temp_add_Ts[ihit];
+			add_Tl[addhit] = temp_add_Tl[ihit];
+			
+			addhit++;
+		}
+		else continue;
+	}
+*/		
 	lbhit = hpge->LaBr_;
 	for (Int_t ihit = 0; ihit < lbhit; ihit++)
 	{
@@ -307,7 +544,6 @@ void EUAnaBeta::CopyEURICA(EUTreeBeta *beta)
 
 void EUAnaBeta::CopyDSSD(EUTreeBeta *beta)
 {
-	dssdhit = beta->dssdhit;
 	if (eventid == 0)
 	{
 		ion_z = beta->ion_z;
@@ -318,16 +554,34 @@ void EUAnaBeta::CopyDSSD(EUTreeBeta *beta)
 		ion_T_X = beta->ion_T_X;
 		ion_T_Y = beta->ion_T_Y;
 	}
+
 	if (eventid == 1)
 	{
+		dssdhit = beta->dssdhit;
+		memcpy(beta_z, beta->beta_z, dssdhit*sizeof(int));
+		memcpy(beta_x, beta->beta_x, dssdhit*sizeof(int));
+		memcpy(beta_y, beta->beta_y, dssdhit*sizeof(int));
+		memcpy(beta_E_X, beta->beta_E_X, dssdhit*sizeof(double));
+		memcpy(beta_E_Y, beta->beta_E_Y, dssdhit*sizeof(double));
+		memcpy(beta_E_delta, beta->beta_E_delta, dssdhit*sizeof(double));
+		memcpy(beta_T_X, beta->beta_T_X, dssdhit*sizeof(int));
+		memcpy(beta_T_Y, beta->beta_T_Y, dssdhit*sizeof(int));
+		
+	}
+/*
+	if (eventid == 1)
+	{
+		dssdhit = beta->dssdhit;
 		beta_z = beta->beta_z;
 		beta_x = beta->beta_x;
 		beta_y = beta->beta_y;
 		beta_E_X = beta->beta_E_X;
 		beta_E_Y = beta->beta_E_Y;
+		beta_E_delta = beta->beta_E_delta;
 		beta_T_X = beta->beta_T_X;
 		beta_T_Y = beta->beta_T_Y;
 	}
+*/
 }
 
 void EUAnaBeta::ResetPL()
@@ -353,7 +607,6 @@ void EUAnaBeta::ResetPID()
 
 void EUAnaBeta::ResetDSSD()
 {
-	dssdhit = 0;
 	ion_z = -10;
 	ion_x = -10;
 	ion_y = -10;
@@ -361,13 +614,18 @@ void EUAnaBeta::ResetDSSD()
 	ion_E_Y = -50000;
 	ion_T_X = -50000;
 	ion_T_Y = -50000;
-	beta_z = -5;
-	beta_x = -5;
-	beta_y = -5;
-	beta_E_X = -50000;
-	beta_E_Y = -50000;
-	beta_T_X = -50000;
-	beta_T_Y = -50000;
+	dssdhit = 0;
+	for (Int_t i = 0; i < 50; i++)
+	{
+		beta_z[i] = -5;
+		beta_x[i] = -5;
+		beta_y[i] = -5;
+		beta_E_X[i] = -50000;
+		beta_E_Y[i] = -50000;
+		beta_E_delta[i] = -50000;
+		beta_T_X[i] = -50000;
+		beta_T_Y[i] = -50000;
+	}
 }
 
 void EUAnaBeta::Addback()
@@ -511,134 +769,3 @@ void EUAnaBeta::Addback()
 	}
 
 }
-
-void EUAnaBeta::AngleEURICA()
-{
-	for (Int_t i = 0; i < gchit; i++)
-	{
-		if (gc_ch[i] >= 0 && gc_ch[i] <= 6)
-		{
-			gc_cl[i] = 0;
-			gc_ang[i] = 51;
-		}
-		if (gc_ch[i] >= 7 && gc_ch[i] <= 13)
-		{
-			gc_cl[i] = 1;
-			gc_ang[i] = 51;
-		}
-		if (gc_ch[i] >= 14 && gc_ch[i] <= 20)
-		{
-			gc_cl[i] = 2;
-			gc_ang[i] = 51;
-		}
-		if (gc_ch[i] >= 21 && gc_ch[i] <= 27)
-		{
-			gc_cl[i] = 3;
-			gc_ang[i] = 129;
-		}
-		if (gc_ch[i] >= 28 && gc_ch[i] <= 34)
-		{
-			gc_cl[i] = 4;
-			gc_ang[i] = 129;
-		}
-		if (gc_ch[i] >= 35 && gc_ch[i] <= 41)
-		{
-			gc_cl[i] = 5;
-			gc_ang[i] = 129;
-		}
-		if (gc_ch[i] >= 42 && gc_ch[i] <= 48)
-		{
-			gc_cl[i] = 6;
-			gc_ang[i] = 90;
-		}
-		if (gc_ch[i] >= 49 && gc_ch[i] <= 55)
-		{
-			gc_cl[i] = 7;
-			gc_ang[i] = 90;
-		}
-		if (gc_ch[i] >= 56 && gc_ch[i] <= 62)
-		{
-			gc_cl[i] = 8;
-			gc_ang[i] = 51;
-		}
-		if (gc_ch[i] >= 63 && gc_ch[i] <= 69)
-		{
-			gc_cl[i] = 9;
-			gc_ang[i] = 51;
-		}
-		if (gc_ch[i] >= 70 && gc_ch[i] <= 76)
-		{
-			gc_cl[i] = 10;
-			gc_ang[i] = 129;
-		}
-		if (gc_ch[i] >= 77 && gc_ch[i] <= 83)
-		{
-			gc_cl[i] = 11;
-			gc_ang[i] = 129;
-		}
-	}
-	for (Int_t i = 0; i < addhit; i++)
-	{
-		if (add_ch[i] >= 0 && add_ch[i] <= 6)
-		{
-			add_cl[i] = 0;
-			add_ang[i] = 51;
-		}
-		if (add_ch[i] >= 7 && add_ch[i] <= 13)
-		{
-			add_cl[i] = 1;
-			add_ang[i] = 51;
-		}
-		if (add_ch[i] >= 14 && add_ch[i] <= 20)
-		{
-			add_cl[i] = 2;
-			add_ang[i] = 51;
-		}
-		if (add_ch[i] >= 21 && add_ch[i] <= 27)
-		{
-			add_cl[i] = 3;
-			add_ang[i] = 129;
-		}
-		if (add_ch[i] >= 28 && add_ch[i] <= 34)
-		{
-			add_cl[i] = 4;
-			add_ang[i] = 129;
-		}
-		if (add_ch[i] >= 35 && add_ch[i] <= 41)
-		{
-			add_cl[i] = 5;
-			add_ang[i] = 129;
-		}
-		if (add_ch[i] >= 42 && add_ch[i] <= 48)
-		{
-			add_cl[i] = 6;
-			add_ang[i] = 90;
-		}
-		if (add_ch[i] >= 49 && add_ch[i] <= 55)
-		{
-			add_cl[i] = 7;
-			add_ang[i] = 90;
-		}
-		if (add_ch[i] >= 56 && add_ch[i] <= 62)
-		{
-			add_cl[i] = 8;
-			add_ang[i] = 51;
-		}
-		if (add_ch[i] >= 63 && add_ch[i] <= 69)
-		{
-			add_cl[i] = 9;
-			add_ang[i] = 51;
-		}
-		if (add_ch[i] >= 70 && add_ch[i] <= 76)
-		{
-			add_cl[i] = 10;
-			add_ang[i] = 129;
-		}
-		if (add_ch[i] >= 77 && add_ch[i] <= 83)
-		{
-			add_cl[i] = 11;
-			add_ang[i] = 129;
-		}
-	}
-}
-
