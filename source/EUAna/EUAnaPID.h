@@ -15,7 +15,7 @@
 #include "TH1D.h"
 #include "TH2D.h"
 
-class EUAnaPID : public EUAna//, public EUTreeDecay, public EUTreeIso
+class EUAnaPID : public EUAna, public EUTreeDecay//, public EUTreeIso
 {
 	private :
 		Double_t ampl;
@@ -25,21 +25,21 @@ class EUAnaPID : public EUAna//, public EUTreeDecay, public EUTreeIso
 
 	public :
 		TTree* ftree;
-		Double_t t;
-		Double_t deltaxy;
-		Double_t Zpro;
-		Double_t AoQ;
-		Int_t gchit;
-		Double_t gc_E[84];
-		Double_t gc_T[84];
+//		Double_t t;
+//		Double_t deltaxy;
+//		Double_t Zpro;
+//		Double_t AoQ;
+//		Int_t gchit;
+//		Double_t gc_E[84];
+//		Double_t gc_T[84];
 
 
 		Double_t timecut[50] = {0};
 
-		EUAnaPID(const char* filename);
+		EUAnaPID(TTree* tree);
 		~EUAnaPID();
 		void	PIDFitting(TH1D* hist, Double_t &mean, Double_t &sig);
-		void	MakeOutFile(const char* filename, Int_t &z, Int_t &mass, Double_t &zpro, Double_t &zpro_cut, Double_t &aoq, Double_t &aoq_cut);
 		void	GammaTimeCut(TH2D* hist);
+		void	CopyData(EUTreeDecay* decay);
 };
 #endif
