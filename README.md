@@ -4,13 +4,18 @@ This software is for EURICA analysis.
 
 ## Directories
 calib : Store all calibration macro files.
+
 exe : Store executable source codes. After compiling, building, and installation, bin directory will be created for executable files.
+
 scripts : Store script files in bash shell. These scripts allocate jobs to HTCondors.
+
 source : Store source codes including header and source files. Classes : EUTree, EUData, EUAna
 
 ## Classes
 EUData : Tree information of root data files for BigRIPS, WASABI, and EURICA.
+
 EUTree : Tree inforamtion of analyzed root data files.
+
 EUAna : Analysis functions.
 
 ## Installation
