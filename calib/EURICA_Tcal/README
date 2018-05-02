@@ -1,0 +1,7 @@
+EURICA Analog TDC Calibration
+Apr. 6. 2018.
+Byul Moon
+
+1. Run EURICA_Tcal_1.cc : build EURICA_TDC.root storing TDCs and TDCl 2-D histogram.
+2. Run EURICA_Tcal_sr.cc : calibrate TDCs. Make eurica_tdcs_calib.dat for gains and offsets, and caltdcs.root for calibrated histogram.
+3. Run EURICA_Tcal_lr.cc : calibrate TDCl. Make eurica_tdcl_calib.dat for the gain and offset, and caltdcl.root for calibrated histogram.

@@ -1,0 +1,8 @@
+WASABI Energy Calibration
+Apr. 6. 2018.
+Byul Moon
+
+1. Run merge.cc : merge WASABI data file and EURICA data file in order to TS correlation.
+2. Run WASABI_1.cc : build SiEcal_hist.root file storing ADC spectra for every single channels.
+3. Run WASABI_2.cc : calibrate energy usign SiEcal_hist.root file and make WASABI_gain.dat file with gains for every channels.
+4. Run WASABI_3.cc : build SuEcal_calibrated_hist.root file to check calibrated energy spectra.

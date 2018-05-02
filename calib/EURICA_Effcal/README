@@ -1,0 +1,5 @@
+EURICA Efficiency Calibration
+Apr. 9. 2018.
+
+1. Run EURICA_Effcal_1.cc : generate EURICA_ADC.root storing an energy spectrum.
+2. Run EURICA_Effcal_2.cc : generate eff_data_add.root and eff_data_gc.root with a fitting function.
