@@ -1,0 +1,6 @@
+WASABI Energy Calibration by using Run Data.
+May. 23. 2018.
+Byul Moon.
+
+1. Run WASABI_1.cc : make SiEcal_beam.root file storing Ex and Ey correlated 2D spectra for each channel.
+2. Run WASABI_2.cc : calibrate each channel and save gains and offsets in WASABI_gain_beam.dat and WASABI_gain_beam_dssd1.dat files.

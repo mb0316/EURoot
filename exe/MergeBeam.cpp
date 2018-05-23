@@ -81,8 +81,8 @@ int main(int argc, char* argv[])
 		beta->ResetDSSD();
 		beta->ResetEURICA();
 		beta->CopyTS(det);
-		beta->CopyDSSD(det);
-		beta->CopyEURICA(det);
+		beta->CopyDSSD(det, 1);
+		beta->CopyEURICA(det, 1);
 		beta->CopyPL(det);
 
 		imts_tot = mts_tot.find(imts_master->second);

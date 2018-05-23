@@ -1,0 +1,12 @@
+WASABI Timing Zero Point Calibration
+May. 23. 2018.
+Byul Moon.
+
+1. Run WASABI_0.cc : make a total data file named w3.root for every run information.
+2. Run WASABI_1.cc : build WASABI_T_hist.root file storing TDC spectra for each channel.
+2. Run WASABI_2.cc : check the prompt peak and save the results in temp_tzero.dat file.
+3. Run WASABI_3.cc : calibrate TDC spectra based on results and save in WASABI_T_hist_1.root file.
+4. Run WASABI_4.cc : check the prompt peak again and save the results in tzero.dat file.
+5. Run WASABI_5.cc : calibrate TDC spectra again and save each spectrum in WASABI_T_hist_2.root file.
+
+This calibration must be confirmed by direct checks and roughly calibrate by human eyes first.

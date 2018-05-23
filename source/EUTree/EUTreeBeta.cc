@@ -33,8 +33,8 @@ EUTreeBeta::EUTreeBeta(TTree* tree)
         tree -> Branch("ion_y", &ion_y, "ion_y/I");
         tree -> Branch("ion_E_X", &ion_E_X, "ion_E_X/D");
         tree -> Branch("ion_E_Y", &ion_E_Y, "ion_E_Y/D");
-        tree -> Branch("ion_T_X", &ion_T_X, "ion_T_X/I");
-        tree -> Branch("ion_T_Y", &ion_T_Y, "ion_T_Y/I");
+        tree -> Branch("ion_T_X", &ion_T_X, "ion_T_X/D");
+        tree -> Branch("ion_T_Y", &ion_T_Y, "ion_T_Y/D");
         tree -> Branch("dssdhit", &dssdhit, "dssdhit/I");
 	tree -> Branch("beta_z", beta_z, "beta_z[dssdhit]/I");
 	tree -> Branch("beta_x", beta_x, "beta_x[dssdhit]/I");
@@ -42,8 +42,8 @@ EUTreeBeta::EUTreeBeta(TTree* tree)
 	tree -> Branch("beta_E_X", beta_E_X, "beta_E_X[dssdhit]/D");
 	tree -> Branch("beta_E_Y", beta_E_Y, "beta_E_Y[dssdhit]/D");
 	tree -> Branch("beta_E_delta", beta_E_delta, "beta_E_delta[dssdhit]/D");
-	tree -> Branch("beta_T_X", beta_T_X, "beta_T_X[dssdhit]/I");
-	tree -> Branch("beta_T_Y", beta_T_Y, "beta_T_Y[dssdhit]/I");
+	tree -> Branch("beta_T_X", beta_T_X, "beta_T_X[dssdhit]/D");
+	tree -> Branch("beta_T_Y", beta_T_Y, "beta_T_Y[dssdhit]/D");
 
 	tree -> Branch("gchit", &gchit, "gchit/I");
 	tree -> Branch("gc_ch", gc_ch, "gc_ch[gchit]/I");

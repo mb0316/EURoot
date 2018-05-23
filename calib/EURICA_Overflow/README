@@ -1,0 +1,7 @@
+EURICA Overflow Calibration
+May. 23. 2018.
+Byul Moon.
+
+1. Run EURICA_OF_1.cc : build a root file with 2D singles spectrum for each channel.
+2. Run EURICA_OF_2.cc : find overflow data for each channel.
+3. Run EURICA_OF_3.cc : store overflow information at ../eurica_overflow.dat and check the results.

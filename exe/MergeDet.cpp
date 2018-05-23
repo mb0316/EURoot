@@ -64,6 +64,8 @@ int main(int argc, char* argv[])
 	Long64_t ent = 0;
 	Int_t nBytes;
 
+	beta->CalibBeam(run_num);
+
 	for (imvdg = mvdg.begin(); imvdg != mvdg.end(); imvdg++)
 	{
 		ent++;
@@ -84,9 +86,9 @@ int main(int argc, char* argv[])
 		beta->CopyPL(dssd, hpge);
 
 		beta->ResetDSSD();
-		beta->CopyDSSD(dssd);
+		beta->CopyDSSD(dssd, 0);
 		beta->ResetEURICA();
-		beta->CopyEURICA(hpge);
+		beta->CopyEURICA(hpge, 0);
 
 		tree->Fill();
 

@@ -46,6 +46,9 @@ class EUAna : public TObject
 		Double_t wasabi_offset_x[5][60];
 		Double_t wasabi_offset_y[5][40];
 
+		Double_t wasabi_Tzero_x[5][60];
+		Double_t wasabi_Tzero_y[5][40];
+
 		Int_t overflow[84];
 		Int_t temp_gchit;
 		Int_t temp_addhit;

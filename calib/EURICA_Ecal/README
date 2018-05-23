@@ -1,6 +1,8 @@
 EURICA Energy Calibration
 Apr. 6. 2018.
+Last Update : May. 23. 2018.
 Byul Moon
 
 1. Run EURICA_Ecal_1.cc : build 2-D histogram with channel vs. ADC.
 2. Run EURICA_Ecal_2.cc : calibrate EUCICA ADC into energy. Stor gains and offsets in ../eurica_adc_calib.dat and resultant 2-D histogram in calhist.root.
+3. Run EURICA_Ecal_3.cc : calibrate EURICA energy by using run data due to gain shifts. Results are stored in BT_Ecal/ directory.

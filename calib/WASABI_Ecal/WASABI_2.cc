@@ -1,179 +1,50 @@
-void WASABI_2()
+void WASABI_2(Int_t idssd, Int_t ich, Double_t gain, Double_t offset, Int_t range_L, Int_t range_U)
 {
+	cout << "Initial Information" << endl;
+	cout << "DSSD : " << idssd+1 << endl;
+	cout << "Channel : " << ich+1 << endl;
+	cout << "Gain : " << gain << endl;
+	cout << "Offset : " << offset << endl;
+	cout << "Fit range : " << range_L << " to " << range_U << endl;
+
+
 	TFile* file = new TFile("SiEcal_hist.root", "read");
 	TH2D* hist;
+	if (ich < 60)	hist = (TH2D*) file->Get(Form("dssd_x%d_ch%d", idssd+1, ich+1));
+	if (ich >= 60)	hist = (TH2D*) file->Get(Form("dssd_y%d_ch%d", idssd+1, ich-60+1));
 
-	TCanvas* cvs = new TCanvas("c1", "", 800, 400);
+	TCanvas* cvs = new TCanvas("c1", "", 1200, 700);
 
-	TF1* ftn1 = new TF1("ftn1", "[0]*x + 1173", 0, 1400);
-	TF1* ftn2 = new TF1("ftn2", "[0]*x + 1332", 0, 1400);
-
-	Double_t gain_X[5][60];
-	Double_t gain_Y[5][60];
-
-	Double_t offset_X[5][60];
-	Double_t offset_Y[5][40];
-	
-	Double_t data_X[5][60][2];
-	Double_t data_Y[5][40][2];
+	TF1* ftn1 = new TF1("ftn1", "[0]*x + [1]", 0, 1400);
+	TF1* ftn2 = new TF1("ftn2", "[0]*x + [1]", 0, 1400);
 
 	TGraph* graph = new TGraph();
 	TF1* ftn3 = new TF1("ftn3", "[0]*x + [1]", 0, 1400);
 
 	ofstream wasabi_gain;
-	wasabi_gain.open ("../WASABI_gain.dat");
+	wasabi_gain.open (Form("WASABI_gain/WASABI_gain_%d_%d.dat", idssd, ich));
 
-	for (Int_t i = 0; i < 5; i++)
-	{
-		for (Int_t j = 0; j < 60; j++)
-		{
-			hist = (TH2D*) file->Get(Form("dssd_x%d_ch%d", i+1, j+1));
-			hist->Draw("colz");
-			ftn1->SetParameter(0, -0.9);
-			ftn1->SetParameter(1, 1173.0);
-			ftn1->SetParLimits(1, 1170.0, 1176.0);
-			if (i == 3)
-			{
-				if (j == 1 || (j >= 14 && j <= 29) || (j >= 32 && j <= 45) || j == 49)
-				{
-					cout << "low gain" << endl;
-					ftn1->SetParLimits(0, -3.0, -0.5);
-					hist->Fit(ftn1, "MQ", "", 200, 350);
-				}
-				else
-				{
-					cout << "normal gain" << endl;
-					ftn1->SetParLimits(0, -1.1, -0.5);
-					hist->Fit(ftn1, "MQ", "", 450, 750);
-				}
-			}
-			else
-			{
-				ftn1->SetParLimits(0, -1.1, -0.5);
-				hist->Fit(ftn1, "MQ", "", 450, 750);
-			}
+	hist->Draw("colz");
+	ftn3->SetParameter(0, gain);
+	ftn3->SetParameter(1, offset);
+	ftn3->SetParLimits(0, gain-0.1, gain+0.1);
+	ftn3->SetParLimits(1, offset-5, offset+5);
+	hist->Fit(ftn3, "M0", "", range_L, range_U);
 
-//			gain_X[i][j] = ftn1->GetParameter(0);
-			
 
-//			cout << "WASABI #" << i+1 << " X strip #" << j+1 << " : " << gain_X[i][j] << endl;
-//			wasabi_gain << 0 << "	" << i << "	" << j << "	" << gain_X[i][j] << endl;
+	gain = ftn3->GetParameter(0);
+	offset = -(1173-ftn3->GetParameter(1))/(ftn3->GetParameter(0));
 
-			ftn2->SetParameter(0, ftn1->GetParameter(0));
-//			cvs->cd();
-//			ftn1->Draw("same");
-//			ftn2->Draw("same");
-//			cvs->Update();
-//			cvs->Modified();
-			data_X[i][j][0] = abs(1173/ftn1->GetParameter(0));
-			data_X[i][j][1] = abs(1332/ftn1->GetParameter(0));
-		}
-	}
+	if (ich < 60)	cout << "WASABI #" << idssd+1 << " X strip #" << ich+1 << " : " << gain << " " << offset << endl;
+	if (ich >= 60)	cout << "WASABI #" << idssd+1 << " Y strip #" << ich-60+1 << " : " << gain << " " << offset << endl;
+	wasabi_gain << gain << "	" << offset << endl;
 
-	for (Int_t i = 0; i < 5; i++)
-	{
-		for (Int_t j = 0; j < 40; j++)
-		{
-			hist = (TH2D*) file->Get(Form("dssd_y%d_ch%d", i+1, j+1));
-			hist->Draw("colz");
-			if (i == 2)
-			{
-				if (j >= 5 && j <= 12)
-				{
-					cout << "low gain" << endl;
-					ftn1->SetParameter(0, -2.0);
-					ftn1->SetParLimits(0, -3.0, -1.8);
-					hist->Fit(ftn1, "MQ", "", 200, 350);
-				}
-				else
-				{
-					ftn1->SetParameter(0, -0.9);
-					cout << "normal gain" << endl;
-					ftn1->SetParLimits(0, -1.1, -0.5);
-					hist->Fit(ftn1, "MQ", "", 450, 750);
-				}
-			}
-			else if (i == 3)
-			{
-				if (j >= 16 && j <= 39)
-				{
-					cout << "low gain" << endl;
-					ftn1->SetParameter(0, -2.0);
-					ftn1->SetParLimits(0, -3.0, -1.8);
-					hist->Fit(ftn1, "MQ", "", 200, 350);
-				}
-				else
-				{
-					ftn1->SetParameter(0, -0.9);
-					cout << "normal gain" << endl;
-					ftn1->SetParLimits(0, -1.1, -0.5);
-					hist->Fit(ftn1, "MQ", "", 450, 750);
-				}
-			}
-
-			else if (i==4)
-			{
-				ftn1->SetParameter(0, -0.5);
-				ftn1->SetParLimits(0, -0.65, -0.4);
-				hist->Fit(ftn1, "MQ", "", 800, 1100);
-			}
-			else
-			{
-				ftn1->SetParameter(0, -0.9);
-				ftn1->SetParLimits(0, -1.1, -0.5);
-				hist->Fit(ftn1, "MQ", "", 450, 750);
-			}
-
-//			gain_Y[i][j] = ftn1->GetParameter(0);
-
-//			cout << "WASABI #" << i+1 << " Y strip #" << j+1 << " : " << gain_Y[i][j] << endl;
-//			wasabi_gain << 1 << "	" << i << "	" << j << "	" << gain_Y[i][j] << endl;
-
-			ftn2->SetParameter(0, ftn1->GetParameter(0));
-//			cvs->cd();
-//			ftn1->Draw("same");
-//			ftn2->Draw("same");
-//			cvs->Update();
-//			cvs->Modified();
-			data_Y[i][j][0] = abs(1173/ftn1->GetParameter(0));
-			data_Y[i][j][1] = abs(1332/ftn1->GetParameter(0));
-
-		}
-	}
-
-	for (Int_t i = 0; i < 5; i++)
-	{
-		for (Int_t j = 0;j < 60; j++)
-		{
-			graph->SetPoint(0, data_X[i][j][0], 1173);
-			graph->SetPoint(1, data_X[i][j][1], 1332);
-
-			graph->Draw();
-			graph->Fit(ftn3, "MQ");
-			cvs->Update();
-			cvs->Modified();
-			gain_X[i][j] = ftn3->GetParameter(0);
-			offset_X[i][j] = ftn3->GetParameter(1);
-			cout << "WASABI #" << i+1 << " dssd X ch#" << j+1 << " gain : " << gain_X[i][j] << endl;	
-			cout << "WASABI #" << i+1 << " dssd X ch#" << j+1 << " offset : " << offset_X[i][j] << endl;	
-			wasabi_gain << 0 << "	" << i << "	" << j << "	" << gain_X[i][j] << "	" << offset_X[i][j] << endl;
-		}
-
-		for (Int_t j = 0; j < 40; j++)
-		{
-			graph->SetPoint(0, data_Y[i][j][0], 1173);
-			graph->SetPoint(1, data_Y[i][j][1], 1332);
-
-			graph->Draw();
-			graph->Fit(ftn3, "MQ");
-			cvs->Update();
-			cvs->Modified();
-			gain_Y[i][j] = ftn3->GetParameter(0);
-			offset_Y[i][j] = ftn3->GetParameter(1);
-			cout << "WASABI #" << i+1 << " dssd Y ch#" << j+1 << " gain : " << gain_Y[i][j] << endl;	
-			cout << "WASABI #" << i+1 << " dssd Y ch#" << j+1 << " offset : " << offset_Y[i][j] << endl;	
-			wasabi_gain << 1 << "	" << i << "	" << j << "	" << gain_Y[i][j] << "	" << offset_Y[i][j] << endl;
-		}
-	}
-
+	ftn1->SetParameter(0, ftn3->GetParameter(0));
+	ftn1->SetParameter(1, ftn3->GetParameter(1));
+	ftn2->SetParameter(0, ftn3->GetParameter(0));
+	ftn2->SetParameter(1, ftn3->GetParameter(1)+159);
+	ftn1->Draw("same");
+	ftn2->Draw("same");
+	ftn1->SetLineStyle(2);
+	ftn2->SetLineStyle(2);
 }

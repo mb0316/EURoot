@@ -45,13 +45,13 @@ class EUTree : public TObject
 		Int_t beta_y[100]; //hit position for betas, only for BetaMerge data
 		Double_t ion_E_X; //ion energy in x strip, only for BetaMerge data
 		Double_t ion_E_Y; //ion energy in y strip, only for BetaMerge data
-		Int_t ion_T_X; //time for an ion in x strip, only for BetaMerge data
-		Int_t ion_T_Y; //time for an ion in y strip, only for BetaMerge data
+		Double_t ion_T_X; //time for an ion in x strip, only for BetaMerge data
+		Double_t ion_T_Y; //time for an ion in y strip, only for BetaMerge data
 		Double_t beta_E_X[100]; //beta energy in x strip, only for BetaMerge data
 		Double_t beta_E_Y[100]; //beta energy in y strip, only for BetaMerge data
 		Double_t beta_E_delta[100]; //difference between Ex and Ey
-		Int_t beta_T_X[100]; //time for betas in x strip, only for BetaMerge data
-		Int_t beta_T_Y[100]; //time for betas in y strip, only for BetaMerge data
+		Double_t beta_T_X[100]; //time for betas in x strip, only for BetaMerge data
+		Double_t beta_T_Y[100]; //time for betas in y strip, only for BetaMerge data
 
 		//EURICA Info.
 		Int_t gchit; //number of hit in EURICA

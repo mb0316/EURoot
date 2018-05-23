@@ -13,9 +13,16 @@ void EURICA_Effcal_2()
 	TFile* file_gc = new TFile("EURICA_ADC.root", "READ");
 	hist[0] = (TH1D*) file_gc -> Get("GeCluster");
 	hist[1] = (TH1D*) file_gc -> Get("GeAddback");
-
+/*
 	Double_t eu_peaks[10] = {39.91, 45.7, 121.77, 244.66, 344.28, 778.90, 867.38, 964.06, 1112.08, 1408.01};//Eu152 peaks
 	Double_t eu_peaks_nb[10] = {0.591, 0.149, 0.284, 0.076, 0.265, 0.129, 0.0423, 0.146, 0.1367, 0.2087};//Eu152 branching ratio for each peak
+
+	Double_t ba_peaks[5] = {80.99, 275.925, 302.851, 356.013, 383.848};//Ba133 peaks
+	Double_t ba_peaks_nb[5] = {0.341, 0.07, 0.1834, 0.6205, 0.0894};//Ba133 branching ration for each peak
+*/
+
+	Double_t eu_peaks[9] = {45.7, 121.77, 244.66, 344.28, 778.90, 867.38, 964.06, 1112.08, 1408.01};//Eu152 peaks
+	Double_t eu_peaks_nb[9] = {0.149, 0.284, 0.076, 0.265, 0.129, 0.0423, 0.146, 0.1367, 0.2087};//Eu152 branching ratio for each peak
 
 	Double_t ba_peaks[5] = {80.99, 275.925, 302.851, 356.013, 383.848};//Ba133 peaks
 	Double_t ba_peaks_nb[5] = {0.341, 0.07, 0.1834, 0.6205, 0.0894};//Ba133 branching ration for each peak
@@ -23,10 +30,10 @@ void EURICA_Effcal_2()
 	TF1* gaus_on = new TF1("gaus_on", "gaus(0)", 0, 5000);
 	TF1* bg = new TF1("bg", "[0]*x + [1]", 0, 5000);
 
-	Double_t netcount_eu[2][10];//save the netarea calculated by the area of the gaussian for each peak
-	Double_t neterror_eu[2][10];//save the error for each netarea
-	Double_t peaks_eu[2][10];//save the peak value with the fitting result
-	Double_t peakerrors_eu[2][10];//save the error for each peak
+	Double_t netcount_eu[2][9];//save the netarea calculated by the area of the gaussian for each peak
+	Double_t neterror_eu[2][9];//save the error for each netarea
+	Double_t peaks_eu[2][9];//save the peak value with the fitting result
+	Double_t peakerrors_eu[2][9];//save the error for each peak
 
 	Double_t netcount_ba[2][5];//save the netarea calculated by the area of the gaussian for each peak
 	Double_t neterror_ba[2][5];//save the error for each netarea
@@ -42,16 +49,16 @@ void EURICA_Effcal_2()
 	//fitting procedure for Eu152
 	for (Int_t ihist = 0; ihist < 2; ihist++)
 	{
-		for (Int_t i = 0; i < 10; i++)
+		for (Int_t i = 0; i < 9; i++)
 		{
 			TF1* gaus = new TF1("gaus", "gaus(0) + [3]*x + [4]", 0, 5000);//fitting each peak
 			peak = eu_peaks[i];
 			hist[ihist] -> GetXaxis() -> SetRange(peak-50, peak+50);
 			ampl = hist[ihist] -> GetBinContent(peak+1);
 			gaus -> SetParameters(ampl, peak, dev, 0, 0);
-			if (i == 0) hist[ihist] -> Fit(gaus, "MQ", "", peak-1, peak+2);
-			if (i == 1) hist[ihist] -> Fit(gaus, "MQ", "", peak-3, peak+5);
-			else hist[ihist] -> Fit(gaus, "MQ", "", peak-10, peak+5);
+//			if (i == 0) hist[ihist] -> Fit(gaus, "MQ", "", peak-1, peak+4);
+			if (i == 0) hist[ihist] -> Fit(gaus, "MQ", "", peak-4, peak+5);
+			else hist[ihist] -> Fit(gaus, "MQ", "", peak-7, peak+5);
 			peaks_eu[ihist][i] = gaus -> GetParameter(1);
 			peakerrors_eu[ihist][i] = gaus -> GetParError(1);
 			ampl = gaus -> GetParameter(0);
@@ -90,7 +97,7 @@ void EURICA_Effcal_2()
 			hist[ihist] -> GetXaxis() -> SetRange(peak-50, peak+50);
 			ampl = hist[ihist] -> GetBinContent(peak+1);
 			gaus -> SetParameters(ampl, peak, dev, 0, 0);
-			hist[ihist] -> Fit(gaus, "MQ", "", peak-10, peak+10);
+			hist[ihist] -> Fit(gaus, "MQ", "", peak-7, peak+5);
 			peaks_ba[ihist][i] = gaus -> GetParameter(1);
 			peakerrors_ba[ihist][i] = gaus -> GetParError(1);
 			ampl = gaus -> GetParameter(0);
@@ -125,7 +132,7 @@ void EURICA_Effcal_2()
 //	Double_t activity_ba = 13.4E3; //decay/s
 	Double_t activity_ba = 15281; //decay/s
 //	Int_t numtrigger = 5216418; //trigger number with fired gamma rays
-	Int_t numtrigger = 2053354; //trigger number with fired gamma rays
+	Int_t numtrigger = 32408508; //trigger number with fired gamma rays
 //	Int_t numtrigger = 11875627;
 	Double_t gatew = 100E-6; //s
 //	Double_t gatew = 75E-6; //s
@@ -134,8 +141,8 @@ void EURICA_Effcal_2()
 //	Double_t betaT_ba = activity_ba*numtrigger*gatew*0.65; //ba133 locates at downstream PL, considering the factor between Eu & Ba
 	Double_t betaT_ba = activity_ba*numtrigger*gatew;
 
-	Double_t eff[2][15];//save the abs eff for each peak
-	Double_t eff_error[2][15];//save the error for each abs eff
+	Double_t eff[2][14];//save the abs eff for each peak
+	Double_t eff_error[2][14];//save the error for each abs eff
 	TGraphErrors* graph_gc = new TGraphErrors();
 	TGraphErrors* graph_add = new TGraphErrors();
 
@@ -143,9 +150,9 @@ void EURICA_Effcal_2()
 	//calculating the efficiency
 	for (Int_t ihist = 0; ihist < 2; ihist++)
 	{
-		for (Int_t i = 0; i < 15; i++)
+		for (Int_t i = 0; i < 14; i++)
 		{
-			if (i < 10)
+			if (i < 9)
 			{
 				eff[ihist][i] = (netcount_eu[ihist][i]/eu_peaks_nb[i])/betaT_eu*100;
 				eff_error[ihist][i] = (neterror_eu[ihist][i]/netcount_eu[ihist][i])*eff[ihist][i];
@@ -164,24 +171,24 @@ void EURICA_Effcal_2()
 			}
 			else
 			{			
-				eff[ihist][i] = (netcount_ba[ihist][i-10]/ba_peaks_nb[i-10])/betaT_ba*100;
-				eff_error[ihist][i] = (neterror_ba[ihist][i-10]/netcount_ba[ihist][i-10])*eff[ihist][i];
+				eff[ihist][i] = (netcount_ba[ihist][i-9]/ba_peaks_nb[i-9])/betaT_ba*100;
+				eff_error[ihist][i] = (neterror_ba[ihist][i-9]/netcount_ba[ihist][i-9])*eff[ihist][i];
 				cout << eff[ihist][i] << " " << eff_error[ihist][i] << endl;
 				if (ihist == 0)
 				{
-					graph_gc -> SetPoint(i, peaks_ba[ihist][i-10], eff[ihist][i]);
-					graph_gc -> SetPointError(i, peakerrors_ba[ihist][i-10], eff_error[ihist][i]);
+					graph_gc -> SetPoint(i, peaks_ba[ihist][i-9], eff[ihist][i]);
+					graph_gc -> SetPointError(i, peakerrors_ba[ihist][i-9], eff_error[ihist][i]);
 				}
 				if (ihist == 1)
 				{
-					graph_add -> SetPoint(i, peaks_ba[ihist][i-10], eff[ihist][i]);
-					graph_add -> SetPointError(i, peakerrors_ba[ihist][i-10], eff_error[ihist][i]);
+					graph_add -> SetPoint(i, peaks_ba[ihist][i-9], eff[ihist][i]);
+					graph_add -> SetPointError(i, peakerrors_ba[ihist][i-9], eff_error[ihist][i]);
 				}
 			}
 		}
 	}
 //plot the abs efficiency graph
-	TH2D* dummy = new TH2D("dum", "", 2000, 0, 2000, 35, 0, 35);
+	TH2D* dummy = new TH2D("dum", "", 1500, 0, 1500, 26, 4, 26);
 	TCanvas* c2 = new TCanvas("eff", "");
 	dummy -> Draw();
 	graph_gc -> Draw("same,P");
@@ -201,8 +208,14 @@ void EURICA_Effcal_2()
 //	eff_ftn -> SetParLimits(4, -0.03, -0.02);
 //	eff_ftn -> SetParLimits(5,  5, 7);
 	
-	graph_gc -> Fit(eff_ftn_gc, "M", "", 30, 1500);
-	graph_add -> Fit(eff_ftn_add, "M", "", 30, 1500);
+	graph_gc -> Fit(eff_ftn_gc, "M0", "", 30, 1500);
+	graph_add -> Fit(eff_ftn_add, "M0", "", 30, 1500);
+
+	eff_ftn_gc->Draw("same");
+	eff_ftn_add->Draw("same");
+
+	eff_ftn_gc->SetLineColor(4);
+	eff_ftn_gc->SetLineStyle(2);
 
 	TFile* outgc = new TFile("eff_data_gc.root", "recreate");
 	outgc -> cd();

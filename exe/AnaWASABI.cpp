@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	TFile* out = new TFile(Form("../results/AnaWASABI/AnaWASABI%04d.root", run_num), "RECREATE");
 	TTree* tree = new TTree("tree", "tree");
 	EUAnaBeta* beta = new EUAnaBeta(tree);
-	TString dssdfile = Form("../data/WASABI%04d.root", run_num);
+	TString dssdfile = Form("../data/w3_data_%04d.root", run_num);
 	dssd = new EUDataSi(dssdfile.Data());
 	Int_t nBytes;
 	Long64_t nEnt = dssd->fData->GetEntries();
@@ -48,26 +48,23 @@ int main(int argc, char* argv[])
 		beta->CopyTS(dssd);
 		beta->ResetPL();
 		beta->CopyPL(dssd);
-//		if ((beta->F11_TDC_L > -2200 && beta->F11_TDC_L < -1800 && beta->F11_TDC_R > -2200 && beta->F11_TDC_R < -1800) && (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3))
-//		if (dssd->IF_ION == 1 && (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3))
-		if (dssd->IF_ION == 1)
+		if (beta->F11_TDC_L < 60000)
 		{
 			beta->ResetDSSD();
 			beta->eventid = 0;
+			beta->CalibTzero(dssd);
 			beta->GetIonPos(dssd);
 			tree->Fill();
 		}
 
-//		else if (beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3)
-//		if (dssd->IF_BETA == 1 && beta->vetoPL1 < -100E3 && beta->vetoPL2 < -100E3)
-		if (dssd->IF_BETA == 1)
+		if (beta->F11_TDC_L > 60000)
 		{
 			beta->eventid = 1;
 			beta->ResetDSSD();
 
 			beta->GetBetaPos(dssd, tree);
 //			for (Int_t ihit = 0; ihit < 5; ihit++) beta->GetBetaPos(dssd, ihit, tree);
-			if (beta->dssdhit<=50) tree->Fill();
+			if (beta->dssdhit < 100)	tree->Fill();
 		}
 
 	}
