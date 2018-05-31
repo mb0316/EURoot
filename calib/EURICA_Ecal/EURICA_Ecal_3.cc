@@ -1,7 +1,7 @@
 void EURICA_Ecal_3(Int_t runnum)
 {
-	TFile* file[10];
-	TTree* tree[10];
+	TFile* file[15];
+	TTree* tree[15];
 
 	Int_t ifile;
 
@@ -11,7 +11,8 @@ void EURICA_Ecal_3(Int_t runnum)
 	Int_t nfile=0;
 	Int_t numfile;
 	if (runnum == 1016)	numfile = 14;
-	else	numfile = 10;
+	else if (runnum == 1120)	numfile = 10;
+	else	numfile = 15;
 
 	for (Int_t i = 0; i < numfile; i++)
 	{

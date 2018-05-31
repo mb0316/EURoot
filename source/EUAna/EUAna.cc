@@ -66,7 +66,7 @@ void EUAna::GetCalib()
 
 int EUAna::Addback2hitCheck(Int_t iclust, Int_t icryst1, Int_t icryst2)
 {
-	if (Addback_hitpattern[tempCry[iclust][icryst1]][tempCry[iclust][icryst2]] == 1 || tempE[iclust][icryst1]+tempE[iclust][icryst2] > 150 || abs(tempT[iclust][icryst1]-tempT[iclust][icryst2]) < 100)
+	if (Addback_hitpattern[tempCry[iclust][icryst1]][tempCry[iclust][icryst2]] == 1 || tempE[iclust][icryst1]+tempE[iclust][icryst2] > 150 || abs(tempT[iclust][icryst1]-tempT[iclust][icryst2]) < 400)
 	{
 		return 1;
 	}

@@ -59,6 +59,7 @@ void EUAnaPID::CopyData(EUTreeDecay* decay)
 	z = decay->z;
 	x = decay->x;
 	y = decay->y;
+	beta_flag = decay->beta_flag;
 	deltaxy = decay->deltaxy;
 
 	gchit = decay->gchit;

@@ -34,7 +34,7 @@ void WASABI_1()
 		}
 		for (Int_t iy = 0; iy < 40; iy++)
 		{
-			if (i == 0 && i == 1)	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 5000, -5000, 5000);
+			if (i == 0 && i == 1 && i == 4)	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 5000, -5000, 5000);
 //			if (i == 2)	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 10000, -5000, 5000);
 			else	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 1000, -5000, 5000);
 		}
@@ -58,7 +58,8 @@ void WASABI_1()
 				for (Int_t ix = 0; ix < 60; ix++)
 				{
 
-					if (w3_ex[idssd][ix] > 4000 && w3tx[idssd][ix] > -5000 && w3tx[idssd][ix] < max_tempT)
+//					if (w3_ex[idssd][ix] > 4000 && w3tx[idssd][ix] > -5000 && w3tx[idssd][ix] < max_tempT)
+					if (w3tx[idssd][ix] > -5000 && w3tx[idssd][ix] < max_tempT)
 					{
 						fire_x[idssd] = ix;
 						max_tempT = w3tx[idssd][ix];
@@ -71,7 +72,8 @@ void WASABI_1()
 				for (Int_t iy = 0; iy < 40; iy++)
 				{
 
-					if (w3_ey[idssd][iy] > 4000 && w3ty[idssd][iy] > -5000 && w3ty[idssd][iy] < max_tempT)
+//					if (w3_ey[idssd][iy] > 4000 && w3ty[idssd][iy] > -5000 && w3ty[idssd][iy] < max_tempT)
+					if (w3ty[idssd][iy] > -5000 && w3ty[idssd][iy] < max_tempT)
 					{
 						fire_y[idssd] = iy;
 						max_tempT = w3ty[idssd][iy];

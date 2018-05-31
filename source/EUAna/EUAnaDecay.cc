@@ -103,6 +103,7 @@ int EUAnaDecay::BetaTrack(EUTreeBeta *beta)
 	Int_t flag_back = -1;
 	deltaxy = 10;
 	good_beta = 0;
+	beta_flag = -1;
 	for (Int_t ihit = 0; ihit < beta->dssdhit; ihit++)
 	{
 		if (beta->beta_z[ihit] == z && (z > -1 && z < 5)) flag_z = 1;
@@ -116,7 +117,11 @@ int EUAnaDecay::BetaTrack(EUTreeBeta *beta)
 			if (beta->beta_z[ihit] == z)
 			{
 				GetXYDistance(beta->beta_x[ihit], beta->beta_y[ihit]);
-				if (temp_deltaxy < deltaxy) deltaxy = temp_deltaxy;
+				if (temp_deltaxy < deltaxy)
+				{
+					deltaxy = temp_deltaxy;
+					beta_flag = beta->beta_good[ihit];
+				}
 				else continue;
 			}
 			else continue;

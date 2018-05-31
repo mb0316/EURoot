@@ -30,6 +30,7 @@ class EUTree : public TObject
 		Int_t y; //implanted pixel, only for Decay data
 		Int_t beta_E; //final beta energy, only for Decay data
 		Double_t deltaxy; //distance between an ion and an emitted beta, only for Decay data
+		Int_t beta_flag; //0 : no dleta E cut, 1: delta E cut
 
 		//Beam Info.
 		Double_t AoQ;
@@ -52,6 +53,7 @@ class EUTree : public TObject
 		Double_t beta_E_delta[100]; //difference between Ex and Ey
 		Double_t beta_T_X[100]; //time for betas in x strip, only for BetaMerge data
 		Double_t beta_T_Y[100]; //time for betas in y strip, only for BetaMerge data
+		Int_t beta_good[100]; //0 : no dleta E cut, 1: delta E cut
 
 		//EURICA Info.
 		Int_t gchit; //number of hit in EURICA
@@ -108,6 +110,7 @@ class EUTree : public TObject
 		TBranch 	*b_x;
 		TBranch		*b_y;
 		TBranch		*b_beta_E;
+		TBranch		*b_beta_flag;
 		TBranch		*b_deltaxy;
 		TBranch        *b_AoQ;   //!
 		TBranch        *b_Zpro;   //!
@@ -127,6 +130,7 @@ class EUTree : public TObject
 		TBranch		*b_beta_E_delta;
 		TBranch        *b_beta_T_X;   //!
 		TBranch        *b_beta_T_Y;   //!
+		TBranch        *b_beta_good;   //!
 		TBranch        *b_gchit;   //!
 		TBranch        *b_gc_ch;   //!
 		TBranch        *b_gc_ang;   //!

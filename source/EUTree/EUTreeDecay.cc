@@ -29,6 +29,7 @@ EUTreeDecay::EUTreeDecay(TTree* tree)
 	tree -> Branch("z", &z, "z/I");
 	tree -> Branch("x", &x, "x/I");
 	tree -> Branch("y", &y, "y/I");
+	tree -> Branch("beta_flag", &beta_flag, "beta_flag/I");
 	tree -> Branch("deltaxy", &deltaxy, "deltaxy/D");
 	tree -> Branch("gchit", &gchit, "gchit/I");
 	tree -> Branch("gc_ch", gc_ch, "gc_ch[gchit]/I");
@@ -89,6 +90,7 @@ void EUTreeDecay::Init(TTree *tree)
 	fData->SetBranchAddress("z", &z, &b_z);
 	fData->SetBranchAddress("x", &x, &b_x);
 	fData->SetBranchAddress("y", &y, &b_y);
+	fData->SetBranchAddress("beta_flag", &beta_flag, &b_beta_flag);
 	fData->SetBranchAddress("deltaxy", &deltaxy, &b_deltaxy);
 
 	fData->SetBranchAddress("gchit", &gchit, &b_gchit);

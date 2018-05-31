@@ -13,12 +13,12 @@ void WASABI_4()
 
 	Int_t temp_dssd, temp_ch;
 	Double_t temp_mean;
-
+/*
 	ifstream inputfile;
 	inputfile.open ("temp_tzero.dat");
-
+*/
 	ofstream datafile;
-	datafile.open ("tzero.dat");
+	datafile.open ("temp_tzero_2nd.dat");
 
 	for (Int_t idssd = 0; idssd < 5; idssd++)
 	{
@@ -32,12 +32,13 @@ void WASABI_4()
 			mean = 0;
 			ftn->SetParameter(0, max);
 			ftn->SetParameter(1, mean);
-/*
-			if (idssd == 0 && idssd == 1)   hist_X[idssd][ix]->Fit(ftn, "MQ", "", mean-80, mean+80);
-			else if (idssd == 4)	hist_X[idssd][ix]->Fit(ftn, "MQ", "", mean-30, mean+20);
-			else    hist_X[idssd][ix]->Fit(ftn, "MQ", "", mean-100, mean+30);
-*/
-			hist_X[idssd][ix]->Fit(ftn, "MQ", "", mean-100, mean+50);
+
+			if (idssd == 0 || idssd == 1)   hist_X[idssd][ix]->Fit(ftn, "MQ", "", mean-60, mean+40);
+			else if (idssd == 2)	hist_X[idssd][ix]->Fit(ftn, "MQ", "", mean-100, mean+40);
+			else if (idssd == 4)	hist_X[idssd][ix]->Fit(ftn, "MQ", "", mean-70, mean+50);
+			else    hist_X[idssd][ix]->Fit(ftn, "MQ", "", mean-100, mean+70);
+
+//			hist_X[idssd][ix]->Fit(ftn, "MQ", "", mean-100, mean+50);
 
 			gSystem->ProcessEvents();
 			cvs->Update();
@@ -45,28 +46,30 @@ void WASABI_4()
 
 			mean = ftn->GetParameter(1);
 
-			inputfile >> temp_dssd >> temp_ch >> temp_mean;
-			mean = mean+temp_mean;
+//			inputfile >> temp_dssd >> temp_ch >> temp_mean;
+//			mean = mean+temp_mean;
 
 			datafile << idssd << "	" << ix << "	" << mean << endl;	
+			cout << idssd << " " << ix << " " << mean << endl;
 		}
 		for (Int_t iy = 0; iy < 40; iy++)
 		{
 			hist_Y[idssd][iy] = (TH1D*) file->Get(Form("hist_Y_%d_%d", idssd, iy));
-			hist_Y[idssd][iy]->GetXaxis()->SetRangeUser(-500,500);
+			hist_Y[idssd][iy]->GetXaxis()->SetRangeUser(-1000,1000);
 			cvs->cd();
 			hist_Y[idssd][iy] ->Draw();
 			max = hist_Y[idssd][iy]->GetMaximum();
-			mean = 0;
+			mean = hist_Y[idssd][iy]->GetBinCenter(hist_Y[idssd][iy]->GetMaximumBin());
 			ftn->SetParameter(0, max);
 			ftn->SetParameter(1, mean);
-/*
-			if (idssd == 0 && idssd == 1)   hist_Y[idssd][iy]->Fit(ftn, "MQ", "", mean-80, mean+80);
+
+			if (idssd == 0 || idssd == 1)   hist_Y[idssd][iy]->Fit(ftn, "MQ", "", mean-60, mean+40);
+			else if (idssd == 2)   hist_Y[idssd][iy]->Fit(ftn, "MQ", "", mean-120, mean+70);
 			else if (idssd == 4)   hist_Y[idssd][iy]->Fit(ftn, "MQ", "", mean-30, mean+20);
-			else    hist_Y[idssd][iy]->Fit(ftn, "MQ", "", mean-100, mean+30);
-*/
-			if (idssd == 4) hist_Y[idssd][iy]->Fit(ftn, "MQ", "", -50, 10);
-			else hist_Y[idssd][iy]->Fit(ftn, "MQ", "", mean-100, mean+50);
+			else    hist_Y[idssd][iy]->Fit(ftn, "MQ", "", mean-100, mean+50);
+
+//			if (idssd == 4) hist_Y[idssd][iy]->Fit(ftn, "MQ", "", -50, 10);
+//			else hist_Y[idssd][iy]->Fit(ftn, "MQ", "", mean-100, mean+50);
 
 			gSystem->ProcessEvents();
 			cvs->Update();
@@ -74,10 +77,11 @@ void WASABI_4()
 	
 			mean = ftn->GetParameter(1);
 
-			inputfile >> temp_dssd >> temp_ch >> temp_mean;
-			mean = mean+temp_mean;
+//			inputfile >> temp_dssd >> temp_ch >> temp_mean;
+//			mean = mean+temp_mean;
 
 			datafile << idssd << "	" << iy+60 << "	" << mean << endl;	
+			cout << idssd << " " << iy << " " << mean << endl;
 		}
 
 

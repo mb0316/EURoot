@@ -63,7 +63,6 @@ int main(int argc, char* argv[])
 			beta->ResetDSSD();
 
 			beta->GetBetaPos(dssd, tree);
-//			for (Int_t ihit = 0; ihit < 5; ihit++) beta->GetBetaPos(dssd, ihit, tree);
 			if (beta->dssdhit < 100)	tree->Fill();
 		}
 

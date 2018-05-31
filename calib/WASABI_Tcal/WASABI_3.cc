@@ -30,15 +30,16 @@ void WASABI_3()
 	{
 		for (Int_t ix = 0; ix < 60; ix++)
 		{
-			if (i == 0 && i == 1)	hist_X[i][ix] = new TH1D(Form("hist_X_%d_%d",i,ix), "", 2000, -5000, 5000);
-			else if (i == 4)	hist_X[i][ix] = new TH1D(Form("hist_X_%d_%d",i,ix), "", 500, -5000, 5000);
-			else	hist_X[i][ix] = new TH1D(Form("hist_X_%d_%d",i,ix), "", 1000, -5000, 5000);
+			if (i == 3 || i == 4)	hist_X[i][ix] = new TH1D(Form("hist_X_%d_%d",i,ix), "", 2000, -5000, 5000);
+			else if (i == 2)	hist_X[i][ix] = new TH1D(Form("hist_X_%d_%d",i,ix), "", 5000, -5000, 5000);
+			else	hist_X[i][ix] = new TH1D(Form("hist_X_%d_%d",i,ix), "", 10000, -5000, 5000);
 		}
+
 		for (Int_t iy = 0; iy < 40; iy++)
 		{
-			if (i == 0 && i == 1)	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 2000, -5000, 5000);
-			else if (i == 4)	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 5000, -5000, 5000);
-			else	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 1000, -5000, 5000);
+			if (i == 3 || i == 4)	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 2000, -5000, 5000);
+			else if (i == 2)	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 5000, -5000, 5000);
+			else	hist_Y[i][iy] = new TH1D(Form("hist_Y_%d_%d",i,iy), "", 10000, -5000, 5000);
 		}
 	}
 
@@ -79,14 +80,15 @@ void WASABI_3()
 				fire_x[idssd] = -1;
 				fire_y[idssd] = -1;
 
-				max_tempT = 5000;
 
 				for (Int_t ix = 0; ix < 60; ix++)	w3tx[idssd][ix] = w3tx[idssd][ix] - tz_x[idssd][ix];
 				for (Int_t iy = 0; iy < 40; iy++)	w3ty[idssd][iy] = w3ty[idssd][iy] - tz_y[idssd][iy];
 
+				max_tempT = 5000;
 				for (Int_t ix = 0; ix < 60; ix++)
 				{
-					if (w3_ex[idssd][ix] > 4000 && w3tx[idssd][ix] > -5000 && w3tx[idssd][ix] < max_tempT)
+//					if (w3_ex[idssd][ix] > 4000 && w3tx[idssd][ix] > -5000 && w3tx[idssd][ix] < max_tempT)
+					if (w3tx[idssd][ix] > -5000 && w3tx[idssd][ix] < max_tempT)
 					{
 						fire_x[idssd] = ix;
 						max_tempT = w3tx[idssd][ix];
@@ -97,7 +99,8 @@ void WASABI_3()
 				max_tempT = 5000;
 				for (Int_t iy = 0; iy < 40; iy++)
 				{
-					if (w3_ey[idssd][iy] > 4000 && w3ty[idssd][iy] > -5000 && w3ty[idssd][iy] < max_tempT)
+//					if (w3_ey[idssd][iy] > 4000 && w3ty[idssd][iy] > -5000 && w3ty[idssd][iy] < max_tempT)
+					if (w3ty[idssd][iy] > -5000 && w3ty[idssd][iy] < max_tempT)
 					{
 						fire_y[idssd] = iy;
 						max_tempT = w3ty[idssd][iy];
@@ -112,52 +115,30 @@ void WASABI_3()
 						hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
 						hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
 					}
-					if (idssd == 2)
+					else if (idssd == 2)
 					{
-						if (fire_x[0] > -1 && fire_x[1] > -1 && fire_x[0] == fire_x[2] && w3tx[idssd][fire_x[idssd]-1] < 5000 && abs(w3tx[0][fire_x[0]] - w3tx[2][fire_x[2]]) < 70 && w3_ex[idssd][fire_x[idssd]-1] > 0 && w3tx[idssd][fire_x[idssd]+1] < 5000 && w3_ex[idssd][fire_x[idssd]+1] > 0) hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
-						if (fire_y[0] > -1 && fire_y[1] > -1 && fire_y[0] == fire_y[2] && w3ty[idssd][fire_y[idssd]-1] < 5000 && abs(w3ty[0][fire_y[0]] - w3ty[2][fire_y[2]]) < 70 && w3_ey[idssd][fire_y[idssd]-1] > 0 && w3ty[idssd][fire_y[idssd]+1] < 5000 && w3_ey[idssd][fire_y[idssd]+1] > 0) hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
+						//if (fire_x[0] > -1 && fire_x[1] > -1 && fire_x[0] == fire_x[2] && w3tx[idssd][fire_x[idssd]-1] < 5000 && abs(w3tx[0][fire_x[0]] - w3tx[2][fire_x[2]]) < 70 && w3_ex[idssd][fire_x[idssd]-1] > 0 && w3tx[idssd][fire_x[idssd]+1] < 5000 && w3_ex[idssd][fire_x[idssd]+1] > 0) hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
+						if (fire_x[0] > -1 && fire_x[1] > -1 && fire_x[0] == fire_x[2] && w3tx[idssd][fire_x[idssd]-1] < 5000 && w3_ex[idssd][fire_x[idssd]-1] > 0 && w3tx[idssd][fire_x[idssd]+1] < 5000 && w3_ex[idssd][fire_x[idssd]+1] > 0) hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
+						//if (fire_y[0] > -1 && fire_y[1] > -1 && fire_y[0] == fire_y[2] && w3ty[idssd][fire_y[idssd]-1] < 5000 && abs(w3ty[0][fire_y[0]] - w3ty[2][fire_y[2]]) < 70 && w3_ey[idssd][fire_y[idssd]-1] > 0 && w3ty[idssd][fire_y[idssd]+1] < 5000 && w3_ey[idssd][fire_y[idssd]+1] > 0) hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
+						if (fire_y[0] > -1 && fire_y[1] > -1 && fire_y[0] == fire_y[2] && w3ty[idssd][fire_y[idssd]-1] < 5000 && w3_ey[idssd][fire_y[idssd]-1] > 0 && w3ty[idssd][fire_y[idssd]+1] < 5000 && w3_ey[idssd][fire_y[idssd]+1] > 0) hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
+						else continue;
 					}
-					if (idssd == 3)
+					else if (idssd == 3)
 					{
 						if (fire_x[0] > -1 && fire_x[1] > -1 && fire_x[2] > -1 && fire_x[0] == fire_x[3])   hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
 						if (fire_y[0] > -1 && fire_y[1] > -1 && fire_y[2] > -1 && fire_y[0] == fire_y[3])   hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
+						else continue;
 //						if (fire_y[0] > -1 && fire_y[1] > -1 && fire_y[2] > -1 && fire_y[0] == fire_y[3] && w3ty[idssd][fire_y[idssd]-1] < 5000 && w3_ey[idssd][fire_y[idssd]-1] > 0 && w3ty[idssd][fire_y[idssd]+1] < 5000 && w3_ey[idssd][fire_y[idssd]+1] > 0 )   hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
 					}
-					if (idssd == 4)
+					else if (idssd == 4)
 					{
 						if (fire_x[0] > -1 && fire_x[3] > -1 && fire_x[0] == fire_x[3]) hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
 						if (fire_y[0] > -1 && fire_y[3] > -1 && fire_y[0] == fire_y[3]) hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
+						else continue;
 					}
+					else continue;
 				}
 
-
-/*
-				if (fire_x[idssd] > -1 && fire_y[idssd] > -1)
-				{
-					if (idssd > -1 && idssd < 2)
-					{
-						hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
-						hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
-					}
-					if (idssd == 2)
-					{
-//						if (fire_x[0] > -1 && fire_x[1] > -1 && fire_x[0] == fire_x[2] && abs(w3tx[0][fire_x[0]] - w3tx[2][fire_x[2]]) < 50) hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
-						if (fire_x[0] > -1 && fire_x[1] > -1 && fire_x[0] == fire_x[2]) hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
-//						if (fire_y[0] > -1 && fire_y[1] > -1 && fire_y[0] == fire_y[2] && abs(w3ty[0][fire_y[0]] - w3ty[2][fire_y[2]]) < 50) hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
-						if (fire_y[0] > -1 && fire_y[1] > -1 && fire_y[0] == fire_y[2]) hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
-					}
-					if (idssd == 3)
-					{
-						if (fire_x[0] > -1 && fire_x[1] > -1 && fire_x[2] > -1 && fire_x[0] == fire_x[3])   hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
-						if (fire_y[0] > -1 && fire_y[1] > -1 && fire_y[2] > -1 && fire_y[0] == fire_y[3])   hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
-					}
-					if (idssd == 4)
-					{
-						if (fire_x[0] > -1 && fire_x[3] > -1 && fire_x[0] == fire_x[3]) hist_X[idssd][fire_x[idssd]] -> Fill(w3tx[idssd][fire_x[idssd]]);
-						if (fire_y[0] > -1 && fire_y[3] > -1 && fire_y[0] == fire_y[3]) hist_Y[idssd][fire_y[idssd]] -> Fill(w3ty[idssd][fire_y[idssd]]);
-					}
-				}
-*/
 			}
 		}
 	}

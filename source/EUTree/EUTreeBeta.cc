@@ -44,6 +44,7 @@ EUTreeBeta::EUTreeBeta(TTree* tree)
 	tree -> Branch("beta_E_delta", beta_E_delta, "beta_E_delta[dssdhit]/D");
 	tree -> Branch("beta_T_X", beta_T_X, "beta_T_X[dssdhit]/D");
 	tree -> Branch("beta_T_Y", beta_T_Y, "beta_T_Y[dssdhit]/D");
+	tree -> Branch("beta_good", beta_good, "beta_good[dssdhit]/I");
 
 	tree -> Branch("gchit", &gchit, "gchit/I");
 	tree -> Branch("gc_ch", gc_ch, "gc_ch[gchit]/I");
@@ -122,6 +123,7 @@ void EUTreeBeta::Init(TTree *tree)
 	fData->SetBranchAddress("beta_E_delta", beta_E_delta, &b_beta_E_delta);
 	fData->SetBranchAddress("beta_T_X", beta_T_X, &b_beta_T_X);
 	fData->SetBranchAddress("beta_T_Y", beta_T_Y, &b_beta_T_Y);
+	fData->SetBranchAddress("beta_good", beta_good, &b_beta_good);
 
 	fData->SetBranchAddress("gchit", &gchit, &b_gchit);
 	fData->SetBranchAddress("gc_ch", gc_ch, &b_gc_ch);

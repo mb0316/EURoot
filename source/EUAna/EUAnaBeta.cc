@@ -91,15 +91,12 @@ void EUAnaBeta::CalibBeam(Int_t &runnum)
 
 	ifstream euricaEcal;
 	if (runnum < 1030)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1020.dat");	  
-	if (runnum < 1040 && runnum >= 1030)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1030.dat");	  
-	if (runnum < 1050 && runnum >= 1040)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1040.dat");	  
-	if (runnum < 1060 && runnum >= 1050)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1050.dat");	  
-	if (runnum < 1070 && runnum >= 1060)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1060.dat");	  
-	if (runnum < 1080 && runnum >= 1070)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1070.dat");	  
-	if (runnum < 1090 && runnum >= 1080)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1080.dat");	  
-	if (runnum < 1100 && runnum >= 1090)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1090.dat");	  
-	if (runnum < 1110 && runnum >= 1100)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1100.dat");	  
-	if (runnum < 1120 && runnum >= 1110)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1110.dat");	  
+	if (runnum < 1045 && runnum >= 1030)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1030.dat");	  
+	if (runnum < 1060 && runnum >= 1045)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1045.dat");	  
+	if (runnum < 1075 && runnum >= 1060)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1060.dat");	  
+	if (runnum < 1090 && runnum >= 1075)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1075.dat");	  
+	if (runnum < 1105 && runnum >= 1090)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1090.dat");	  
+	if (runnum < 1120 && runnum >= 1105)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1105.dat");	  
 	if (runnum < 1130 && runnum >= 1120)	euricaEcal.open ("../calib/EURICA_Ecal/BT_Ecal/1120.dat");	  
 
 	for (Int_t i = 0; i < 84; i++)	euricaEcal >> nch >> adc_gain[i] >> adc_offset[i];
@@ -110,8 +107,8 @@ void EUAnaBeta::CalibTzero(EUDataSi *dssd)
 {
 	for (idssd = 0; idssd < 5; idssd++)
 	{
-		for (ix = 0; ix < 60; ix++)	nw3tx[idssd][ix] = dssd->w3tx[idssd][ix][0] - wasabi_Tzero_x[idssd][ix];
-		for (iy = 0; iy < 40; iy++)	nw3ty[idssd][iy] = dssd->w3ty[idssd][iy][0] - wasabi_Tzero_y[idssd][iy];
+		for (ix = 0; ix < 60; ix++)	nw3tx[idssd][ix] = (dssd->w3tx[idssd][ix][0] - wasabi_Tzero_x[idssd][ix]);
+		for (iy = 0; iy < 40; iy++)	nw3ty[idssd][iy] = (dssd->w3ty[idssd][iy][0] - wasabi_Tzero_y[idssd][iy]);
 	}
 }
 
@@ -122,26 +119,30 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 
 	for (Int_t i = 0; i < 6; i++)
 	{
-		fire_x[i] = -1;
-		fire_y[i] = -1;
-		fire_z[i] = -1;
+		fire_x[i] = 0;
+		fire_y[i] = 0;
+		fire_z[i] = 0;
 	}
 
 	for (idssd = 0; idssd < 5; idssd++)
 	{
 		for (ix = 0; ix < 60; ix++)
 		{
-			if (abs(nw3tx[idssd][ix]) < 600)	fire_x[idssd] = 1;
-//			if ((idssd == 0 || idssd == 4) && dssd->w3_ex[idssd][ix] > 4500 && abs(nw3tx[idssd][ix]) < 600)	fire_x[idssd] = 1;
-//			if ((idssd == 1 || idssd == 2 || idssd == 3) && dssd->w3_ex[idssd][ix] > 4500)	fire_x[idssd] = 1;
+			if (abs(nw3tx[idssd][ix]) < max_tempTX[idssd])
+			{
+				fire_x[idssd] = 1;
+				break;
+			}
 			else    continue;
 		}
 
 		for (iy = 0; iy < 40; iy++)
 		{
-			if (abs(nw3ty[idssd][iy]) < 1000)	fire_y[idssd] = 1;
-//			if ((idssd == 0 || idssd == 4) && dssd->w3_ey[idssd][iy] > 4500 && abs(nw3ty[idssd][iy]) < 1000)	fire_y[idssd] = 1;
-//			if ((idssd == 1 || idssd == 2 || idssd == 3) && dssd->w3_ey[idssd][iy] > 4500)	fire_y[idssd] = 1;
+			if (abs(nw3ty[idssd][iy]) < max_tempTY[idssd])
+			{
+				fire_y[idssd] = 1;
+				break;
+			}
 			else    continue;
 		}
 
@@ -151,18 +152,17 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 
 	}
 
-	for (Int_t i = 0; i < 6; i++)
+	for (Int_t i = 0; i < 5; i++)
 	{
-		if (i == 0 && fire_z[i] == 1) temp_z = i;
-		if (i == 1 && fire_z[i] == 1 && fire_z[i-1] == 1) temp_z = i;
-		if (i == 2 && fire_z[i] == 1 && fire_z[i-1] == 1 && fire_z[i-2] == 1) temp_z = i;
-		if (i == 3 && fire_z[i] == 1 && fire_z[i-1] == 1 && fire_z[i-2] == 1 && fire_z[i-3] == 1) temp_z = i;
-		if (i == 4 && fire_z[i] == 1 && fire_z[i-1] == 1 && fire_z[i-2] == 1 && fire_z[i-3] == 1 && fire_z[i-4] == 1) temp_z = i;
-		if (i == 5 && fire_z[i] == 1) temp_z = i;
+		if (fire_z[i] == 1 && fire_z[i+1] == 0)
+		{
+			temp_z = i;
+			break;
+		}
 		else continue;
 	}
 
-	GetXY(temp_z);
+	GetXY(temp_z, dssd);
 	if (good_xy == 1)
 	{
 		ion_z = temp_z;
@@ -175,7 +175,7 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 	}
 	if (good_xy == 0)
 	{
-		ion_z = temp_z;
+		ion_z = -1;
 		ion_x = -10;
 		ion_y = -10;
 		ion_E_X = -50000;
@@ -185,7 +185,7 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 	}
 }
 
-int EUAnaBeta::GetXY(Int_t temp_z)
+int EUAnaBeta::GetXY(Int_t temp_z, EUDataSi* dssd)
 {
 	for (Int_t i = 0; i < 5; i++)
 	{
@@ -201,10 +201,11 @@ int EUAnaBeta::GetXY(Int_t temp_z)
 			max_tempT = max_tempTX[idssd];
 			for (ix = 0; ix < 60; ix++)
 			{
-				if (nw3tx[temp_z][ix] > -600 && nw3tx[temp_z][ix]< max_tempT)
+//				if (dssd->w3_ex[idssd][ix] > 4100 && nw3tx[idssd][ix] > -1000 && nw3tx[idssd][ix]< max_tempT)
+				if (nw3tx[idssd][ix] > -1000 && nw3tx[idssd][ix]< max_tempT)
 				{
 					temp_x[idssd] = ix;
-					max_tempT = nw3tx[temp_z][ix];
+					max_tempT = nw3tx[idssd][ix];
 				}
 				else continue;
 			}
@@ -212,21 +213,25 @@ int EUAnaBeta::GetXY(Int_t temp_z)
 			max_tempT = max_tempTY[idssd];
 			for (iy = 0; iy < 40; iy++)
 			{
-				if (nw3ty[temp_z][iy]> -600 && nw3ty[temp_z][iy]< max_tempT)
+//				if (dssd->w3_ey[idssd][iy] > 4100 && nw3ty[idssd][iy]> -1000 && nw3ty[idssd][iy]< max_tempT)
+				if (nw3ty[idssd][iy]> -1000 && nw3ty[idssd][iy]< max_tempT)
 				{
 					temp_y[idssd] = iy;
-					max_tempT = nw3ty[temp_z][iy];
+					max_tempT = nw3ty[idssd][iy];
 				}
 				else continue;
 			}
 		}
+		//if (temp_x[temp_z] > -1 && temp_y[temp_z] > -1)	good_xy = 1;
+
 		if (temp_x[temp_z] > -1 && temp_y[temp_z] > -1)
 		{
 			if (temp_z == 0) good_xy = 1;
-			if (temp_z == 1 && temp_x[temp_z] == temp_x[0] && temp_y[0] == temp_y[temp_z]) good_xy = 1;
-			if ((temp_z > 1 && temp_z <= 3) && abs(temp_x[temp_z] - temp_x[0]) <= 3 && abs(temp_y[temp_z] - temp_y[temp_z]) <= 3) good_xy = 1;
+			if (temp_z == 1 && abs(temp_x[temp_z] - temp_x[0]) <= 1 && abs(temp_y[0] - temp_y[temp_z]) <= 1) good_xy = 1;
+			if ((temp_z == 2 || temp_z == 3) && abs(temp_x[temp_z] - temp_x[0]) <= 3 && abs(temp_y[temp_z] - temp_y[temp_z]) <= 3) good_xy = 1;
 			if (temp_z ==4) good_xy = 1;
 		}
+
 	}
 
 	return good_xy;
@@ -242,11 +247,13 @@ void EUAnaBeta::GetBetaPos(EUDataSi *dssd, TTree* tree)
 	{
 		for (ix = 0; ix < 60; ix++)
 		{
-			if (dssd->w3_ex[idssd][ix] > 10 && dssd->w3_ex[idssd][ix] < 4000 && dssd->w3tx[idssd][ix][0] > -4000 && dssd->w3tx[idssd][ix][0] < 50000)
+//			if (dssd->w3_ex[idssd][ix] > 10 && dssd->w3_ex[idssd][ix] < 4100 && dssd->w3tx[idssd][ix][0] > -4000 && dssd->w3tx[idssd][ix][0] < 50000)
+			if (dssd->w3_ex[idssd][ix] > 0 && dssd->w3tx[idssd][ix][0] > beta_T_X_cut_L[idssd] && dssd->w3tx[idssd][ix][0] < beta_T_X_cut_H[idssd])
 			{
 				for (iy = 0; iy < 40; iy++)
 				{
-					if (dssd->w3_ey[idssd][iy] > 10 && dssd->w3_ey[idssd][iy] < 4000 && dssd->w3ty[idssd][iy][0] > -4000 && dssd->w3ty[idssd][iy][0] < 50000)
+//					if (dssd->w3_ey[idssd][iy] > 10 && dssd->w3_ey[idssd][iy] < 4100 && dssd->w3ty[idssd][iy][0] > -4000 && dssd->w3ty[idssd][iy][0] < 50000)
+					if (dssd->w3_ey[idssd][iy] > 0 && dssd->w3ty[idssd][iy][0] > beta_T_Y_cut_L[idssd] && dssd->w3ty[idssd][iy][0] < beta_T_Y_cut_H[idssd])
 					{
 						fire = 1;
 						dssdhit++;
@@ -265,13 +272,31 @@ void EUAnaBeta::GetBetaPos(EUDataSi *dssd, TTree* tree)
 		for (Int_t i = 0; i < dssdhit; i++)
 		{
 			beta_z[i]  = temp_beta_z[i];
-			beta_x[i] = temp_beta_pos[i].first;
-			beta_y[i] = temp_beta_pos[i].second;
+			if (beta_z[i] == 3)
+			{
+				beta_x[i] = temp_beta_pos[i].first;
+				if (temp_beta_pos[i].second == 21)	beta_y[i] = 31;
+				else if (temp_beta_pos[i].second == 31)	beta_y[i] = 21;
+				else beta_y[i] = temp_beta_pos[i].second;
+			}
+			else if (beta_z[i] == 4)
+			{
+				beta_y[i] = temp_beta_pos[i].second;
+				if (temp_beta_pos[i].first == 3)	beta_x[i] = 13;
+				else if (temp_beta_pos[i].first == 13)	beta_x[i] = 3;
+				else beta_x[i] = temp_beta_pos[i].first;
+			}
+			else
+			{
+				beta_x[i] = temp_beta_pos[i].first;
+				beta_y[i] = temp_beta_pos[i].second;
+			}
 			beta_E_X[i] = dssd->w3_ex[beta_z[i]][beta_x[i]]*wasabi_gain_x[beta_z[i]][beta_x[i]] + wasabi_offset_x[beta_z[i]][beta_x[i]];
 			beta_E_Y[i] = dssd->w3_ey[beta_z[i]][beta_y[i]]*wasabi_gain_y[beta_z[i]][beta_y[i]] + wasabi_offset_y[beta_z[i]][beta_y[i]];
 			beta_T_X[i] = dssd->w3tx[beta_z[i]][beta_x[i]][0];
 			beta_T_Y[i] = dssd->w3ty[beta_z[i]][beta_y[i]][0];
 			beta_E_delta[i] = beta_E_X[i] - beta_E_Y[i];
+			beta_good[i] = 0;
 		}
 	}
 }
@@ -527,6 +552,7 @@ void EUAnaBeta::CopyDSSD(EUTreeBeta *beta, Int_t opt)
 					beta_E_Y[ihit] = wasabi_gain_y[beta_z[ihit]][beta_y[ihit]]*(beta->beta_E_Y[ihit]) + wasabi_offset_y[beta_z[ihit]][beta_y[ihit]];
 				}
 				beta_E_delta[ihit] = beta_E_X[ihit] - beta_E_Y[ihit];
+				beta_good[ihit] = beta->beta_good[ihit];
 				beta_T_X[ihit] = beta->beta_T_X[ihit];
 				beta_T_Y[ihit] = beta->beta_T_Y[ihit];
 			}
@@ -545,6 +571,26 @@ void EUAnaBeta::CopyDSSD(EUTreeBeta *beta, Int_t opt)
 			ion_T_Y = beta->ion_T_Y;
 		}
 
+		if (eventid == 1)
+		{
+			dssdhit = beta->dssdhit;
+			for (Int_t ihit = 0; ihit < dssdhit; ihit++)
+			{
+				beta_z[ihit] = beta->beta_z[ihit];
+				beta_x[ihit] = beta->beta_x[ihit];
+				beta_y[ihit] = beta->beta_y[ihit];
+				beta_E_X[ihit] = beta->beta_E_X[ihit];
+				beta_E_Y[ihit] = beta->beta_E_Y[ihit];
+				beta_E_delta[ihit] = beta->beta_E_delta[ihit];
+				if (beta_E_delta[ihit] > deltaE_cut_L[beta_z[ihit]] && beta_E_delta[ihit] < deltaE_cut_U[beta_z[ihit]])	beta_good[ihit] = 2;
+				else if (abs(beta_E_delta[ihit]) < 500)	beta_good[ihit] = 1;
+				else	beta_good[ihit] = 0;
+				beta_T_X[ihit] = beta->beta_T_X[ihit];
+				beta_T_Y[ihit] = beta->beta_T_Y[ihit];
+			}
+		}
+
+/*
 		if (eventid == 1)
 		{
 			tem_dssdhit = beta->dssdhit;
@@ -578,6 +624,7 @@ void EUAnaBeta::CopyDSSD(EUTreeBeta *beta, Int_t opt)
 				else continue;
 			}
 		}
+*/
 	}
 }
 
@@ -622,6 +669,7 @@ void EUAnaBeta::ResetDSSD()
 		beta_E_delta[i] = -50000;
 		beta_T_X[i] = -50000;
 		beta_T_Y[i] = -50000;
+		beta_good[i] = -1;
 	}
 }
 
