@@ -28,7 +28,7 @@ class EUTree : public TObject
 		Int_t z; //implanted depth, only for Decay data
 		Int_t x; //implanted pixel, only for Decay data
 		Int_t y; //implanted pixel, only for Decay data
-		Int_t beta_E; //final beta energy, only for Decay data
+		Double_t beta_E; //final beta energy, only for Decay data
 		Double_t deltaxy; //distance between an ion and an emitted beta, only for Decay data
 		Int_t beta_flag; //0 : no dleta E cut, 1: delta E cut
 

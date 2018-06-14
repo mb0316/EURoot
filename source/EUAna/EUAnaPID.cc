@@ -50,6 +50,37 @@ void EUAnaPID::GammaTimeCut(TH2D* hist)
 	}
 }
 
+void EUAnaPID::GetCalib()
+{
+        ifstream gcT_beta_twfile("../calib/gcT_beta_TW.dat");
+        Int_t temp_ch;
+        Double_t temp_1, temp_2, temp_3;
+        for (Int_t i = 0; i < 84; i++)
+        {
+                gcT_beta_twfile >> temp_ch >> temp_1 >> temp_2 >> temp_3;
+                gcT_beta_twc[temp_ch][0] = temp_1;
+                gcT_beta_twc[temp_ch][1] = temp_2;
+                gcT_beta_twc[temp_ch][2] = temp_3;
+        }
+
+        gcT_beta_twfile.close();
+}
+
+void EUAnaPID::TWCor()
+{
+        for (Int_t ihit = 0; ihit < gchit; ihit++)
+        {
+                if (gc_T[ihit] > -500E3 && gc_T[ihit] < 500E3)    gc_T[ihit] = -(gc_T[ihit] - gcT_beta_twc[gc_ch[ihit]][0] - gcT_beta_twc[gc_ch[ihit]][1]*TMath::Power(gc_E[ihit], -gcT_beta_twc[gc_ch[ihit]][2]));
+                else continue;
+        }
+        for (Int_t ihit = 0; ihit < addhit; ihit++)
+        {
+                if (add_T[ihit] > -500E3 && add_T[ihit] < 500E3)    add_T[ihit] = -(add_T[ihit] - gcT_beta_twc[add_ch[ihit]][0] - gcT_beta_twc[add_ch[ihit]][1]*TMath::Power(add_E[ihit], -gcT_beta_twc[add_ch[ihit]][2]));
+                else continue;
+        }
+
+}
+
 void EUAnaPID::CopyData(EUTreeDecay* decay)
 {
 

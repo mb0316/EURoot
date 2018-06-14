@@ -25,6 +25,7 @@ class EUAnaMat : public EUAna
 		Int_t addhit;
 		Double_t add_E[84];
 		Double_t add_T[84];
+		Int_t beta_flag;
 
 		Double_t beta_time_cut[50] = {0};
 		Double_t iso_time_cut[50] = {0};
@@ -32,9 +33,9 @@ class EUAnaMat : public EUAna
 		EUAnaMat(const char* filename, int mode);
 		~EUAnaMat();
  		//mass : mass number, name : name of nuclide, type : 0 : addback / 1 : Ge, stat : statistics(0 : good, 1 : bad), format : 0 : 32MB, 1 : 64MB
-		void MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend);
+		void MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend, Int_t &flag);
 		void MakeIGG(Int_t &mode, Int_t &tend);
-		void MakeBTG(Int_t &stat, Int_t &mode);
+		void MakeBTG(Int_t &stat, Int_t &mode, Int_t &flag);
 		void MakeITG(Int_t &mode1, Int_t &mode2);
 };
 

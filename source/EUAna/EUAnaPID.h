@@ -39,6 +39,8 @@ class EUAnaPID : public EUAna, public EUTreeDecay//, public EUTreeIso
 		EUAnaPID(TTree* tree);
 		~EUAnaPID();
 		void	PIDFitting(TH1D* hist, Double_t &mean, Double_t &sig);
+		void	GetCalib();
+		void	TWCor();
 		void	GammaTimeCut(TH2D* hist);
 		void	CopyData(EUTreeDecay* decay);
 };

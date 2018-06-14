@@ -28,7 +28,6 @@ void EUAnaDecay::GetCalib()
 		gcT_beta_twc[temp_ch][0] = temp_1;
 		gcT_beta_twc[temp_ch][1] = temp_2;
 		gcT_beta_twc[temp_ch][2] = temp_3;
-//		cout << i << " " << temp_ch << " " << gcT_beta_twc[temp_ch][0] << " " << gcT_beta_twc[temp_ch][1] << " " <<  gcT_beta_twc[temp_ch][2] << endl;
 	}
 
 	gcT_beta_twfile.close();
@@ -56,6 +55,12 @@ void EUAnaDecay::TWCor()
 		else continue;
 	}
 
+}
+
+void EUAnaDecay::TCorrEURICA(EUTreeBeta *beta)
+{
+	for (Int_t ihit = 0; ihit < beta->gchit; ihit++)	beta->gc_T[ihit] = beta->gc_T[ihit] - beta_T;
+	for (Int_t ihit = 0; ihit < beta->addhit; ihit++)	beta->add_T[ihit] = beta->add_T[ihit] - beta_T;
 }
 
 void EUAnaDecay::CopyEURICA(EUTreeBeta *beta)
@@ -104,6 +109,7 @@ int EUAnaDecay::BetaTrack(EUTreeBeta *beta)
 	deltaxy = 10;
 	good_beta = 0;
 	beta_flag = -1;
+	beta_T = 0;
 	for (Int_t ihit = 0; ihit < beta->dssdhit; ihit++)
 	{
 		if (beta->beta_z[ihit] == z && (z > -1 && z < 5)) flag_z = 1;
@@ -120,6 +126,7 @@ int EUAnaDecay::BetaTrack(EUTreeBeta *beta)
 				if (temp_deltaxy < deltaxy)
 				{
 					deltaxy = temp_deltaxy;
+					beta_T = (beta->beta_T_X[ihit] + beta->beta_T_Y[ihit])/2;
 					beta_flag = beta->beta_good[ihit];
 				}
 				else continue;

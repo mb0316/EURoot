@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 			beta->ResetDSSD();
 			beta->eventid = 0;
 			beta->CalibTzero(dssd);
-			beta->GetIonPos(dssd);
+			beta->GetIonPos(dssd,run_num);
 			tree->Fill();
 		}
 
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 		{
 			beta->eventid = 1;
 			beta->ResetDSSD();
-
+			beta->CalibTzeroBeta(dssd);
 			beta->GetBetaPos(dssd, tree);
 			if (beta->dssdhit < 100)	tree->Fill();
 		}

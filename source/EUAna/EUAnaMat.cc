@@ -35,6 +35,7 @@ EUAnaMat::EUAnaMat(const char* filename, int mode)
 		ftree->SetBranchAddress("add_T", add_T);
 		ftree->SetBranchAddress("deltaxy", &deltaxy);
 		ftree->SetBranchAddress("t", &t);
+		ftree->SetBranchAddress("beta_flag", &beta_flag);
 	}
 	if (mode == 1)
 	{
@@ -55,7 +56,7 @@ EUAnaMat::EUAnaMat(const char* filename, int mode)
 EUAnaMat::~EUAnaMat()
 {}
 
-void EUAnaMat::MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend)
+void EUAnaMat::MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend, Int_t &flag)
 {
 
 	gStyle->SetOptStat(0);
@@ -88,7 +89,7 @@ void EUAnaMat::MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend)
 
 						if (abs(add_T[ihit]) < beta_time_cut[Eregion1])
 						{
-							if (abs(add_T[ihit] - add_T[addhit-jhit-1]) < 200 && abs(add_T[addhit-jhit-1]) < beta_time_cut[Eregion2]  && !(add_E[ihit]==add_E[addhit-jhit-1])) gg_a -> Fill(add_E[ihit], add_E[addhit-jhit-1]);
+							if (abs(add_T[ihit] - add_T[addhit-jhit-1]) < 200 && abs(add_T[addhit-jhit-1]) < beta_time_cut[Eregion2]  && !(add_E[ihit]==add_E[addhit-jhit-1]) && beta_flag >= flag) gg_a -> Fill(add_E[ihit], add_E[addhit-jhit-1]);
 							else continue;
 						}
 						else continue;
@@ -107,7 +108,7 @@ void EUAnaMat::MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend)
 
 						if (abs(gc_T[ihit]) < beta_time_cut[Eregion1])
 						{
-							if (abs(gc_T[ihit] - gc_T[gchit-jhit-1]) < 200 && abs(gc_T[gchit-jhit-1]) < beta_time_cut[Eregion2]  && !(gc_E[ihit]==gc_E[gchit-jhit-1])) gg_g -> Fill(gc_E[ihit], gc_E[gchit-jhit-1]);
+							if (abs(gc_T[ihit] - gc_T[gchit-jhit-1]) < 200 && abs(gc_T[gchit-jhit-1]) < beta_time_cut[Eregion2]  && !(gc_E[ihit]==gc_E[gchit-jhit-1]) && beta_flag >= flag) gg_g -> Fill(gc_E[ihit], gc_E[gchit-jhit-1]);
 							else continue;
 						}
 						else continue;
@@ -120,7 +121,7 @@ void EUAnaMat::MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend)
 		}
 		if (stat == 1) //bad statistics
 		{
-			if (t >= tstart && t <= tend && deltaxy <= 1)
+			if (t >= tstart && t <= tend && deltaxy < 2)
 			{
 				for (Int_t ihit = 0; ihit < addhit; ihit++)
 				{
@@ -133,7 +134,7 @@ void EUAnaMat::MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend)
 
 						if (abs(add_T[ihit]) < beta_time_cut[Eregion1])
 						{
-							if (abs(add_T[ihit] - add_T[addhit-jhit-1]) < 200 && abs(add_T[addhit-jhit-1]) < beta_time_cut[Eregion2]  && !(add_E[ihit]==add_E[addhit-jhit-1])) gg_a -> Fill(add_E[ihit], add_E[addhit-jhit-1]);
+							if (abs(add_T[ihit] - add_T[addhit-jhit-1]) < 200 && abs(add_T[addhit-jhit-1]) < beta_time_cut[Eregion2]  && !(add_E[ihit]==add_E[addhit-jhit-1]) && beta_flag >= flag) gg_a -> Fill(add_E[ihit], add_E[addhit-jhit-1]);
 							else continue;
 						}
 						else continue;
@@ -152,7 +153,7 @@ void EUAnaMat::MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend)
 
 						if (abs(gc_T[ihit]) < beta_time_cut[Eregion1])
 						{
-							if (abs(gc_T[ihit] - gc_T[gchit-jhit-1]) < 200 && abs(gc_T[gchit-jhit-1]) < beta_time_cut[Eregion2]  && !(gc_E[ihit]==gc_E[gchit-jhit-1])) gg_g -> Fill(gc_E[ihit], gc_E[gchit-jhit-1]);
+							if (abs(gc_T[ihit] - gc_T[gchit-jhit-1]) < 200 && abs(gc_T[gchit-jhit-1]) < beta_time_cut[Eregion2]  && !(gc_E[ihit]==gc_E[gchit-jhit-1]) && beta_flag >= flag) gg_g -> Fill(gc_E[ihit], gc_E[gchit-jhit-1]);
 							else continue;
 						}
 						else continue;
@@ -206,7 +207,7 @@ void EUAnaMat::MakeIGG(Int_t &mode, Int_t &tend)
 	}
 }
 
-void EUAnaMat::MakeBTG(Int_t &stat, Int_t &mode)
+void EUAnaMat::MakeBTG(Int_t &stat, Int_t &mode, Int_t &flag)
 {
 	gStyle->SetOptStat(0);
 	Int_t Emax;
@@ -225,7 +226,7 @@ void EUAnaMat::MakeBTG(Int_t &stat, Int_t &mode)
 		ftree->GetEntry(iEnt);
 		if (stat == 0)
 		{
-			if (t>= 0 && deltaxy == 0)
+			if (t>= 0 && deltaxy == 0 && beta_flag >= flag)
 			{
 				for (Int_t ihit = 0; ihit < addhit; ihit++)
 				{
@@ -244,7 +245,7 @@ void EUAnaMat::MakeBTG(Int_t &stat, Int_t &mode)
 		}
 		if (stat == 1)
 		{
-			if (t>= 0 && deltaxy == 1)
+			if (t>= 0 && deltaxy < 2 && beta_flag >= flag)
 			{
 				for (Int_t ihit = 0; ihit < addhit; ihit++)
 				{

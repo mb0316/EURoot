@@ -21,10 +21,12 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
 		Int_t	temp_z;
 		Int_t	temp_x[5];
 		Int_t	temp_y[5];
-//		Int_t	max_tempTX[5] = {150, 300, 1000, 100, 100};
-		Int_t	max_tempTX[5] = {100, 100, 1200, 300, 500};
-//		Int_t	max_tempTY[5] = {200, 250, 1000, 160, 20};
-		Int_t	max_tempTY[5] = {100, 100, 1200, 300, 100};
+		Int_t	max_tempTX_1[5] = {1500, 1000, 150, 1000, 1000};
+		//Int_t	max_tempTX_2[5] = {80, 100, 800, 100, 100};
+		Int_t	max_tempTX_2[5] = {500, 1000, 2500, 1000, 1000};
+		Int_t	max_tempTY_1[5] = {1500, 1500, 100, 500, 1000};
+		//Int_t	max_tempTY_2[5] = {80, 100, 400, 160, 15};
+		Int_t	max_tempTY_2[5] = {700, 1000, 1200, 500, 1000};
 		Int_t	max_tempT;
 		Int_t	fire_z[6];
 		Int_t	fire_x[6];
@@ -39,10 +41,10 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
 		Bool_t	good_xy;
 		Double_t deltaE_cut_L[5] = {-44.55, -113.92, -50.6, -41.33, -59.84};
 		Double_t deltaE_cut_U[5] = {55.37, 92.92, 60.04, 53.91, 68.6};
-		Int_t beta_T_X_cut_L[5] = {-3000, -3000, -3000, -3000, -3000};
-		Int_t beta_T_Y_cut_L[5] = {-4000, -5000, -4000, -4000, -3000};
-		Int_t beta_T_X_cut_H[5] = {5000, 6000, 5000, 5000, 5000};
-		Int_t beta_T_Y_cut_H[5] = {5000, 8000, 5000, 5000, 2000};
+		Int_t beta_T_X_cut_L[5] = {-300, -300, -300, -300, -300};
+		Int_t beta_T_Y_cut_L[5] = {-400, -500, -400, -400, -300};
+		Int_t beta_T_X_cut_H[5] = {500, 600, 500, 500, 500};
+		Int_t beta_T_Y_cut_H[5] = {500, 800, 500, 500, 200};
 		Int_t tem_dssdhit;
 		Int_t tem_beta_z[100];
 		Int_t tem_beta_x[100];
@@ -67,8 +69,9 @@ class EUAnaBeta : public EUAna, public EUTreeBeta
 		void	CalibBeam(Int_t &runnum);
 		void	GetBetaTDCoffset();
 		void	CalibTzero(EUDataSi *dssd);
-		void	GetIonPos(EUDataSi *dssd);
-		int	GetXY(Int_t temp_z, EUDataSi *dssd);
+		void	CalibTzeroBeta(EUDataSi *dssd);
+		void	GetIonPos(EUDataSi *dssd, Int_t &run_num);
+		//int	GetXY(Int_t temp_z, EUDataSi *dssd);
 		void	GetBetaPos(EUDataSi *dssd, TTree* tree);
 //		void	GetBetaPos(EUDataSi *dssd, Int_t &ndssd, TTree* tree);
 

@@ -47,7 +47,7 @@ int main (int argc, char* argv[])
 
 	cout << "Start analyzing and build beta decay data." << endl;
 	Long64_t ent = 0;
-	decay->GetCalib();
+//	decay->GetCalib();
 	Int_t nBytes;
 
 	for (imts_master = mts_master.begin(); imts_master != mts_master.end(); imts_master++)
@@ -82,8 +82,9 @@ int main (int argc, char* argv[])
 					tsBeta = imts_slave->first;
 					decay->t = (tsBeta - tsIon)/(1e5);
 					decay->ResetEURICA();
+					decay->TCorrEURICA(beta);
 					decay->CopyEURICA(beta);
-					decay->TWCor();
+//					decay->TWCor();
 					tree->Fill();
 				}
 

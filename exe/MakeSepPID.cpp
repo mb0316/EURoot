@@ -43,11 +43,10 @@ int main (int argc, char* argv[])
 	EUTreeDecay* decay = new EUTreeDecay(filename);
 	EUAnaPID* pid = new EUAnaPID(tree);
 
-
 	//	EUAnaPID* beta = new EUAnaPID("../results/BuildBetaDecay/BuildBetaDecay.root");
 	TH1D* hist_Z = new TH1D("Z", "", 500, 50, 55);
 	TH1D* hist_A = new TH1D("Mass", "", 600, 2.6, 2.8);
-	TH2D* hist = new TH2D("t-g", "", 2000, 0, 2000, 500, -1000, 1000);
+//	TH2D* hist = new TH2D("t-g", "", 2000, 0, 2000, 500, -1000, 1000);
 
 	Long64_t nEnt = decay->fData->GetEntries();
 
@@ -61,12 +60,12 @@ int main (int argc, char* argv[])
 			fflush(stdout);
 			printf("\r");
 		}
-
+/*
 		if (decay->deltaxy == 0 && decay->t>=0)
 		{
 			for (Int_t ihit = 0; ihit < decay->gchit; ihit++)	hist -> Fill(decay->gc_E[ihit], decay->gc_T[ihit]);
 		}
-
+*/
 		if (decay->AoQ > aoq-3*aoq_sig && decay->AoQ < aoq+3*aoq_sig && decay->Zpro > zpro-3*z_sig && decay->Zpro < zpro+3*z_sig)
 		{
 			hist_Z -> Fill(decay->Zpro);
@@ -90,8 +89,7 @@ int main (int argc, char* argv[])
 	cout << "Mass mean : " << aoq_mean << endl;
 	cout << "Mass 2sigma : " << aoq_cut << endl;
 
-//	pid->MakeOutFile(filename, tree, zpro, mass, z_mean, z_cut, aoq_mean, aoq_cut);
-
+	pid->GetCalib();
 	Double_t rad = 2;
 
 	for (Long64_t iEnt = 0; iEnt < nEnt; iEnt++)
@@ -109,6 +107,7 @@ int main (int argc, char* argv[])
 		if (rad <= 1)
 		{
 			pid->CopyData(decay); 
+			pid->TWCor();
 			tree->Fill();
 		}
 		rad = 2;
@@ -117,7 +116,7 @@ int main (int argc, char* argv[])
 	out->cd();
 	tree->Write();
 	out->Close();
-
+/*
 	pid->GammaTimeCut(hist);
 	TGraph* graph = new TGraph();
 	ofstream gtc;
@@ -140,8 +139,7 @@ int main (int argc, char* argv[])
 	graph->Draw("L");
 	graph->SetLineColor(2);
 
-
 	cvs->SaveAs(Form("../results/PID/Betadecay_%d_%d.pdf", zpro, mass));
-
+*/
 //	theApp.Run();
 }

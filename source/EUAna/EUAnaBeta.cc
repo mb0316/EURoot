@@ -24,6 +24,7 @@ void EUAnaBeta::GetCalib()
 	ifstream wasabifile("../calib/WASABI_gain.dat");
 	ifstream overflowfile("../calib/eurica_overflow.dat");
 	ifstream wasabiTfile("../calib/tzero.dat");
+	ifstream wasabiTBfile("../calib/tzero_beta.dat");
 
 	for (Int_t i = 0; i < 84; i++)
 	{
@@ -57,7 +58,7 @@ void EUAnaBeta::GetCalib()
 		wasabi_offset_y[4][i] = 0;
 	}
 
-	Double_t temp_T;
+	Double_t temp_T, temp1, temp2, temp3;
 	for (Int_t i = 0; i < 500; i++)
 	{
 		wasabiTfile >> numdssd >> ich >> temp_T;
@@ -65,12 +66,21 @@ void EUAnaBeta::GetCalib()
 		if (ich >= 60)	wasabi_Tzero_y[numdssd][ich-60] = temp_T;
 	}
 
+	for (Int_t i = 0; i < 500; i++)
+	{
+		wasabiTBfile >> numdssd >> ich >> temp_T;
+		if (ich < 60)	wasabi_Tzero_beta_x[numdssd][ich] = temp_T;
+		else	wasabi_Tzero_beta_y[numdssd][ich-60] = temp_T;
+	}
+	
+
 	adcfile.close();
 	tdcsfile.close();
 	tdclfile.close();
 	wasabifile.close();
 	overflowfile.close();
 	wasabiTfile.close();
+	wasabiTBfile.close();
 }
 
 void EUAnaBeta::CalibBeam(Int_t &runnum)
@@ -102,7 +112,6 @@ void EUAnaBeta::CalibBeam(Int_t &runnum)
 	for (Int_t i = 0; i < 84; i++)	euricaEcal >> nch >> adc_gain[i] >> adc_offset[i];
 }
 	
-
 void EUAnaBeta::CalibTzero(EUDataSi *dssd)
 {
 	for (idssd = 0; idssd < 5; idssd++)
@@ -112,7 +121,16 @@ void EUAnaBeta::CalibTzero(EUDataSi *dssd)
 	}
 }
 
-void EUAnaBeta::GetIonPos(EUDataSi *dssd)
+void EUAnaBeta::CalibTzeroBeta(EUDataSi *dssd)
+{
+	for (idssd = 0; idssd < 5; idssd++)
+	{
+		for (ix = 0; ix < 60; ix++)	nw3tx[idssd][ix] = 0.097*(dssd->w3tx[idssd][ix][0] - wasabi_Tzero_beta_x[idssd][ix]);
+		for (iy = 0; iy < 40; iy++)	nw3ty[idssd][iy] = 0.097*(dssd->w3ty[idssd][iy][0] - wasabi_Tzero_beta_y[idssd][iy]);
+	}
+}
+
+void EUAnaBeta::GetIonPos(EUDataSi *dssd, Int_t &run_num)
 {
 	temp_z = -1;
 	max_tempT = 0;
@@ -126,31 +144,88 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 
 	for (idssd = 0; idssd < 5; idssd++)
 	{
-		for (ix = 0; ix < 60; ix++)
+		if (idssd == 0)
 		{
-			if (abs(nw3tx[idssd][ix]) < max_tempTX[idssd])
+			if (run_num < 1038)	max_tempT = max_tempTX_1[idssd];
+			else	max_tempT = max_tempTX_2[idssd];
+			for (ix = 0; ix < 60; ix++)
 			{
-				fire_x[idssd] = 1;
-				break;
+				if (nw3tx[idssd][ix] > -500 && nw3tx[idssd][ix] < max_tempT)
+				{
+					fire_x[idssd] = ix;
+					max_tempT = nw3tx[idssd][ix];
+				}
+				else    continue;
 			}
-			else    continue;
-		}
 
-		for (iy = 0; iy < 40; iy++)
+			if (run_num < 1038)	max_tempT = max_tempTY_1[idssd];
+			else	max_tempT = max_tempTY_2[idssd];
+			for (iy = 0; iy < 40; iy++)
+			{
+				if (nw3ty[idssd][iy] > -500 && nw3ty[idssd][iy] < max_tempT)
+				{
+					fire_y[idssd] = iy;
+					max_tempT = nw3ty[idssd][iy];
+				}
+				else    continue;
+			}
+		}
+		else
 		{
-			if (abs(nw3ty[idssd][iy]) < max_tempTY[idssd])
-			{
-				fire_y[idssd] = 1;
-				break;
+			if (run_num < 1038)
+			{	
+				max_tempT = max_tempTX_1[idssd];
+				for (ix = 0; ix < 60; ix++)
+				{
+					if (nw3tx[idssd-1][ix] > -500 && nw3tx[idssd-1][ix] < max_tempTX_1[idssd-1] && nw3tx[idssd][ix] > -500 && nw3tx[idssd][ix] < max_tempT)
+					{
+						fire_x[idssd] = ix;
+						max_tempT = nw3tx[idssd][ix];
+					}
+					else    continue;
+				}
+
+				max_tempT = max_tempTY_1[idssd];
+				for (iy = 0; iy < 40; iy++)
+				{
+					if (nw3ty[idssd-1][iy] > -500 && nw3ty[idssd-1][iy] < max_tempTY_1[idssd-1] && nw3ty[idssd][iy] > -500 && nw3ty[idssd][iy] < max_tempT)
+					{
+						fire_y[idssd] = iy;
+						max_tempT = nw3ty[idssd][iy];
+					}
+					else    continue;
+				}
 			}
-			else    continue;
+
+			else
+			{	
+				max_tempT = max_tempTX_2[idssd];
+				for (ix = 0; ix < 60; ix++)
+				{
+					if (nw3tx[idssd-1][ix] > -500 && nw3tx[idssd-1][ix] < max_tempTX_2[idssd-1] && nw3tx[idssd][ix] > -500 && nw3tx[idssd][ix] < max_tempT)
+					{
+						fire_x[idssd] = ix;
+						max_tempT = nw3tx[idssd][ix];
+					}
+					else    continue;
+				}
+
+				max_tempT = max_tempTY_2[idssd];
+				for (iy = 0; iy < 40; iy++)
+				{
+					if (nw3ty[idssd-1][iy] > -500 && nw3ty[idssd-1][iy] < max_tempTY_2[idssd-1] && nw3ty[idssd][iy] > -500 && nw3ty[idssd][iy] < max_tempT)
+					{
+						fire_y[idssd] = iy;
+						max_tempT = nw3ty[idssd][iy];
+					}
+					else    continue;
+				}
+			}
 		}
-
-		if (fire_x[idssd] == 1 && fire_y[idssd] == 1)	fire_z[idssd] = 1;
-
-		if (fire_z[4] == 1 && dssd->betaPL2L < 50000 && dssd->betaPL2R < 50000) fire_z[5] = 1; 
-
+		if (fire_x[idssd] > 0 && fire_y[idssd] > 0)	fire_z[idssd] = 1;
 	}
+
+	if (fire_z[4] == 1 && dssd->betaPL2L < 50000 && dssd->betaPL2R < 50000) fire_z[5] = 1; 
 
 	for (Int_t i = 0; i < 5; i++)
 	{
@@ -162,12 +237,20 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 		else continue;
 	}
 
-	GetXY(temp_z, dssd);
+	good_xy = 0;
+
+	if (fire_x[temp_z] > 0 && fire_y[temp_z] > 0)	//good_xy=1;
+	{
+		if (temp_z == 0 || temp_z == 4) good_xy = 1;
+		else if (abs(fire_x[temp_z] - fire_x[temp_z-1]) <= 2 && abs(fire_y[temp_z] - fire_y[temp_z-1]) <= 2) good_xy = 1;
+	}
+
+
 	if (good_xy == 1)
 	{
 		ion_z = temp_z;
-		ion_x = temp_x[temp_z];
-		ion_y = temp_y[temp_z];
+		ion_x = fire_x[temp_z];
+		ion_y = fire_y[temp_z];
 		ion_E_X = dssd->w3_ex[ion_z][ion_x];
 		ion_T_X = nw3tx[ion_z][ion_x];
 		ion_E_Y = dssd->w3_ey[ion_z][ion_y];
@@ -185,58 +268,6 @@ void EUAnaBeta::GetIonPos(EUDataSi *dssd)
 	}
 }
 
-int EUAnaBeta::GetXY(Int_t temp_z, EUDataSi* dssd)
-{
-	for (Int_t i = 0; i < 5; i++)
-	{
-		temp_x[i] = -1;
-		temp_y[i] = -1;
-	}
-
-	good_xy = 0;
-	if (temp_z > -1 && temp_z < 5)
-	{
-		for (idssd = 0; idssd <= temp_z; idssd++)
-		{
-			max_tempT = max_tempTX[idssd];
-			for (ix = 0; ix < 60; ix++)
-			{
-//				if (dssd->w3_ex[idssd][ix] > 4100 && nw3tx[idssd][ix] > -1000 && nw3tx[idssd][ix]< max_tempT)
-				if (nw3tx[idssd][ix] > -1000 && nw3tx[idssd][ix]< max_tempT)
-				{
-					temp_x[idssd] = ix;
-					max_tempT = nw3tx[idssd][ix];
-				}
-				else continue;
-			}
-
-			max_tempT = max_tempTY[idssd];
-			for (iy = 0; iy < 40; iy++)
-			{
-//				if (dssd->w3_ey[idssd][iy] > 4100 && nw3ty[idssd][iy]> -1000 && nw3ty[idssd][iy]< max_tempT)
-				if (nw3ty[idssd][iy]> -1000 && nw3ty[idssd][iy]< max_tempT)
-				{
-					temp_y[idssd] = iy;
-					max_tempT = nw3ty[idssd][iy];
-				}
-				else continue;
-			}
-		}
-		//if (temp_x[temp_z] > -1 && temp_y[temp_z] > -1)	good_xy = 1;
-
-		if (temp_x[temp_z] > -1 && temp_y[temp_z] > -1)
-		{
-			if (temp_z == 0) good_xy = 1;
-			if (temp_z == 1 && abs(temp_x[temp_z] - temp_x[0]) <= 1 && abs(temp_y[0] - temp_y[temp_z]) <= 1) good_xy = 1;
-			if ((temp_z == 2 || temp_z == 3) && abs(temp_x[temp_z] - temp_x[0]) <= 3 && abs(temp_y[temp_z] - temp_y[temp_z]) <= 3) good_xy = 1;
-			if (temp_z ==4) good_xy = 1;
-		}
-
-	}
-
-	return good_xy;
-}
-
 void EUAnaBeta::GetBetaPos(EUDataSi *dssd, TTree* tree)
 {   
 	fire = -1;
@@ -245,15 +276,13 @@ void EUAnaBeta::GetBetaPos(EUDataSi *dssd, TTree* tree)
 	dssdhit = 0;
 	for (Int_t idssd = 0; idssd < 5; idssd++)
 	{
-		for (ix = 0; ix < 60; ix++)
+		for (ix = 1; ix < 59; ix++)
 		{
-//			if (dssd->w3_ex[idssd][ix] > 10 && dssd->w3_ex[idssd][ix] < 4100 && dssd->w3tx[idssd][ix][0] > -4000 && dssd->w3tx[idssd][ix][0] < 50000)
-			if (dssd->w3_ex[idssd][ix] > 0 && dssd->w3tx[idssd][ix][0] > beta_T_X_cut_L[idssd] && dssd->w3tx[idssd][ix][0] < beta_T_X_cut_H[idssd])
+			if (dssd->w3_ex[idssd][ix] > 0 && nw3tx[idssd][ix] > -5 && nw3tx[idssd][ix] < 10000)
 			{
-				for (iy = 0; iy < 40; iy++)
+				for (iy = 1; iy < 39; iy++)
 				{
-//					if (dssd->w3_ey[idssd][iy] > 10 && dssd->w3_ey[idssd][iy] < 4100 && dssd->w3ty[idssd][iy][0] > -4000 && dssd->w3ty[idssd][iy][0] < 50000)
-					if (dssd->w3_ey[idssd][iy] > 0 && dssd->w3ty[idssd][iy][0] > beta_T_Y_cut_L[idssd] && dssd->w3ty[idssd][iy][0] < beta_T_Y_cut_H[idssd])
+					if (dssd->w3_ey[idssd][iy] > 0 && abs(nw3tx[idssd][ix] - nw3ty[idssd][iy]) < 200)
 					{
 						fire = 1;
 						dssdhit++;
@@ -272,6 +301,14 @@ void EUAnaBeta::GetBetaPos(EUDataSi *dssd, TTree* tree)
 		for (Int_t i = 0; i < dssdhit; i++)
 		{
 			beta_z[i]  = temp_beta_z[i];
+			beta_x[i] = temp_beta_pos[i].first;
+			beta_y[i] = temp_beta_pos[i].second;
+			beta_E_X[i] = dssd->w3_ex[beta_z[i]][beta_x[i]]*wasabi_gain_x[beta_z[i]][beta_x[i]] + wasabi_offset_x[beta_z[i]][beta_x[i]];
+			beta_E_Y[i] = dssd->w3_ey[beta_z[i]][beta_y[i]]*wasabi_gain_y[beta_z[i]][beta_y[i]] + wasabi_offset_y[beta_z[i]][beta_y[i]];
+			beta_T_X[i] = nw3tx[beta_z[i]][beta_x[i]];
+			beta_T_Y[i] = nw3ty[beta_z[i]][beta_y[i]];
+			beta_E_delta[i] = beta_E_X[i] - beta_E_Y[i];
+			beta_good[i] = 0;
 			if (beta_z[i] == 3)
 			{
 				beta_x[i] = temp_beta_pos[i].first;
@@ -291,12 +328,7 @@ void EUAnaBeta::GetBetaPos(EUDataSi *dssd, TTree* tree)
 				beta_x[i] = temp_beta_pos[i].first;
 				beta_y[i] = temp_beta_pos[i].second;
 			}
-			beta_E_X[i] = dssd->w3_ex[beta_z[i]][beta_x[i]]*wasabi_gain_x[beta_z[i]][beta_x[i]] + wasabi_offset_x[beta_z[i]][beta_x[i]];
-			beta_E_Y[i] = dssd->w3_ey[beta_z[i]][beta_y[i]]*wasabi_gain_y[beta_z[i]][beta_y[i]] + wasabi_offset_y[beta_z[i]][beta_y[i]];
-			beta_T_X[i] = dssd->w3tx[beta_z[i]][beta_x[i]][0];
-			beta_T_Y[i] = dssd->w3ty[beta_z[i]][beta_y[i]][0];
-			beta_E_delta[i] = beta_E_X[i] - beta_E_Y[i];
-			beta_good[i] = 0;
+
 		}
 	}
 }
@@ -582,49 +614,12 @@ void EUAnaBeta::CopyDSSD(EUTreeBeta *beta, Int_t opt)
 				beta_E_X[ihit] = beta->beta_E_X[ihit];
 				beta_E_Y[ihit] = beta->beta_E_Y[ihit];
 				beta_E_delta[ihit] = beta->beta_E_delta[ihit];
-				if (beta_E_delta[ihit] > deltaE_cut_L[beta_z[ihit]] && beta_E_delta[ihit] < deltaE_cut_U[beta_z[ihit]])	beta_good[ihit] = 2;
-				else if (abs(beta_E_delta[ihit]) < 500)	beta_good[ihit] = 1;
+				if (beta_E_delta[ihit] > -100 && beta_E_delta[ihit] < 100)	beta_good[ihit] = 1;
 				else	beta_good[ihit] = 0;
 				beta_T_X[ihit] = beta->beta_T_X[ihit];
 				beta_T_Y[ihit] = beta->beta_T_Y[ihit];
 			}
 		}
-
-/*
-		if (eventid == 1)
-		{
-			tem_dssdhit = beta->dssdhit;
-			for (Int_t ihit = 0; ihit < tem_dssdhit; ihit++)
-			{
-					tem_beta_z[ihit] = beta->beta_z[ihit];
-					tem_beta_x[ihit] = beta->beta_x[ihit];
-					tem_beta_y[ihit] = beta->beta_y[ihit];
-					tem_beta_E_X[ihit] = beta->beta_E_X[ihit];
-					tem_beta_E_Y[ihit] = beta->beta_E_Y[ihit];
-					tem_beta_E_delta[ihit] = beta->beta_E_delta[ihit];
-					tem_beta_T_X[ihit] = beta->beta_T_X[ihit];
-					tem_beta_T_Y[ihit] = beta->beta_T_Y[ihit];
-			}
-
-			dssdhit = 0;
-			for (Int_t ihit = 0; ihit < tem_dssdhit; ihit++)
-			{
-				if (tem_beta_E_delta[ihit] > deltaE_cut_L[tem_beta_z[ihit]] && tem_beta_E_delta[ihit] < deltaE_cut_U[tem_beta_z[ihit]])
-				{
-					beta_z[dssdhit] = tem_beta_z[ihit];
-					beta_x[dssdhit] = tem_beta_x[ihit];
-					beta_y[dssdhit] = tem_beta_y[ihit];
-					beta_E_X[dssdhit] = tem_beta_E_X[ihit];
-					beta_E_Y[dssdhit] = tem_beta_E_Y[ihit];
-					beta_E_delta[dssdhit] = tem_beta_E_delta[ihit];
-					beta_T_X[dssdhit] = tem_beta_T_X[ihit];
-					beta_T_Y[dssdhit] = tem_beta_T_Y[ihit];
-					dssdhit++;
-				}
-				else continue;
-			}
-		}
-*/
 	}
 }
 
