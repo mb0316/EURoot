@@ -154,8 +154,8 @@ void EURICA_Ecal_2()
 	Double_t offset[84] = {0};
 	TF1* linear[84];
 	TGraphErrors* graph[84];
-	TH2D* calib_hist = new TH2D("calib", ";HPGe channel;Energy (keV)", 84, 0, 84, 3000, 0, 3000);
-	TH2D* dum = new TH2D("dummy", ";HPGe ADC;HPGe Energy (keV)", 30000, 0, 30000, 3000, 0, 3000);
+	TH2D* calib_hist = new TH2D("calib", "", 84, 0, 84, 3000, 0, 3000);
+	TH2D* dum = new TH2D("dummy", "", 30000, 0, 30000, 3000, 0, 3000);
 	TCanvas* cvs = new TCanvas();
 	ofstream outfile("../eurica_adc_calib.dat");
 
@@ -215,5 +215,3 @@ void EURICA_Ecal_2()
 	out->Close();
 
 }
-
-

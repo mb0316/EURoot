@@ -9,4 +9,8 @@ Byul Moon.
 4. Run WASABI_4.cc : check the prompt peak again and save the results in tzero.dat file.
 5. Run WASABI_5.cc : calibrate TDC spectra again and save each spectrum in WASABI_T_hist_2.root file.
 
+Only for Y strips in 3rd layer.
+1. Run WASABI_3rd_Y.cc : make WASABI_T_3rd_T.root file.
+2. Run WASABI_3rd_Y_calib.cc : calib Y strips in 3rd layer. User should artificially correct the Tzero points.
+
 This calibration must be artificially checked, especially for y strips in dssd 3rd layer and 5th layer.

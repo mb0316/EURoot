@@ -4,7 +4,7 @@ void EURICA_Ecal_1()
 {
 	TFile* outfile = new TFile("EURICA_ADC.root", "RECREATE");
 	char euricafile[100];
-	sprintf(euricafile, "/home/mb0316/EURICA/EURoot/data/EURICA_Calib/eu152run_0003.root");
+	sprintf(euricafile, "../../data/EURICA_Calib/eu152run_0003.root");
 	TFile* file = new TFile(Form("%s", euricafile), "READ");
 
 	eurica hpge;

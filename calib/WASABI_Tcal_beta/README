@@ -1,0 +1,6 @@
+WASABI Beta time calibration.
+by Byul Moon.
+Jun. 15. 2018.
+
+1. Run WASABI_1.cc : make WASABI_beta_T_hist.root.
+2. Run WASABI_2.cc : calibrate Tzero points for every strips by using WASABI_beta_T_hist.root.

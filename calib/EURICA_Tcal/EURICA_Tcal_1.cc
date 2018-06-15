@@ -5,8 +5,8 @@ void EURICA_Tcal_1()
 	TFile* outfile = new TFile("EURICA_TDC.root", "RECREATE");
 	char srfile[100];
 	char lrfile[100];
-	sprintf(srfile, "/home/mb0316/EURICA/EURoot/data/EURICA_Calib/ge_srtdc_cal0001.root");
-	sprintf(lrfile, "/home/mb0316/EURICA/EURoot/data/EURICA_Calib/ge_lrtdc_cal0001.root");
+	sprintf(srfile, "../../data/EURICA_Calib/ge_srtdc_cal0001.root");
+	sprintf(lrfile, "../../data/EURICA_Calib/ge_lrtdc_cal0001.root");
 	TFile* sfile = new TFile(Form("%s", srfile), "READ");
 
 	eurica hpge;

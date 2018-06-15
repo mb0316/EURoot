@@ -1,6 +1,6 @@
 #include "eurica.h"
 
-void EURICA_Effcal_uEUdBa()
+void EURICA_Effcal_1()
 {
 	TFile* outfile = new TFile("EURICA_ADC.root", "RECREATE");
 	TFile* file[7];

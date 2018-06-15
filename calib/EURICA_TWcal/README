@@ -1,0 +1,7 @@
+EURICA Time-walk correction
+by Byul Moon.
+Jun. 15. 2018.
+
+1. run EURICA_1.cc : make TWhist.root file sotring E vs. T 2-D histograms for each channel.
+2. run EURICA_2.cc : correct time-walk by TWhist.root for every channels.
+3. run EURICA_3.cc : get 3sigma cut conditions after the time-walk correction.

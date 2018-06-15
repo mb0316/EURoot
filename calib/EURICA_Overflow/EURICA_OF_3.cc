@@ -4,8 +4,8 @@ void EURICA_OF_3()
 {
 	ifstream opencal("../eurica_overflow.dat");
 	char openfile[100];
-	sprintf(openfile, "/home/mb0316/EURICA/EURoot/data/EURICA_Calib/eu152run_0003.root");
-	TFile* file = new TFile("/home/mb0316/EURICA/EURoot/data/EURICA_Calib/eu152run_0003.root", "READ");
+	sprintf(openfile, "../../data/EURICA_Calib/eu152run_0003.root");
+	TFile* file = new TFile("../../data/EURICA_Calib/eu152run_0003.root", "READ");
 	eurica hpge;
 	hpge.GetTree(openfile);
 

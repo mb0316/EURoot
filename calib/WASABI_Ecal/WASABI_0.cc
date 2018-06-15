@@ -18,13 +18,13 @@ void WASABI_0()
 		if (ifile == 65) continue;
 		else
 		{
-			filename = Form("~/EURICA/EURoot/data/WASABI_Calib/GeSiCorr_%04d.root", ifile);
+			filename = Form("../../data/WASABI_Calib/GeSiCorr_%04d.root", ifile);
 			chain -> Add(filename);
 			cout << filename << endl;
 		}
 	}
 
-	TFile* out = new TFile("~/EURICA/EURoot/data/WASABI_Calib/GeSiCorr.root", "RECREATE");
+	TFile* out = new TFile("../../data/WASABI_Calib/GeSiCorr.root", "RECREATE");
 	out -> cd();
 	chain -> CopyTree("") -> Write();
 	out -> Close();

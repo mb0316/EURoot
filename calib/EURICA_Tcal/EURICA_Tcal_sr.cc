@@ -104,8 +104,8 @@ void EURICA_Tcal_sr()
 	Double_t offset[84] = {0};
 	TF1* linear[84];
 	TGraphErrors* graph[84];
-	TH2D* calib_hist = new TH2D("calib", ";HPGe channel; Time (ns)", 84, 0, 84, 4000, 0, 4000);
-	TH2D* dum = new TH2D("dummy", ";TDCs channel;Time (ns)", 4000, 0, 4000, 2000, 0, 2000);
+	TH2D* calib_hist = new TH2D("calib", "", 84, 0, 84, 4000, 0, 4000);
+	TH2D* dum = new TH2D("dummy", "", 4000, 0, 4000, 2000, 0, 2000);
 //	TCanvas* cvs = new TCanvas();
 	ofstream outfile("../eurica_tdcs_calib.dat");
 

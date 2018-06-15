@@ -23,7 +23,7 @@ void EURICA_Ecal_3(Int_t runnum)
 		else if (ifile > 1040 && ifile < 1045)  continue;
 		else
 		{
-			file[nfile] = new TFile(Form("~/EURICA/EURoot/results/AnaEURICA/AnaEURICA%d.root",ifile),"read");
+			file[nfile] = new TFile(Form("../../results/AnaEURICA/AnaEURICA%d.root",ifile),"read");
 			tree[nfile] = (TTree*) file[nfile]->Get("tree");
 
 			tree[nfile]->SetBranchAddress("gchit", &gchit);

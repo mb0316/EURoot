@@ -57,8 +57,8 @@ void EURICA_Tcal_lr()
 	Double_t offset = 0;
 	TF1* linear = new TF1("linearfit", "[0]*x+[1]", 0, 140E3);
 	TGraphErrors* graph = new TGraphErrors();
-	TH2D* calib_hist = new TH2D("calib", ";HPGe channel; Time (ns)", 84, 0, 84, 100000, 0, 100000);
-	TH2D* dum = new TH2D("dummy", ";TDCl;Time (ns)", 14000, 0, 140E3, 100000, 0, 100000);
+	TH2D* calib_hist = new TH2D("calib", "", 84, 0, 84, 100000, 0, 100000);
+	TH2D* dum = new TH2D("dummy", "", 14000, 0, 140E3, 100000, 0, 100000);
 //	TCanvas* cvs = new TCanvas();
 	ofstream outfile("../eurica_tdcl_calib.dat");
 
