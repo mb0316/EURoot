@@ -18,16 +18,15 @@ int main (int argc, char* argv[])
 {
 //	TApplication theApp("test",0,0);
 
-	if (argc < 8 || argc > 9)
+	if (argc < 7 || argc > 8)
 	{
-		cout << "Please type 'MakeMAT #Z #Mass #statistics # mode #tstart #tend #flag'." << endl;
+		cout << "Please type 'MakeMAT #Z #Mass #statistics # mode #tstart #tend'." << endl;
 		cout << "Z : Proton number" << endl;
 		cout << "Mass : Mass number" << endl;
 		cout << "statistics : 0 for good statistics, 1 for bad statistics" << endl;
 		cout << "mode : 0 for 1 MeV, 1 for 2 MeV, 2 for 4 MeV, 3 for 8 MeV" << endl;
 		cout << "tstart : set first time cut for g-g matrix" << endl;
 		cout << "tend : set end time cut for g-g matrix" << endl;
-		cout << "flag : 0 for no beta energy cut, 1 for +- 200keV cut, 2 for 3sigma cut" << endl;
 		return 0;
 	}
 
@@ -37,11 +36,11 @@ int main (int argc, char* argv[])
 	Int_t mode = atoi(argv[4]);
 	Int_t tstart = atoi(argv[5]);
 	Int_t tend = atoi(argv[6]);
-	Int_t flag = atoi(argv[7]);
+
 
 	EUAnaMat* mat = new EUAnaMat(Form("../results/PID/Betadecay_%d_%d.root", zpro, mass), 0);
-	mat->MakeBGG(stat, mode, tstart, tend, flag);
-	mat->MakeBTG(stat, mode, flag);
+	mat->MakeBGG(stat, mode, tstart, tend);
+	mat->MakeBTG(stat, mode);
 
 	TCanvas* cvs = new TCanvas("cvs", "", 1500, 1000);
 	cvs->Divide(2,2);
@@ -54,6 +53,13 @@ int main (int argc, char* argv[])
 	cvs->cd(4);
 	mat->tg_g->Draw("colz");
 
+	TCanvas* cvs1 = new TCanvas("cvs1", "", 1000, 800);
+	cvs1->Divide(1,2);
+	cvs1->cd(1);
+	mat->gcT_E->Draw("colz");
+	cvs1->cd(2);
+	mat->addT_E->Draw("colz");
+
 	Int_t ch;
 	if (mode == 0)	ch = 1;
 	if (mode == 1)	ch = 2;
@@ -62,6 +68,7 @@ int main (int argc, char* argv[])
 
 
 	cvs->SaveAs(Form("../results/MAT/Beta%d_%d_%dk.pdf", zpro, mass, ch));
+	cvs1->SaveAs(Form("../results/MAT/Beta%d_%d_%dk_EvsT.pdf", zpro, mass, ch));
 
 	FILE* out_gga;
 	FILE* out_ggg;
