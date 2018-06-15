@@ -12,8 +12,6 @@ ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaBeta.h
 ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaIso.h
 ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaDecay.h
 ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaPID.h
-${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaCalib.h
-${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaCalibTW.h
 ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaMat.h
 )
 
@@ -39,8 +37,6 @@ ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaBeta.cc
 ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaIso.cc
 ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaDecay.cc
 ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaPID.cc
-${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaCalib.cc
-${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaCalibTW.cc
 ${CMAKE_SOURCE_DIR}/source/EUAna/EUAnaMat.cc
 EUAnaDict.cxx
 
