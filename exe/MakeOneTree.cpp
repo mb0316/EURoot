@@ -57,4 +57,6 @@ int main (int argc, char* argv[])
 		out -> Close();
 		std::cout << "All work has been done." << std::endl;
 	}
+
+	return 0;
 }

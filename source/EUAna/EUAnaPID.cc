@@ -29,7 +29,7 @@ void EUAnaPID::PIDFitting(TH1D* hist, Double_t &mean, Double_t &sig)
 	Double_t ampl = hist->GetMaximum();
 	TF1* gaus = new TF1("gaussian", "gaus(0)", mean - mean/5, mean + mean/5);
 	gaus -> SetParameters(ampl, mean, sig);
-	hist->Fit(gaus, "MQ", "", mean-sig, mean+sig);
+	hist->Fit(gaus, "MQ", "", mean-2*sig, mean+2*sig);
 	mean = gaus -> GetParameter(1);
 	sig = gaus -> GetParameter(2);
 }

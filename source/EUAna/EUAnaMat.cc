@@ -70,98 +70,42 @@ void EUAnaMat::MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend)
 	Int_t Eregion1 = 100;
 	Int_t Eregion2 = 100;
 
+	if (stat == 0)	delta_cut = 1;
+	else if (stat == 1)	delta_cut = 2;
+
 	for (Long64_t iEnt = 0; iEnt < nEnt; iEnt++)
 	{
 		ftree->GetEntry(iEnt);
-		if (stat == 0) //good statistics
+		if (t >= tstart && t <= tend && deltaxy < delta_cut && gchit<50)
 		{
-			if (t >= tstart && t <= tend && deltaxy == 0)
+			for (Int_t ihit = 0; ihit < addhit; ihit++)
 			{
-				for (Int_t ihit = 0; ihit < addhit; ihit++)
+				if (add_E[ihit] < 2000)	Eregion1 = int(50 - (2000 - add_E[ihit])/40);
+				else if (add_E[ihit] >= 2000)	Eregion1 = 49;
+				for (Int_t jhit = 0; jhit < addhit; jhit++)
 				{
-					if (add_E[ihit] < 2000)	Eregion1 = int(50 - (2000 - add_E[ihit])/40);
-					if (add_E[ihit] >= 2000)	Eregion1 = 49;
-					for (Int_t jhit = 0; jhit < addhit; jhit++)
-					{
-						if (add_E[addhit-jhit-1] < 2000)	Eregion2 = int(50 - (2000 - add_E[addhit-jhit-1])/40);
-						if (add_E[addhit-jhit-1] >= 2000)	Eregion2 = 49;
+					if (add_E[addhit-jhit-1] < 2000)	Eregion2 = int(50 - (2000 - add_E[addhit-jhit-1])/40);
+					else if (add_E[addhit-jhit-1] >= 2000)	Eregion2 = 49;
 
-						if (abs(add_T[ihit]) < beta_time_cut[Eregion1])
-						{
-							if (abs(add_T[ihit] - add_T[addhit-jhit-1]) < 200 && abs(add_T[addhit-jhit-1]) < beta_time_cut[Eregion2]  && !(add_E[ihit]==add_E[addhit-jhit-1])) gg_a -> Fill(add_E[ihit], add_E[addhit-jhit-1]);
-							else continue;
-						}
-						else continue;
-					}
-
-				}
-
-				for (Int_t ihit = 0; ihit < gchit; ihit++)
-				{
-					if (gc_E[ihit] < 2000)	Eregion1 = int(50 - (2000 - gc_E[ihit])/40);
-					if (gc_E[ihit] >= 2000)	Eregion1 = 49;
-					for (Int_t jhit = 0; jhit < gchit; jhit++)
-					{
-						if (gc_E[gchit-jhit-1] < 2000)	Eregion2 = int(50 - (2000 - gc_E[gchit-jhit-1])/40);
-						if (gc_E[gchit-jhit-1] >= 2000)	Eregion2 = 49;
-
-						if (abs(gc_T[ihit]) < beta_time_cut[Eregion1])
-						{
-							if (abs(gc_T[ihit] - gc_T[gchit-jhit-1]) < 200 && abs(gc_T[gchit-jhit-1]) < beta_time_cut[Eregion2]  && !(gc_E[ihit]==gc_E[gchit-jhit-1])) gg_g -> Fill(gc_E[ihit], gc_E[gchit-jhit-1]);
-							else continue;
-						}
-						else continue;
-					}
-
+					if (abs(add_T[ihit]) < beta_time_cut[Eregion1] && abs(add_T[ihit] - add_T[addhit-jhit-1]) < 200 && abs(add_T[addhit-jhit-1]) < beta_time_cut[Eregion2]  && !(add_E[ihit]==add_E[addhit-jhit-1])) gg_a -> Fill(add_E[ihit], add_E[addhit-jhit-1]);
 				}
 
 			}
-			else continue;
-		}
-		if (stat == 1) //bad statistics
-		{
-			if (t >= tstart && t <= tend && deltaxy < 2)
+
+			for (Int_t ihit = 0; ihit < gchit; ihit++)
 			{
-				for (Int_t ihit = 0; ihit < addhit; ihit++)
+				if (gc_E[ihit] < 2000)	Eregion1 = int(50 - (2000 - gc_E[ihit])/40);
+				else if (gc_E[ihit] >= 2000)	Eregion1 = 49;
+				for (Int_t jhit = 0; jhit < gchit; jhit++)
 				{
-					if (add_E[ihit] < 2000)	Eregion1 = int(50 - (2000 - add_E[ihit])/40);
-					if (add_E[ihit] >= 2000)	Eregion1 = 49;
-					for (Int_t jhit = 0; jhit < addhit; jhit++)
-					{
-						if (add_E[addhit-jhit-1] < 2000)	Eregion2 = int(50 - (2000 - add_E[addhit-jhit-1])/40);
-						if (add_E[addhit-jhit-1] >= 2000)	Eregion2 = 49;
+					if (gc_E[gchit-jhit-1] < 2000)	Eregion2 = int(50 - (2000 - gc_E[gchit-jhit-1])/40);
+					else if (gc_E[gchit-jhit-1] >= 2000)	Eregion2 = 49;
 
-						if (abs(add_T[ihit]) < beta_time_cut[Eregion1])
-						{
-							if (abs(add_T[ihit] - add_T[addhit-jhit-1]) < 200 && abs(add_T[addhit-jhit-1]) < beta_time_cut[Eregion2]  && !(add_E[ihit]==add_E[addhit-jhit-1])) gg_a -> Fill(add_E[ihit], add_E[addhit-jhit-1]);
-							else continue;
-						}
-						else continue;
-					}
-
-				}
-
-				for (Int_t ihit = 0; ihit < gchit; ihit++)
-				{
-					if (gc_E[ihit] < 2000)	Eregion1 = int(50 - (2000 - gc_E[ihit])/40);
-					if (gc_E[ihit] >= 2000)	Eregion1 = 49;
-					for (Int_t jhit = 0; jhit < gchit; jhit++)
-					{
-						if (gc_E[gchit-jhit-1] < 2000)	Eregion2 = int(50 - (2000 - gc_E[gchit-jhit-1])/40);
-						if (gc_E[gchit-jhit-1] >= 2000)	Eregion2 = 49;
-
-						if (abs(gc_T[ihit]) < beta_time_cut[Eregion1])
-						{
-							if (abs(gc_T[ihit] - gc_T[gchit-jhit-1]) < 200 && abs(gc_T[gchit-jhit-1]) < beta_time_cut[Eregion2]  && !(gc_E[ihit]==gc_E[gchit-jhit-1])) gg_g -> Fill(gc_E[ihit], gc_E[gchit-jhit-1]);
-							else continue;
-						}
-						else continue;
-					}
-
+					if (abs(gc_T[ihit]) < beta_time_cut[Eregion1] && abs(gc_T[ihit] - gc_T[gchit-jhit-1]) < 200 && abs(gc_T[gchit-jhit-1]) < beta_time_cut[Eregion2]  && !(gc_E[ihit]==gc_E[gchit-jhit-1])) gg_g -> Fill(gc_E[ihit], gc_E[gchit-jhit-1]);
 				}
 
 			}
-			else continue;
+
 		}
 	}
 }
@@ -215,6 +159,9 @@ void EUAnaMat::MakeBTG(Int_t &stat, Int_t &mode)
 	if (mode == 2)	Emax = 4096;
 	if (mode == 3)	Emax = 8192;
 
+	if (stat == 0)	delta_cut = 1;
+	else if (stat == 1) delta_cut = 2;
+
 	tg_a = new TH2D("tg_a", "", 4096, 0, 4096, 4096, 0, Emax);
 	tg_g = new TH2D("tg_g", "", 4096, 0, 4096, 4096, 0, Emax);
 	gcT_E = new TH2D("gcT_E","",1000,0,1000,500,-1000,1000);
@@ -225,65 +172,34 @@ void EUAnaMat::MakeBTG(Int_t &stat, Int_t &mode)
 	for (Long64_t iEnt = 0; iEnt < nEnt; iEnt++)
 	{
 		ftree->GetEntry(iEnt);
-		if (stat == 0)
+		if (t>= 0 && deltaxy < delta_cut)
 		{
-			if (t>= 0 && deltaxy == 0)
+			for (Int_t ihit = 0; ihit < addhit; ihit++)
 			{
-				for (Int_t ihit = 0; ihit < addhit; ihit++)
+				if (add_E[ihit] < 2000)  Eregion = int(50 - (2000 - add_E[ihit])/40);
+				if (add_E[ihit] >= 2000) Eregion = 49;
+				if (abs(add_T[ihit]) < beta_time_cut[Eregion])
 				{
-					if (add_E[ihit] < 2000)  Eregion = int(50 - (2000 - add_E[ihit])/40);
-					if (add_E[ihit] >= 2000) Eregion = 49;
-					if (abs(add_T[ihit]) < beta_time_cut[Eregion])
-					{
-						tg_a -> Fill(t, add_E[ihit]);
-						addT_E->Fill(add_E[ihit], add_T[ihit]);
-					}
-				}
-				for (Int_t ihit = 0; ihit < gchit; ihit++)
-				{
-					if (gc_E[ihit] < 2000)  Eregion = int(50 - (2000 - gc_E[ihit])/40);
-					if (gc_E[ihit] >= 2000) Eregion = 49;
-					if (abs(gc_T[ihit]) < beta_time_cut[Eregion])
-					{
-						tg_g -> Fill(t, gc_E[ihit]);
-						gcT_E->Fill(gc_E[ihit], gc_T[ihit]);
-					}
+					tg_a -> Fill(t, add_E[ihit]);
+					addT_E->Fill(add_E[ihit], add_T[ihit]);
 				}
 			}
-			else continue;
-		}
-		if (stat == 1)
-		{
-			if (t>= 0 && deltaxy < 2)
+			for (Int_t ihit = 0; ihit < gchit; ihit++)
 			{
-				for (Int_t ihit = 0; ihit < addhit; ihit++)
+				if (gc_E[ihit] < 2000)  Eregion = int(50 - (2000 - gc_E[ihit])/40);
+				if (gc_E[ihit] >= 2000) Eregion = 49;
+				if (abs(gc_T[ihit]) < beta_time_cut[Eregion])
 				{
-					if (add_E[ihit] < 2000)  Eregion = int(50 - (2000 - add_E[ihit])/40);
-					if (add_E[ihit] >= 2000) Eregion = 49;
-					if (abs(add_T[ihit]) < beta_time_cut[Eregion])
-					{
-						tg_a -> Fill(t, add_E[ihit]);
-						addT_E->Fill(add_E[ihit], add_T[ihit]);
-					}
-				}
-				for (Int_t ihit = 0; ihit < gchit; ihit++)
-				{
-					if (gc_E[ihit] < 2000)  Eregion = int(50 - (2000 - gc_E[ihit])/40);
-					if (gc_E[ihit] >= 2000) Eregion = 49;
-					if (abs(gc_T[ihit]) < beta_time_cut[Eregion])
-					{
-						tg_g -> Fill(t, gc_E[ihit]);
-						gcT_E->Fill(gc_E[ihit], gc_T[ihit]);
-					}
+					tg_g -> Fill(t, gc_E[ihit]);
+					gcT_E->Fill(gc_E[ihit], gc_T[ihit]);
 				}
 			}
-			else continue;
 		}
-
+		else continue;
 	}
 }
 
-void EUAnaMat::MakeITG(Int_t &mode1, Int_t &mode2)
+void EUAnaMat::MakeITG(Int_t &mode1)
 {
 	gStyle->SetOptStat(0);
 	Int_t Emax, Tch;
@@ -292,21 +208,45 @@ void EUAnaMat::MakeITG(Int_t &mode1, Int_t &mode2)
 	if (mode1 == 2)	Emax = 4096;
 	if (mode1 == 3)	Emax = 8192;
 
-	if (mode2 == 0) Tch = 1;	
-	if (mode2 == 1)	Tch = 2;
-	if (mode2 == 2)	Tch = 5;
-	if (mode2 == 3) Tch = 10;
-
-	tg_g = new TH2D("tg_g", "", 4096, -500, 4096*Tch-500, 4096, 0, Emax);
+	tg_g = new TH2D("tg_g", "", 4096, 0, 102400, 4096, 0, Emax);
 	Long64_t nEnt = ftree->GetEntries();
+
+        Int_t Eregion = 100;
 
 	for (Long64_t iEnt = 0; iEnt < nEnt; iEnt++)
 	{
 		ftree->GetEntry(iEnt);
 		for (Int_t ihit = 0; ihit < gchit; ihit++)
 		{
-			if (gc_T[ihit] > -500 && gc_T[ihit] < 4096*Tch-500)	tg_g -> Fill(gc_T[ihit], gc_E[ihit]);
+                        if (gc_E[ihit] < 2000)  Eregion = int(50 - (2000 - gc_E[ihit])/40);
+                        if (gc_E[ihit] >= 2000) Eregion = 49;
+			if (gc_T[ihit] > 0 && gc_T[ihit] < 102400 && gc_T[ihit] >= iso_time_cut[Eregion])	tg_g -> Fill(gc_T[ihit], gc_E[ihit]);
 			else continue;
 		}
+	}
+}
+
+void EUAnaMat::MakeDecayCurve(Int_t &stat)
+{
+	if (stat == 0)	delta_cut = 1;
+	else if (stat == 1) delta_cut = 2;
+
+	decay = new TH1F("hist_decay", "", 5000,0,5000);
+
+	Long64_t nEnt = ftree->GetEntries();
+	Int_t Eregion = 100;
+	for (Long64_t iEnt = 0; iEnt < nEnt; iEnt++)
+	{
+		ftree->GetEntry(iEnt);
+		if (t>= 0 && deltaxy < delta_cut)
+		{
+			for (Int_t ihit = 0; ihit < addhit; ihit++)
+			{
+				if (add_E[ihit] < 2000)  Eregion = int(50 - (2000 - add_E[ihit])/40);
+				if (add_E[ihit] >= 2000) Eregion = 49;
+				if (abs(add_T[ihit]) < beta_time_cut[Eregion]) decay->Fill(t);
+			}
+		}
+		else continue;
 	}
 }

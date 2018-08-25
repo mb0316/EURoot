@@ -11,6 +11,8 @@
 
 class EUAnaMat : public EUAna
 {
+	private :
+		Int_t delta_cut;
 	public :
 		TH2D* gg_a;
 		TH2D* gg_g;
@@ -18,6 +20,7 @@ class EUAnaMat : public EUAna
 		TH2D* tg_g;
 		TH2D* gcT_E;
 		TH2D* addT_E;
+		TH1F* decay;
 		TTree* ftree;
 		Double_t t;
 		Double_t deltaxy;
@@ -37,7 +40,8 @@ class EUAnaMat : public EUAna
 		void MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend);
 		void MakeIGG(Int_t &mode, Int_t &tend);
 		void MakeBTG(Int_t &stat, Int_t &mode);
-		void MakeITG(Int_t &mode1, Int_t &mode2);
+		void MakeITG(Int_t &mode1);
+		void MakeDecayCurve(Int_t &stat);
 };
 
 #endif

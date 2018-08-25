@@ -39,9 +39,9 @@ int main (int argc, char* argv[])
 
 	cout << "Start analyzing and build isomer decay data." << endl;
 	Long64_t ent = 0;
-	decay->GetCalib();
+//	decay->GetCalib();
 	Int_t nBytes;
-
+	Bool_t good_trig;
 	for (imts = mts.begin(); imts != mts.end(); imts++)
 	{
 		ent++;
@@ -56,14 +56,16 @@ int main (int argc, char* argv[])
 			printf("\r");
 		}
 		beta->GetEntry(imts->second);
-		if (beta->eventid == 0)
+		good_trig = 0;
+		if (beta->F11_TDC_L > -2500 && beta->F11_TDC_L < -1500 && beta->F11_TDC_R > -2500 && beta->F11_TDC_R < -1500)	good_trig = 1;
+
+		if (beta->eventid == 0 && good_trig == 1)
 		{			
 			decay->CopyDSSD(beta);
 			if (decay->z >= 0 && decay->z <=4)
 			{
 				decay->ResetEURICA();
 				decay->CopyEURICA(beta);
-				decay->TWCor();
 				tree->Fill();
 			}
 		}
@@ -74,4 +76,5 @@ int main (int argc, char* argv[])
 	cout << "Tree has been saved." << endl;
 	out->Close();
 	cout << "All work has been finished." << endl;
+	return 0;
 }

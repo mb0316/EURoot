@@ -101,6 +101,6 @@ int main(int argc, char* argv[])
 	cout << "Tree has been saved." << endl;
 	out -> Close();
 	cout << "All work has been finished." << endl;
-
+	return 0;
 }
 

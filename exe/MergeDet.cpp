@@ -100,5 +100,6 @@ int main(int argc, char* argv[])
 	out -> Close();
 	cout << "All work has been finished." << endl;
 
+	return 0;
 }
 

@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include "EUTreeIso.h"
 #include "EUTreeBeta.h"
+#include "TH1D.h"
+#include "TH2D.h"
 
 class EUAnaIso : public EUAna, public EUTreeIso
 {
@@ -18,9 +20,10 @@ class EUAnaIso : public EUAna, public EUTreeIso
 
 		void GetCalib();
 		void CopyDSSD(EUTreeBeta *beta);
-		void TWCor();
 		void CopyEURICA(EUTreeBeta *beta);
 		void ResetEURICA();
-		
+		void PIDFitting(TH1D* hist, Double_t &mean, Double_t &sig);
+		void TWCor();
+		void CopyData(EUTreeIso* iso);
 };
 #endif

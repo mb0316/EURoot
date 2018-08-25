@@ -16,7 +16,7 @@ using namespace std;
 
 int main (int argc, char* argv[])
 {
-//	TApplication theApp("test",0,0);
+	//	TApplication theApp("test",0,0);
 
 	if (argc < 7 || argc > 8)
 	{
@@ -41,6 +41,7 @@ int main (int argc, char* argv[])
 	EUAnaMat* mat = new EUAnaMat(Form("../results/PID/Betadecay_%d_%d.root", zpro, mass), 0);
 	mat->MakeBGG(stat, mode, tstart, tend);
 	mat->MakeBTG(stat, mode);
+	mat->MakeDecayCurve(stat);
 
 	TCanvas* cvs = new TCanvas("cvs", "", 1500, 1000);
 	cvs->Divide(2,2);
@@ -97,25 +98,32 @@ int main (int argc, char* argv[])
 		fwrite(temp4, sizeof(short), 4096, out_tgg);
 	}
 
-        TFile* out1 = new TFile(Form("../results/MAT/%d_%d_add_gg.root", zpro, mass), "RECREATE");
-        TFile* out2 = new TFile(Form("../results/MAT/%d_%d_gc_gg.root", zpro, mass), "RECREATE");
-        TFile* out3 = new TFile(Form("../results/MAT/%d_%d_add_tg.root", zpro, mass), "RECREATE");
-        TFile* out4 = new TFile(Form("../results/MAT/%d_%d_gc_tg.root", zpro, mass), "RECREATE");
+	TFile* out1 = new TFile(Form("../results/MAT/%d_%d_add_gg.root", zpro, mass), "RECREATE");
+	TFile* out2 = new TFile(Form("../results/MAT/%d_%d_gc_gg.root", zpro, mass), "RECREATE");
+	TFile* out3 = new TFile(Form("../results/MAT/%d_%d_add_tg.root", zpro, mass), "RECREATE");
+	TFile* out4 = new TFile(Form("../results/MAT/%d_%d_gc_tg.root", zpro, mass), "RECREATE");
+	TFile* out5 = new TFile(Form("../results/MAT/%d_%d_decay.root", zpro, mass), "RECREATE");
 
-        out1->cd();
-        mat->gg_a -> Write();
-        out1->Close();
+	out1->cd();
+	mat->gg_a -> Write();
+	out1->Close();
 
-        out2->cd();
-        mat->gg_g -> Write();
-        out2->Close();
+	out2->cd();
+	mat->gg_g -> Write();
+	out2->Close();
 
-        out3->cd();
-        mat->tg_a -> Write();
-        out3->Close();
+	out3->cd();
+	mat->tg_a -> Write();
+	out3->Close();
 
-        out4->cd();
-        mat->tg_g -> Write();
-        out4->Close();
-//	theApp.Run();
+	out4->cd();
+	mat->tg_g -> Write();
+	out4->Close();
+
+	out5->cd();
+	mat->decay -> Write();
+	out5->Close();
+
+	//	theApp.Run();
+	return 0;
 }
