@@ -38,13 +38,14 @@ int main (int argc, char* argv[])
 	EUAnaMat* mat = new EUAnaMat(Form("../results/PID/Isodecay_%d_%d.root", zpro, mass), 1);
 	mat->MakeIGG(mode, tend);
 	mat->MakeITG(mode);
-
+/*
 	TCanvas* cvs = new TCanvas("cvs", "", 1500, 1000);
 	cvs->Divide(1,2);
 	cvs->cd(1);
 	mat->gg_g->Draw("colz");
 	cvs->cd(2);
 	mat->tg_g->Draw("colz");
+*/
 
 	Int_t ch;
 	if (mode == 0)	ch = 1;
@@ -71,8 +72,8 @@ int main (int argc, char* argv[])
 		fwrite(temp2, sizeof(short), 4096, out_tgg);
 	}
 
-	TFile* out1 = new TFile(Form("../results/MAT/%d_%d_gc_gg.root", zpro, mass), "RECREATE");
-	TFile* out2 = new TFile(Form("../results/MAT/%d_%d_gc_tg.root", zpro, mass), "RECREATE");
+	TFile* out1 = new TFile(Form("../results/MAT/Iso%d_%d_gc_gg.root", zpro, mass), "RECREATE");
+	TFile* out2 = new TFile(Form("../results/MAT/Iso%d_%d_gc_tg.root", zpro, mass), "RECREATE");
 
 	out1->cd();
 	mat->gg_g -> Write();

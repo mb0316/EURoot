@@ -42,7 +42,7 @@ int main (int argc, char* argv[])
 	mat->MakeBGG(stat, mode, tstart, tend);
 	mat->MakeBTG(stat, mode);
 	mat->MakeDecayCurve(stat);
-
+/*
 	TCanvas* cvs = new TCanvas("cvs", "", 1500, 1000);
 	cvs->Divide(2,2);
 	cvs->cd(1);
@@ -60,6 +60,7 @@ int main (int argc, char* argv[])
 	mat->gcT_E->Draw("colz");
 	cvs1->cd(2);
 	mat->addT_E->Draw("colz");
+*/
 
 	Int_t ch;
 	if (mode == 0)	ch = 1;
@@ -67,10 +68,10 @@ int main (int argc, char* argv[])
 	if (mode == 2)	ch = 4;
 	if (mode == 3)	ch = 8;
 
-
+/*
 	cvs->SaveAs(Form("../results/MAT/Beta%d_%d_%dk.pdf", zpro, mass, ch));
 	cvs1->SaveAs(Form("../results/MAT/Beta%d_%d_%dk_EvsT.pdf", zpro, mass, ch));
-
+*/
 	FILE* out_gga;
 	FILE* out_ggg;
 	FILE* out_tga;
@@ -98,11 +99,11 @@ int main (int argc, char* argv[])
 		fwrite(temp4, sizeof(short), 4096, out_tgg);
 	}
 
-	TFile* out1 = new TFile(Form("../results/MAT/%d_%d_add_gg.root", zpro, mass), "RECREATE");
-	TFile* out2 = new TFile(Form("../results/MAT/%d_%d_gc_gg.root", zpro, mass), "RECREATE");
-	TFile* out3 = new TFile(Form("../results/MAT/%d_%d_add_tg.root", zpro, mass), "RECREATE");
-	TFile* out4 = new TFile(Form("../results/MAT/%d_%d_gc_tg.root", zpro, mass), "RECREATE");
-	TFile* out5 = new TFile(Form("../results/MAT/%d_%d_decay.root", zpro, mass), "RECREATE");
+	TFile* out1 = new TFile(Form("../results/MAT/Beta%d_%d_add_gg.root", zpro, mass), "RECREATE");
+	TFile* out2 = new TFile(Form("../results/MAT/Beta%d_%d_gc_gg.root", zpro, mass), "RECREATE");
+	TFile* out3 = new TFile(Form("../results/MAT/Beta%d_%d_add_tg.root", zpro, mass), "RECREATE");
+	TFile* out4 = new TFile(Form("../results/MAT/Beta%d_%d_gc_tg.root", zpro, mass), "RECREATE");
+	TFile* out5 = new TFile(Form("../results/MAT/Beta%d_%d_decay.root", zpro, mass), "RECREATE");
 
 	out1->cd();
 	mat->gg_a -> Write();

@@ -38,8 +38,10 @@ class EUAnaMat : public EUAna
 		~EUAnaMat();
  		//mass : mass number, name : name of nuclide, type : 0 : addback / 1 : Ge, stat : statistics(0 : good, 1 : bad), format : 0 : 32MB, 1 : 64MB
 		void MakeBGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend);
+		void MakeBIGG(Int_t &stat, Int_t &mode, Int_t &tstart, Int_t &tend);
 		void MakeIGG(Int_t &mode, Int_t &tend);
 		void MakeBTG(Int_t &stat, Int_t &mode);
+		void MakeBITG(Int_t &stat, Int_t &mode);
 		void MakeITG(Int_t &mode1);
 		void MakeDecayCurve(Int_t &stat);
 };
